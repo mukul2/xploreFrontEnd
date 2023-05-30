@@ -24,7 +24,11 @@ class MyApp extends StatelessWidget {
 
     return   MultiProvider(
         providers: [
-    ChangeNotifierProvider<DrawerProviderProvider>(create: (context) => DrawerProviderProvider()),],child: MaterialApp(
+    ChangeNotifierProvider<DrawerProviderProvider>(create: (context) => DrawerProviderProvider()),
+    ChangeNotifierProvider<QuestionsSelectedProvider>(create: (context) => QuestionsSelectedProvider()),
+
+        ],
+      child: MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(fontFamily: 'Nexa',inputDecorationTheme: InputDecorationTheme( border:  OutlineInputBorder(
       // width: 0.0 produces a thin "hairline" border
