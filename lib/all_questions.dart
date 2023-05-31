@@ -1,8 +1,13 @@
+import 'dart:convert';
+import 'dart:html';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
+import 'package:pdf/pdf.dart';
 import 'package:provider/provider.dart';
 
 import 'AppProviders/DrawerProvider.dart';
@@ -195,8 +200,48 @@ class _Questions_AllState extends State<Questions_All> {
             child: Text("Total Marks : "+bar.totalMarks.toString(),style: TextStyle(color: Colors.blue),),
           ),
         ),
-        InkWell( onTap: (){
+        InkWell( onTap: () async {
           final pdf = pw.Document();
+          List<pw.Widget> allwidgets = [];
+
+          for(int i = 0 ; i <bar.selectedQuestions.length ; i++ ){
+
+            List<pw.Widget> r = [];
+
+            for(int j = 0 ; j <bar.selectedQuestionsBody[i].get("choice").length ; j++ ){
+              r.add(pw.Row(children: [pw.Container(margin: pw.EdgeInsets.only(left: 5,right: 5),height: 10,width: 10,decoration: pw.BoxDecoration(border: pw.Border.all())),pw.Text(bar.selectedQuestionsBody[i].get("choice")[j])]));
+            }
+            allwidgets.add(
+              pw.Column(mainAxisAlignment: pw.MainAxisAlignment.start,crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Text(bar.selectedQuestionsBody[i].get("title")),
+                  pw.Text(bar.selectedQuestionsBody[i].get("q")),
+                  pw.Wrap(children: r)
+                ]
+              )
+            );
+          }
+
+
+
+          pdf.addPage(
+            pw.MultiPage(
+              pageFormat: PdfPageFormat.a4,
+              build: (context) => allwidgets,//here goes the widgets list
+            ),
+          );
+
+          Uint8List uint8list2 =await pdf.save();
+          print("PDf gen compleate");
+          String content = base64Encode(uint8list2);
+          final anchor = AnchorElement(
+              href:
+              "data:application/octet-stream;charset=utf-16le;base64,$content")
+            ..setAttribute(
+                "download",
+                "file.pdf")
+            ..click();//
+
 
         },
           child: Container(margin: EdgeInsets.all(4), decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),border: Border.all(color: Colors.blue)),
