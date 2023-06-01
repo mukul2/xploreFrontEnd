@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'AppProviders/DrawerProvider.dart';
+import 'Questions_new.dart';
+import 'Quizes.dart';
 import 'all_questions.dart';
 import 'all_quizes.dart';
 import 'drawer.dart';
@@ -97,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Container(width: 300,child: AppDrawer(),),
         Expanded(
           child: Consumer<DrawerProviderProvider>(
-            builder: (_, bar, __) => bar.selectedMenu == 0?Questions_All():Quizes_All(),
+            builder: (_, bar, __) => bar.selectedMenu == 0?Questions_All():(bar.selectedMenu == 1?Quizes_All():(bar.selectedMenu ==2?QuizFromFirebase():Questions_All_new())),
           ),
         ),
 

@@ -6,7 +6,7 @@ class DrawerProviderProvider extends ChangeNotifier {
 
 
 
-  List<String> drawerItems= ["Question bank","Quiz"];
+  List<String> drawerItems= ["Question bank","Quiz","New Quiz","New Questions"];
   int _selectedMenu = 0 ;
 
   int get selectedMenu => _selectedMenu;

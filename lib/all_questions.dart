@@ -14,6 +14,7 @@ import 'AppProviders/DrawerProvider.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:pdf/widgets.dart' as pw;
 class Questions_All extends StatefulWidget {
+
   const Questions_All({Key? key}) : super(key: key);
 
   @override
@@ -29,6 +30,7 @@ class _Questions_AllState extends State<Questions_All> {
     builder: (_, bar, __) =>bar.selectedQuestions.length>0?Row(
       children: [
         InkWell( onTap: (){
+          TextEditingController c = TextEditingController();
           showDialog(
               context: context,
               builder: (_) => Dialog(
@@ -36,6 +38,7 @@ class _Questions_AllState extends State<Questions_All> {
                   child: Column(
                     children: [
                       Text("Create new quiz"),
+                      TextField(controller: c,decoration: InputDecoration(label: Text("Title of the Quiz")),),
                       ListView.builder(shrinkWrap: true,
                         itemCount: bar.selectedQuestions.length,
 
@@ -82,6 +85,27 @@ class _Questions_AllState extends State<Questions_All> {
                           );
                         },
                       ),
+                      InkWell( onTap: (){
+
+                        List allQ = [];
+
+                        for(int i = 0 ; i < bar.selectedQuestionsBody.length ; i++){
+                          allQ.add(bar.selectedQuestionsBody[i].data() as Map<String,dynamic>);
+                        }
+
+                        FirebaseFirestore.instance.collection("quizz2").add({"title":c.text,"questions":allQ,"totalMarks":bar.totalMarks});
+                        Navigator.pop(context);
+
+                      },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Card(color: Colors.blue,child: Padding(
+                            padding:  EdgeInsets.symmetric(vertical: 8,horizontal: 20),
+                            child: Text("Create",style: TextStyle(color: Colors.white),),
+                          ),),
+                        ),
+                      ),
+
 
                     ],
                   ),
@@ -113,6 +137,7 @@ class _Questions_AllState extends State<Questions_All> {
 
                         itemBuilder: (context, index) {
                           Map<String,dynamic> json = bar.selectedQuestionsBody[index].data() as Map<String,dynamic>;
+                          json["created_at"] = DateTime.now().millisecondsSinceEpoch;
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
@@ -150,8 +175,15 @@ class _Questions_AllState extends State<Questions_All> {
                                         ),
                                       );
                                     }),
+                                Text("Correct Ans :"),
+                                //Text(bar.selectedQuestionsBody[index].get("title")),
+                                TextFormField(onChanged: (String d){
+                                  json["ans"] = d;
+                                },initialValue:json["ans"] ,),
+                                //
                                 InkWell(onTap: (){
                                   FirebaseFirestore.instance.collection("questions").add(json);
+                                  FirebaseFirestore.instance.collection("questionsN").add(json);
 
 
                                 },
@@ -203,34 +235,87 @@ class _Questions_AllState extends State<Questions_All> {
         InkWell( onTap: () async {
           final pdf = pw.Document();
           List<pw.Widget> allwidgets = [];
+          List<pw.Widget> allAnswers = [];
 
           for(int i = 0 ; i <bar.selectedQuestions.length ; i++ ){
+            allAnswers.add(pw.Row(
+              children: [
+                pw.Text((i+1).toString()),
+                pw.Text("  :   "),
+                pw.Text(bar.selectedQuestionsBody[i].get("ans"))
+              ]
+            ));
 
             List<pw.Widget> r = [];
 
             for(int j = 0 ; j <bar.selectedQuestionsBody[i].get("choice").length ; j++ ){
-              r.add(pw.Row(children: [pw.Container(margin: pw.EdgeInsets.only(left: 5,right: 5),height: 10,width: 10,decoration: pw.BoxDecoration(border: pw.Border.all())),pw.Text(bar.selectedQuestionsBody[i].get("choice")[j])]));
+              r.add(pw.Row(mainAxisAlignment: pw.MainAxisAlignment.start,children: [pw.Container(margin: pw.EdgeInsets.only(left: 5,right: 5),height: 10,width: 10,decoration: pw.BoxDecoration(border: pw.Border.all())),pw.Text(bar.selectedQuestionsBody[i].get("choice")[j])]));
+             // r.add(pw.Row(children: [pw.Container(margin: pw.EdgeInsets.only(left: 5,right: 5),height: 10,width: 10,decoration: pw.BoxDecoration(border: pw.Border.all())),pw.Text(bar.selectedQuestionsBody[i].get("choice")[j])]));
             }
             allwidgets.add(
               pw.Column(mainAxisAlignment: pw.MainAxisAlignment.start,crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [
-                  pw.Text(bar.selectedQuestionsBody[i].get("title")),
-                  pw.Text(bar.selectedQuestionsBody[i].get("q")),
-                  pw.Wrap(children: r)
+                  pw.Padding(padding: pw.EdgeInsets.only(top: 5,bottom: 2),child: pw.Text(bar.selectedQuestionsBody[i].get("title")),),
+                  pw.Padding(padding: pw.EdgeInsets.only(top: 2,bottom: 5),child: pw.Text(bar.selectedQuestionsBody[i].get("q")),),
+
+                  pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start,children: r)
                 ]
               )
             );
           }
 
+          List<List<pw.Widget>> colums = [];
+          int currentPara = 0 ;
+          List<pw.Widget> sss = [];
+          sss.add(pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.center,
+            children: [
+              pw.Text("Text 1 "),
+              pw.Text("Text 2 "),
+              pw.Text("Text 3 "),
+              pw.Container(height: 5,width: 600,color: PdfColors.grey),
+            ]
+          ));
+          for(int i = 0 ; i < allwidgets.length ; i += 2){
+            List<pw.Widget> lll = [];
+            lll.add(pw.Expanded(child: allwidgets[i]));
+            lll.add(pw.Expanded(child: allwidgets[i+1]));
+            sss.add(pw.Row(mainAxisAlignment: pw.MainAxisAlignment.start,crossAxisAlignment: pw.CrossAxisAlignment.start,children: lll));
+
+            // if(colums[currentPara].length<2){
+            //   colums[currentPara].add(allwidgets[i]);
+            //
+            // }else{
+            //   currentPara++;
+            //   colums[currentPara].add(allwidgets[i]);
+            // }
+
+
+          }
+
+    // for(int i = 0 ; i < colums.length ; i++){
+    //   sss.add(pw.Row(children:colums[i] ));
+    // }
+
+
+
+
+
 
 
           pdf.addPage(
-            pw.MultiPage(
+            pw.MultiPage(margin: pw.EdgeInsets.all(10),
               pageFormat: PdfPageFormat.a4,
-              build: (context) => allwidgets,//here goes the widgets list
+              build: (context) => sss,//here goes the widgets list
             ),
           );
-
+          pdf.addPage(
+            pw.MultiPage(margin: pw.EdgeInsets.all(20),
+              pageFormat: PdfPageFormat.a4,
+              build: (context) => allAnswers,//here goes the widgets list
+            ),
+          );
+          //allAnswers
+         // P
           Uint8List uint8list2 =await pdf.save();
           print("PDf gen compleate");
           String content = base64Encode(uint8list2);
@@ -261,7 +346,7 @@ class _Questions_AllState extends State<Questions_All> {
             query: FirebaseFirestore.instance.collection("questions").where("quize_type",isEqualTo: "SC") ,
             builder: (context, snapshot, _) {
               if (snapshot.isFetching) {
-                return const CircularProgressIndicator();
+                return Center(child: const Text("Please wait"));
               }
               if (snapshot.hasError) {
                 return Text('error ${snapshot.error}');
@@ -312,7 +397,7 @@ class _Questions_AllState extends State<Questions_All> {
             query: FirebaseFirestore.instance.collection("questions").where("quize_type",isEqualTo: "MC") ,
             builder: (context, snapshot, _) {
               if (snapshot.isFetching) {
-                return const CircularProgressIndicator();
+                return Center(child: const Text("Please wait"));
               }
               if (snapshot.hasError) {
                 return Text('error ${snapshot.error}');
