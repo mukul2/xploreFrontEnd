@@ -9,6 +9,7 @@ import 'all_questions.dart';
 import 'all_quizes.dart';
 import 'drawer.dart';
 import 'firebase_options.dart';
+import 'utils.dart';
 
 Future<void> main() async {
   await Firebase.initializeApp(
@@ -34,19 +35,19 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(fontFamily: 'Nexa',inputDecorationTheme: InputDecorationTheme( border:  OutlineInputBorder(
       // width: 0.0 produces a thin "hairline" border
-      borderSide:  BorderSide(color:Colors.black.withOpacity(0.8), width: 1.0),
+      borderSide:  BorderSide(color:Colors.black.withOpacity(0.8), width: 0.5),
     ),
         enabledBorder:  OutlineInputBorder(
           // width: 0.0 produces a thin "hairline" border
-          borderSide:  BorderSide(color: Colors.black.withOpacity(0.8), width: 1.0),
+          borderSide:  BorderSide(color: Colors.black.withOpacity(0.8), width: 0.5),
         ),
         disabledBorder:   OutlineInputBorder(
           // width: 0.0 produces a thin "hairline" border
-          borderSide:  BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
+          borderSide:  BorderSide(color: Theme.of(context).primaryColor, width: 0.5),
         ),
         focusedBorder:    OutlineInputBorder(
           // width: 0.0 produces a thin "hairline" border
-          borderSide:  BorderSide(color: Colors.blue, width: 1.0),
+          borderSide:  BorderSide(color: Colors.blue, width:0.5),
         ),floatingLabelBehavior: FloatingLabelBehavior.always)),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     ),);
@@ -97,9 +98,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
       body: Row(children: [
         Container(width: 300,child: AppDrawer(),),
+        Container(height: double.infinity,width: 0.5,color: Colors.grey,),
         Expanded(
           child: Consumer<DrawerProviderProvider>(
-            builder: (_, bar, __) => bar.selectedMenu == 0?Questions_All():(bar.selectedMenu == 1?Quizes_All():(bar.selectedMenu ==2?QuizFromFirebase():Questions_All_new())),
+            builder: (_, bar, __) => bar.selectedMenu == 0?Questions_All(type: questionbank.type1,) :(bar.selectedMenu == 1?Quizes_All():(bar.selectedMenu ==2?QuizFromFirebase():Questions_All(type: questionbank.type2,))),
           ),
         ),
 

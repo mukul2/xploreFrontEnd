@@ -30,6 +30,20 @@ class _Questions_AllState extends State<Questions_All_new> {
             builder: (_, bar, __) =>bar.selectedQuestions.length>0?Row(
               children: [
                 InkWell( onTap: (){
+                  for(int i = 0 ; i < bar.selectedQuestions.length ; i++){
+                    bar.selectedQuestionsBody[i].reference.delete();
+                    bar.remove(bar.selectedQuestions[i]);
+                  }
+
+                },
+                  child: Container(margin: EdgeInsets.all(4), decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),border: Border.all(color: Colors.blue)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text("Delete",style: TextStyle(color: Colors.blue),),
+                    ),
+                  ),
+                ),
+                InkWell( onTap: (){
                   TextEditingController c = TextEditingController();
                   showDialog(
                       context: context,
@@ -362,6 +376,7 @@ class _Questions_AllState extends State<Questions_All_new> {
                   }
 
                   final data = snapshot.docs[index];
+
                   //QuestionsSelectedProvider
                   return  Consumer<QuestionsSelectedProvider>(
                       builder: (_, bar, __) =>Row(
