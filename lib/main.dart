@@ -35,19 +35,19 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(fontFamily: 'Nexa',inputDecorationTheme: InputDecorationTheme( border:  OutlineInputBorder(
       // width: 0.0 produces a thin "hairline" border
-      borderSide:  BorderSide(color:Colors.black.withOpacity(0.8), width: 0.5),
-    ),
+      borderSide:  BorderSide(color:Colors.black.withOpacity(0.8), width: 0.5,),borderRadius: BorderRadius.circular(1),
+      ),
         enabledBorder:  OutlineInputBorder(
           // width: 0.0 produces a thin "hairline" border
-          borderSide:  BorderSide(color: Colors.black.withOpacity(0.8), width: 0.5),
+          borderSide:  BorderSide(color: Colors.black.withOpacity(0.8), width: 0.5),borderRadius: BorderRadius.circular(1),
         ),
         disabledBorder:   OutlineInputBorder(
           // width: 0.0 produces a thin "hairline" border
-          borderSide:  BorderSide(color: Theme.of(context).primaryColor, width: 0.5),
+          borderSide:  BorderSide(color: Theme.of(context).primaryColor, width: 0.5),borderRadius: BorderRadius.circular(1),
         ),
         focusedBorder:    OutlineInputBorder(
           // width: 0.0 produces a thin "hairline" border
-          borderSide:  BorderSide(color: Colors.blue, width:0.5),
+          borderSide:  BorderSide(color: Colors.blue, width:0.5),borderRadius: BorderRadius.circular(1),
         ),floatingLabelBehavior: FloatingLabelBehavior.always)),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     ),);
