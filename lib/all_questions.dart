@@ -21,10 +21,13 @@ class Questions_All extends StatefulWidget {
   @override
   State<Questions_All> createState() => _Questions_AllState();
 }
-
+enum questionType{singleChoice,multipleChoice}
 class _Questions_AllState extends State<Questions_All> {
+  List questions = [];
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   BuildContext? ccc;
+  questionType qt = questionType.singleChoice;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(appBar: PreferredSize(preferredSize: Size(0,60),child: Container(height: 60,child: Column(
@@ -133,7 +136,57 @@ class _Questions_AllState extends State<Questions_All> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextField(minLines: 7,maxLines: 10,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),label: Text("Quiz Content")),),
-                  )
+                  ),
+                  InkWell( onTap: (){
+                    //questions
+                    showDialog(
+                        context: context,
+                        builder: (_) =>Dialog(child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(decoration: InputDecoration(label: Text("Question title")),),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(decoration: InputDecoration(label: Text("Question body")),),
+                            ),
+                            ClipRRect(borderRadius: BorderRadius.circular(5),child: Row(
+                              children: [
+                                Expanded(child: InkWell( onTap: (){
+                                  setState(() {
+                                    qt = (qt == questionType.singleChoice)?questionType.multipleChoice:questionType.singleChoice;
+                                  });
+                                },
+                                  child: Container(color: qt == questionType.singleChoice?Colors.blue:Colors.white,
+                                    child: Center(child: Text("Single choice",style: TextStyle(color: qt == questionType.multipleChoice?Colors.blue:Colors.white ),),),),
+                                )),
+                                Expanded(child: InkWell(onTap: (){
+                                  setState(() {
+                                    qt = (qt == questionType.singleChoice)?questionType.multipleChoice:questionType.singleChoice;
+                                  });
+                                },
+                                  child: Container(color: qt == questionType.multipleChoice?Colors.blue:Colors.white,
+                                    child: Center(child: Text("Multiple choice",style: TextStyle(color: qt == questionType.singleChoice?Colors.blue:Colors.white ),),),),
+                                )),
+                              ],
+                            ),),
+
+                          ],
+                        ),));
+                  },
+                    child: Card(color: Colors.blue,child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
+                      child: Text("Add Question",style: TextStyle(color: Colors.white),),
+                    ),),
+                  ),
+                  ListView.builder(shrinkWrap: true,
+                  itemCount: questions.length,
+
+                  itemBuilder: (context, index) {
+                    return Text(questions[index]);
+
+                  }),
 
 
                 ],),
@@ -1310,3 +1363,18 @@ class _HoverButtonsState extends State<HoverButtons> {
 
   }
 }
+
+class Create extends StatefulWidget {
+  const Create({Key? key}) : super(key: key);
+
+  @override
+  State<Create> createState() => _CreateState();
+}
+
+class _CreateState extends State<Create> {
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
