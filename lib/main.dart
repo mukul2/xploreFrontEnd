@@ -1,3 +1,4 @@
+import 'package:admin/side.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         providers: [
     ChangeNotifierProvider<DrawerProviderProvider>(create: (context) => DrawerProviderProvider()),
     ChangeNotifierProvider<QuestionsSelectedProvider>(create: (context) => QuestionsSelectedProvider()),
+    ChangeNotifierProvider<AddedProvider>(create: (context) => AddedProvider()),
 
         ],
       child: MaterialApp(
@@ -49,7 +51,7 @@ class MyApp extends StatelessWidget {
           // width: 0.0 produces a thin "hairline" border
           borderSide:  BorderSide(color: Colors.blue, width:0.5),borderRadius: BorderRadius.circular(1),
         ),floatingLabelBehavior: FloatingLabelBehavior.always)),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home:  SidebarXExampleApp(),
     ),);
   }
 }
