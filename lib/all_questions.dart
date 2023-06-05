@@ -36,161 +36,238 @@ class _Questions_AllState extends State<Questions_All> {
           children: [
             InkWell( onTap: (){
 
+              BuildContext cN ;
+
               showBottomSheet(
                   context:ccc??context,
-                  builder: (context) => Container(
-                  color: Colors.white,
-                  height: MediaQuery.of(context).size.height,child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(children: [
-                  Padding(
-                    padding:  EdgeInsets.only(bottom: 10),
-                    child: InkWell( onTap: (){
-                      Navigator.pop(context);
-                    },
-                      child: Row(
-                        children: [
-                          Icon(Icons.navigate_before,color: Colors.blue,),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 10),
-                            child: Text("Close",style: TextStyle(color: Colors.blue),),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(flex: 3,
+                  builder: (context) {
+                    cN = context;
+                    return Container(
+                        color: Colors.white,
+                        height: MediaQuery.of(context).size.height,child: SingleChildScrollView(
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Title")),),
-                        ),
-                      ),
-                      Expanded(flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Number of quiz takes")),),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Course")),),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Eaxm Duration Time(H:M:S)")),),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Total Exam Marks")),),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Pass Mark")),),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Exam Start Date")),),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Exam End Date")),),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Published")),),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                         // child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Pass Mark")),),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(minLines: 7,maxLines: 10,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),label: Text("Quiz Content")),),
-                  ),
-                  InkWell( onTap: (){
-                    //questions
-                    showDialog(
-                        context: context,
-                        builder: (_) =>Dialog(child: Column(
-                          children: [
+                          padding: const EdgeInsets.all(20.0),
+                          child: Column(children: [
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(decoration: InputDecoration(label: Text("Question title")),),
+                              padding:  EdgeInsets.only(bottom: 10),
+                              child: InkWell( onTap: (){
+                                Navigator.pop(context);
+                              },
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.navigate_before,color: Colors.blue,),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Text("Close",style: TextStyle(color: Colors.blue),),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(decoration: InputDecoration(label: Text("Question body")),),
-                            ),
-                            ClipRRect(borderRadius: BorderRadius.circular(5),child: Row(
+                            Row(
                               children: [
-                                Expanded(child: InkWell( onTap: (){
-                                  setState(() {
-                                    qt = (qt == questionType.singleChoice)?questionType.multipleChoice:questionType.singleChoice;
-                                  });
-                                },
-                                  child: Container(color: qt == questionType.singleChoice?Colors.blue:Colors.white,
-                                    child: Center(child: Text("Single choice",style: TextStyle(color: qt == questionType.multipleChoice?Colors.blue:Colors.white ),),),),
-                                )),
-                                Expanded(child: InkWell(onTap: (){
-                                  setState(() {
-                                    qt = (qt == questionType.singleChoice)?questionType.multipleChoice:questionType.singleChoice;
-                                  });
-                                },
-                                  child: Container(color: qt == questionType.multipleChoice?Colors.blue:Colors.white,
-                                    child: Center(child: Text("Multiple choice",style: TextStyle(color: qt == questionType.singleChoice?Colors.blue:Colors.white ),),),),
-                                )),
+                                Expanded(flex: 3,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Title")),),
+                                  ),
+                                ),
+                                Expanded(flex: 1,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Number of quiz takes")),),
+                                  ),
+                                ),
                               ],
-                            ),),
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Course")),),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Eaxm Duration Time(H:M:S)")),),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Total Exam Marks")),),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Pass Mark")),),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Exam Start Date")),),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Exam End Date")),),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Published")),),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    // child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Pass Mark")),),
+                                  ),
+                                ),
+                              ],
+                            ),
 
-                          ],
-                        ),));
-                  },
-                    child: Card(color: Colors.blue,child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
-                      child: Text("Add Question",style: TextStyle(color: Colors.white),),
-                    ),),
-                  ),
-                  ListView.builder(shrinkWrap: true,
-                  itemCount: questions.length,
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(minLines: 7,maxLines: 10,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),label: Text("Quiz Content")),),
+                            ),
+                            InkWell( onTap: (){
+                              //questions
 
-                  itemBuilder: (context, index) {
-                    return Text(questions[index]);
-
-                  }),
+                              List Options = [];
+                              int correctOption = 0;
+                              List<TextEditingController> allController = [];
 
 
-                ],),
-              ))));
+
+
+                              showBottomSheet(
+                                  context: context,
+                                  builder: (_) =>StatefulBuilder(
+                                      builder: (BuildContext context, StateSetter setState) {
+                                        return Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            InkWell(onTap: (){
+                                              Navigator.pop(context);
+                                            },child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.navigate_before_rounded,color: Colors.blue,),
+                                                  Text("Back",style: TextStyle(color: Colors.blue),),
+                                                ],
+                                              ),
+                                            ),),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: TextField(decoration: InputDecoration(label: Text("Question title")),),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: TextField(decoration: InputDecoration(label: Text("Question body")),),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 8),
+                                              child: ClipRRect(borderRadius: BorderRadius.circular(5),child: Row(
+                                                children: [
+                                                  Expanded(child: InkWell( onTap: (){
+                                                    setState(() {
+                                                      qt = (qt == questionType.singleChoice)?questionType.multipleChoice:questionType.singleChoice;
+                                                    });
+                                                    print(qt);
+                                                  },
+                                                    child: Container(color: qt == questionType.singleChoice?Colors.blue:Colors.white,
+                                                      child: Center(child: Padding(
+                                                        padding: const EdgeInsets.all(10.0),
+                                                        child: Text("Single choice",style: TextStyle(color: qt == questionType.multipleChoice?Colors.blue:Colors.white ),),
+                                                      ),),),
+                                                  )),
+                                                  Expanded(child: InkWell(onTap: (){
+                                                    setState(() {
+                                                      qt = (qt == questionType.singleChoice)?questionType.multipleChoice:questionType.singleChoice;
+                                                    });
+                                                    print(qt);
+                                                  },
+                                                    child: Container(color: qt == questionType.multipleChoice?Colors.blue:Colors.white,
+                                                      child: Center(child: Padding(
+                                                        padding: const EdgeInsets.all(10.0),
+                                                        child: Text("Multiple choice",style: TextStyle(color: qt == questionType.singleChoice?Colors.blue:Colors.white ),),
+                                                      ),),),
+                                                  )),
+                                                ],
+                                              ),),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("Options:", ),
+                                            ),
+                                            ListView.builder(shrinkWrap: true,
+                                              itemCount: Options.length,
+
+                                              itemBuilder: (context, index) {
+                                                TextEditingController c = TextEditingController(text: Options[index]);
+                                                allController.add(c);
+                                                return ListTile(trailing: IconButton(onPressed: (){
+                                                  allController.removeAt(index);
+                                                  Options.removeAt(index);
+
+                                                  setState(() {
+                                                  });
+
+                                                },icon: Icon(Icons.delete),),leading: Checkbox(value: true,onChanged: (bool? b){
+
+                                                },),
+                                                  title: Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: TextFormField(onChanged: (String s){
+                                                      Options[index] = s ;
+                                                    },controller: c,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 10),label: Text("Option "+(index+1).toString())),),
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                            TextButton(onPressed: (){
+
+                                              setState(() {
+                                                Options.add("");
+                                              });
+
+
+
+                                            }, child: Text("Add Options")),
+
+                                          ],
+                                        );
+                                      }
+                                  ));
+                            },
+                              child: Card(color: Colors.blue,child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
+                                child: Text("Add Question",style: TextStyle(color: Colors.white),),
+                              ),),
+                            ),
+                            ListView.builder(shrinkWrap: true,
+                                itemCount: questions.length,
+
+                                itemBuilder: (context, index) {
+                                  return Text(questions[index]);
+
+                                }),
+
+
+                          ],),
+                        )));
+                  });
 
             },
               child: Container(margin: EdgeInsets.all(4), decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),border: Border.all(color: Colors.blue)),
@@ -206,7 +283,86 @@ class _Questions_AllState extends State<Questions_All> {
                   children: [
                     InkWell( onTap: (){
                       TextEditingController c = TextEditingController();
-                      showDialog(
+
+                      showBottomSheet(
+                          context:ccc??context,
+                          builder: (context) =>SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Text("Create new quiz"),
+                                TextField(controller: c,decoration: InputDecoration(label: Text("Title of the Quiz")),),
+                                ListView.builder(shrinkWrap: true,
+                                  itemCount: bar.selectedQuestions.length,
+
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+
+                                          //bar.selectedQuestionsBody[index].get("choice")
+
+                                          Row(
+                                            children: [
+                                              Text("TYPE :"),
+                                              Text(bar.selectedQuestionsBody[index].get("quize_type")=="SC"?"Single choice":"Multiple choice"),
+                                            ],
+                                          ),
+
+                                          Text("Question :"),
+                                          HtmlWidget(bar.selectedQuestionsBody[index].get("q")),
+                                          Text("Title :"),
+                                          Text(bar.selectedQuestionsBody[index].get("title")),
+                                          Text("Choices :"),
+                                          ListView.builder(shrinkWrap: true,
+                                              itemCount: bar.selectedQuestionsBody[index].get("choice").length,
+                                              itemBuilder: (context, index2) {
+                                                return Container(margin: EdgeInsets.all(4), decoration: BoxDecoration(border: Border.all(color: Colors.blue),borderRadius: BorderRadius.circular(3) ),
+                                                  child: Padding(
+                                                    padding: const EdgeInsets.all(8.0),
+                                                    child: Text(bar.selectedQuestionsBody[index].get("choice")[index2]),
+                                                  ),
+                                                );
+                                              }),
+                                          // Wrap(children:bar.selectedQuestionsBody[index].get("choice").map((e) => Container(margin: EdgeInsets.all(4), decoration: BoxDecoration(border: Border.all(color: Colors.blue),borderRadius: BorderRadius.circular(3) ),
+                                          //   child: Padding(
+                                          //     padding: const EdgeInsets.all(8.0),
+                                          //     child: Text(e),
+                                          //   ),
+                                          // )).toList() ,),
+
+
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                                InkWell( onTap: (){
+
+                                  List allQ = [];
+
+                                  for(int i = 0 ; i < bar.selectedQuestionsBody.length ; i++){
+                                    allQ.add(bar.selectedQuestionsBody[i].data() as Map<String,dynamic>);
+                                  }
+
+                                  FirebaseFirestore.instance.collection("quizz2").add({"title":c.text,"questions":allQ,"totalMarks":bar.totalMarks});
+                                  Navigator.pop(context);
+
+                                },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Card(color: Colors.blue,child: Padding(
+                                      padding:  EdgeInsets.symmetric(vertical: 8,horizontal: 20),
+                                      child: Text("Create",style: TextStyle(color: Colors.white),),
+                                    ),),
+                                  ),
+                                ),
+
+
+                              ],
+                            ),
+                          ));
+                    if(false)  showDialog(
                           context: context,
                           builder: (_) => Dialog(
                             child: Container(height: MediaQuery.of(context).size.height * 0.8,width: MediaQuery.of(context).size.width * 0.8 ,child: SingleChildScrollView(
