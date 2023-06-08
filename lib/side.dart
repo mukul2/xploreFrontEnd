@@ -159,7 +159,7 @@ class _ScreensExample extends StatelessWidget {
         final pageTitle = _getTitleByIndex(controller.selectedIndex);
         switch (controller.selectedIndex) {
           case 0:
-            return Questions_All(type: questionbank.type2,);
+            return Questions_All(type: questionbank.type1,);
             case 1:
             return QuizFromFirebase();
           default:

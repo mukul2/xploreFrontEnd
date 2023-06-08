@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:html';
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
@@ -29,6 +28,7 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
         Container(color: Colors.white,height: 59,child: Row(
           children: [
             InkWell( onTap: (){
+
               scaffoldKey.currentState!.showBottomSheet((context) => Container(
                   color: Colors.white,
                   height: MediaQuery.of(context).size.height,child: SingleChildScrollView(
@@ -72,7 +72,7 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Course")),),
+                              child:TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Course")),),
                             ),
                           ),
                           Expanded(
@@ -194,152 +194,445 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
                       ),
 
 
-                      InkWell( onTap: (){
-                        //questions
+                      Row(
+                        children: [
+                          InkWell( onTap: (){
+                            //questions
 
-                        List Options = [];
-                        int correctOption = 0;
-                        List<TextEditingController> allController = [];
+                            List Options = [];
+                            int correctOption = 0;
+                            List<TextEditingController> allController = [];
 
-                        TextEditingController c1 = TextEditingController();
-                        TextEditingController c2 = TextEditingController();
-
-
+                            TextEditingController c1 = TextEditingController();
+                            TextEditingController c2 = TextEditingController();
 
 
 
-                        showDialog(
-                            context: context,
-                            builder: (_) =>StatefulBuilder(
-                                builder: (BuildContext context, StateSetter setStateC) {
-                                  return Dialog(child: Container(width: 500,height: 900,
-                                    child: SingleChildScrollView(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(20.0),
-                                        child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            InkWell(onTap: (){
-                                              Navigator.pop(context);
-                                            },child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.navigate_before_rounded,color: Colors.blue,),
-                                                  Text("Back",style: TextStyle(color: Colors.blue),),
-                                                ],
-                                              ),
-                                            ),),
-                                            Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: TextField(controller: c1,decoration: InputDecoration(label: Text("Question title")),),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: TextField(controller: c2,decoration: InputDecoration(label: Text("Question body")),),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 8),
-                                              child: ClipRRect(borderRadius: BorderRadius.circular(5),child: Row(
-                                                children: [
-                                                  Expanded(child: InkWell( onTap: (){
-                                                    setState(() {
-                                                      qt = (qt == questionType.singleChoice)?questionType.multipleChoice:questionType.singleChoice;
-                                                    });
-                                                    print(qt);
+
+
+                            showDialog(
+                                context: context,
+                                builder: (_) =>StatefulBuilder(
+                                    builder: (BuildContext context, StateSetter setStateC) {
+                                      return Dialog(child: Container(width: 500,height: 900,
+                                        child: SingleChildScrollView(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(20.0),
+                                            child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                InkWell(onTap: (){
+                                                  Navigator.pop(context);
+                                                },child: Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(Icons.navigate_before_rounded,color: Colors.blue,),
+                                                      Text("Back",style: TextStyle(color: Colors.blue),),
+                                                    ],
+                                                  ),
+                                                ),),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: TextField(controller: c1,decoration: InputDecoration(label: Text("Question title")),),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: TextField(controller: c2,decoration: InputDecoration(label: Text("Question body")),),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 8),
+                                                  child: ClipRRect(borderRadius: BorderRadius.circular(5),child: Row(
+                                                    children: [
+                                                      Expanded(child: InkWell( onTap: (){
+                                                        setState(() {
+                                                          qt = (qt == questionType.singleChoice)?questionType.multipleChoice:questionType.singleChoice;
+                                                        });
+                                                        print(qt);
+                                                      },
+                                                        child: Container(color: qt == questionType.singleChoice?Colors.blue:Colors.white,
+                                                          child: Center(child: Padding(
+                                                            padding: const EdgeInsets.all(10.0),
+                                                            child: Text("Single choice",style: TextStyle(color: qt == questionType.multipleChoice?Colors.blue:Colors.white ),),
+                                                          ),),),
+                                                      )),
+                                                      Expanded(child: InkWell(onTap: (){
+                                                        setState(() {
+                                                          qt = (qt == questionType.singleChoice)?questionType.multipleChoice:questionType.singleChoice;
+                                                        });
+                                                        print(qt);
+                                                      },
+                                                        child: Container(color: qt == questionType.multipleChoice?Colors.blue:Colors.white,
+                                                          child: Center(child: Padding(
+                                                            padding: const EdgeInsets.all(10.0),
+                                                            child: Text("Multiple choice",style: TextStyle(color: qt == questionType.singleChoice?Colors.blue:Colors.white ),),
+                                                          ),),),
+                                                      )),
+                                                    ],
+                                                  ),),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text("Options:", ),
+                                                ),
+                                                ListView.builder(shrinkWrap: true,
+                                                  itemCount: Options.length,
+
+                                                  itemBuilder: (context, index) {
+                                                    TextEditingController c = TextEditingController(text: Options[index]);
+                                                    allController.add(c);
+                                                    return ListTile(trailing: IconButton(onPressed: (){
+                                                      allController.removeAt(index);
+                                                      Options.removeAt(index);
+
+                                                      setStateC(() {
+                                                      });
+
+                                                    },icon: Icon(Icons.delete),),leading: Checkbox(value: index==correctOption,onChanged: (bool? b){
+                                                      if(b == true){
+
+                                                        correctOption = index;
+                                                        setStateC(() {
+                                                        });
+                                                      }
+
+                                                    },),
+                                                      title: Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+                                                        child: TextFormField(onChanged: (String s){
+                                                          Options[index] = s ;
+                                                        },controller: c,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 10),label: Text("Option "+(index+1).toString())),),
+                                                      ),
+                                                    );
                                                   },
-                                                    child: Container(color: qt == questionType.singleChoice?Colors.blue:Colors.white,
-                                                      child: Center(child: Padding(
-                                                        padding: const EdgeInsets.all(10.0),
-                                                        child: Text("Single choice",style: TextStyle(color: qt == questionType.multipleChoice?Colors.blue:Colors.white ),),
-                                                      ),),),
-                                                  )),
-                                                  Expanded(child: InkWell(onTap: (){
-                                                    setState(() {
-                                                      qt = (qt == questionType.singleChoice)?questionType.multipleChoice:questionType.singleChoice;
-                                                    });
-                                                    print(qt);
-                                                  },
-                                                    child: Container(color: qt == questionType.multipleChoice?Colors.blue:Colors.white,
-                                                      child: Center(child: Padding(
-                                                        padding: const EdgeInsets.all(10.0),
-                                                        child: Text("Multiple choice",style: TextStyle(color: qt == questionType.singleChoice?Colors.blue:Colors.white ),),
-                                                      ),),),
-                                                  )),
-                                                ],
-                                              ),),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Text("Options:", ),
-                                            ),
-                                            ListView.builder(shrinkWrap: true,
-                                              itemCount: Options.length,
-
-                                              itemBuilder: (context, index) {
-                                                TextEditingController c = TextEditingController(text: Options[index]);
-                                                allController.add(c);
-                                                return ListTile(trailing: IconButton(onPressed: (){
-                                                  allController.removeAt(index);
-                                                  Options.removeAt(index);
+                                                ),
+                                                TextButton(onPressed: (){
 
                                                   setStateC(() {
+                                                    Options.add("");
                                                   });
 
-                                                },icon: Icon(Icons.delete),),leading: Checkbox(value: index==correctOption,onChanged: (bool? b){
-                                                  if(b == true){
 
-                                                    correctOption = index;
-                                                    setStateC(() {
-                                                    });
-                                                  }
 
-                                                },),
-                                                  title: Padding(
-                                                    padding: const EdgeInsets.all(8.0),
-                                                    child: TextFormField(onChanged: (String s){
-                                                      Options[index] = s ;
-                                                    },controller: c,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 10),label: Text("Option "+(index+1).toString())),),
-                                                  ),
-                                                );
-                                              },
+                                                }, child: Text("Add Options")),
+                                                InkWell( onTap: (){
+
+
+
+                                                  Provider.of<AddedProvider>(context, listen: false).add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
+                                                  setState(() {
+                                                  });
+                                                  Navigator.pop(context);
+
+                                                },
+                                                  child: Card(color: Colors.blue,child: Padding(
+                                                    padding: const EdgeInsets.all(10.0),
+                                                    child: Text("Save",style: TextStyle(color: Colors.white),),
+                                                  ),),
+                                                ),
+
+                                              ],
                                             ),
-                                            TextButton(onPressed: (){
-
-                                              setStateC(() {
-                                                Options.add("");
-                                              });
-
-
-
-                                            }, child: Text("Add Options")),
-                                            InkWell( onTap: (){
-
-
-
-                                              Provider.of<AddedProvider>(context, listen: false).add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
-                                              setState(() {
-                                              });
-                                              Navigator.pop(context);
-
-                                            },
-                                              child: Card(color: Colors.blue,child: Padding(
-                                                padding: const EdgeInsets.all(10.0),
-                                                child: Text("Save",style: TextStyle(color: Colors.white),),
-                                              ),),
-                                            ),
-
-                                          ],
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ),);
-                                }
-                            ));
-                      },
-                        child: Card(color: Colors.blue,child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
-                          child: Text("Add Question",style: TextStyle(color: Colors.white),),
-                        ),),
+                                      ),);
+                                    }
+                                ));
+                          },
+                            child: Card(color: Colors.blue,child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
+                              child: Text("Add Question",style: TextStyle(color: Colors.white),),
+                            ),),
+                          ),
+                          InkWell( onTap: (){
+                            //questions
+
+                            List Options = [];
+                            int correctOption = 0;
+                            List<TextEditingController> allController = [];
+
+                            TextEditingController c1 = TextEditingController();
+                            TextEditingController c2 = TextEditingController();
+
+
+
+
+
+
+
+                            showDialog(
+                                context: context,
+                                builder: (_) => true?Dialog(
+                                  child: FirestoreQueryBuilder(pageSize: 20,
+                                    query: FirebaseFirestore.instance.collection( "questions").where("quize_type",isEqualTo: "SC") ,
+                                    builder: (context, snapshot, _) {
+                                      if (snapshot.isFetching) {
+                                        return Center(child: const Text("Please wait"));
+                                      }
+                                      if (snapshot.hasError) {
+                                        return Text('error ${snapshot.error}');
+                                      }
+
+                                      return ListView.separated(padding: EdgeInsets.all(10), shrinkWrap: true,
+                                        itemCount: snapshot.docs.length,
+                                        itemBuilder: (context, index) {
+                                          // if we reached the end of the currently obtained items, we try to
+                                          // obtain more items
+                                          if (snapshot.hasMore && index + 1 == snapshot.docs.length) {
+                                            // Tell FirestoreQueryBuilder to try to obtain more items.
+                                            // It is safe to call this function from within the build method.
+                                            snapshot.fetchMore();
+                                          }
+
+                                          final data = snapshot.docs[index];
+                                          ccc = context;
+                                          //QuestionsSelectedProvider
+                                          return  true?HoverButtons(data: data,onCl: (String d){
+
+                                          },): Consumer<QuestionsSelectedProvider>(
+                                              builder: (_, bar, __) =>InkWell(onTap: (){
+                                                Map<String,dynamic> json = data.data() as Map<String,dynamic>;
+                                                json["created_at"] = DateTime.now().millisecondsSinceEpoch;
+
+
+                                                showBottomSheet(
+                                                    context: context,
+                                                    builder: (context) => Container(
+                                                      color: Colors.white,
+                                                      height: MediaQuery.of(context).size.height,child: SingleChildScrollView(
+                                                      child: Column(
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              IconButton(onPressed: (){
+                                                                Navigator.pop(context);
+                                                              }, icon: Icon(Icons.arrow_back_rounded)),
+                                                            ],
+                                                          ),
+
+                                                          Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Question")),onChanged: (String d){
+                                                              json["q"] = d;
+                                                            },initialValue:json["q"] ,),
+                                                          ),
+
+                                                          Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Title")),onChanged: (String d){
+                                                              json["title"] = d;
+                                                            },initialValue:json["title"] ,),
+                                                          ),
+
+                                                          ListView.builder(shrinkWrap: true,
+                                                              itemCount: json["choice"].length,
+                                                              itemBuilder: (context, index2) {
+                                                                return Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child:  TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Option "+(index2+1).toString())),onChanged: (String d){
+                                                                    json["choice"][index2] = d;
+                                                                  },initialValue:json["choice"][index2]),
+                                                                );
+                                                              }),
+
+                                                          Padding(
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Correct ans")),onChanged: (String d){
+                                                              json["ans"] = d;
+                                                            },initialValue:json["ans"] ,),
+                                                          ),
+
+                                                          TextButton(onPressed: (){
+
+                                                            data.reference.update(json);
+
+                                                            Navigator.pop(context);
+                                                          }, child: Text("Update")),
+
+                                                          if(false)   InkWell(onTap: (){
+                                                            FirebaseFirestore.instance.collection("questions").add(json);
+                                                            FirebaseFirestore.instance.collection("questions").add(json);
+                                                            Navigator.pop(context);
+
+
+                                                          },),
+
+
+
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    ));
+
+                                                // scaffoldKey.currentState!
+                                                //     .showBottomSheet((context) => Container(
+                                                //   color: Colors.red,
+                                                // ));
+                                              },
+                                                child: Row(
+                                                  children: [
+                                                    if(false)  Container(margin: EdgeInsets.all(5), decoration: BoxDecoration( color: Colors.blue,borderRadius: BorderRadius.circular(2)),child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Text(data.get("quize_type"),style: TextStyle(color: Colors.white),),
+                                                    )),
+
+                                                    Checkbox(value: bar.selectedQuestions.contains(data.id),onChanged: (val){
+                                                      if(val!){
+                                                        bar.add(data.id,data);
+                                                        //Provider.of<QuestionsSelectedProvider>(context, listen: false).
+
+                                                      }else{
+                                                        bar.remove(data.id);
+                                                      }
+
+                                                    },),
+
+
+                                                    Expanded(
+                                                      child: HoverButtons(data: data,onCl: (String d){
+
+                                                      },),
+                                                    ),
+
+                                                  ],
+                                                ),
+                                              ));
+
+                                        }, separatorBuilder: (BuildContext context, int index) { return Container(height: 0.5,width: double.infinity,color: Colors.grey,); },
+                                      );
+                                    },
+                                  ),
+                                ): StatefulBuilder(
+                                    builder: (BuildContext context, StateSetter setStateC) {
+                                      return Dialog(child: Container(width: 500,height: 900,
+                                        child: SingleChildScrollView(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(20.0),
+                                            child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                InkWell(onTap: (){
+                                                  Navigator.pop(context);
+                                                },child: Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(Icons.navigate_before_rounded,color: Colors.blue,),
+                                                      Text("Back",style: TextStyle(color: Colors.blue),),
+                                                    ],
+                                                  ),
+                                                ),),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: TextField(controller: c1,decoration: InputDecoration(label: Text("Question title")),),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: TextField(controller: c2,decoration: InputDecoration(label: Text("Question body")),),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 8),
+                                                  child: ClipRRect(borderRadius: BorderRadius.circular(5),child: Row(
+                                                    children: [
+                                                      Expanded(child: InkWell( onTap: (){
+                                                        setState(() {
+                                                          qt = (qt == questionType.singleChoice)?questionType.multipleChoice:questionType.singleChoice;
+                                                        });
+                                                        print(qt);
+                                                      },
+                                                        child: Container(color: qt == questionType.singleChoice?Colors.blue:Colors.white,
+                                                          child: Center(child: Padding(
+                                                            padding: const EdgeInsets.all(10.0),
+                                                            child: Text("Single choice",style: TextStyle(color: qt == questionType.multipleChoice?Colors.blue:Colors.white ),),
+                                                          ),),),
+                                                      )),
+                                                      Expanded(child: InkWell(onTap: (){
+                                                        setState(() {
+                                                          qt = (qt == questionType.singleChoice)?questionType.multipleChoice:questionType.singleChoice;
+                                                        });
+                                                        print(qt);
+                                                      },
+                                                        child: Container(color: qt == questionType.multipleChoice?Colors.blue:Colors.white,
+                                                          child: Center(child: Padding(
+                                                            padding: const EdgeInsets.all(10.0),
+                                                            child: Text("Multiple choice",style: TextStyle(color: qt == questionType.singleChoice?Colors.blue:Colors.white ),),
+                                                          ),),),
+                                                      )),
+                                                    ],
+                                                  ),),
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Text("Options:", ),
+                                                ),
+                                                ListView.builder(shrinkWrap: true,
+                                                  itemCount: Options.length,
+
+                                                  itemBuilder: (context, index) {
+                                                    TextEditingController c = TextEditingController(text: Options[index]);
+                                                    allController.add(c);
+                                                    return ListTile(trailing: IconButton(onPressed: (){
+                                                      allController.removeAt(index);
+                                                      Options.removeAt(index);
+
+                                                      setStateC(() {
+                                                      });
+
+                                                    },icon: Icon(Icons.delete),),leading: Checkbox(value: index==correctOption,onChanged: (bool? b){
+                                                      if(b == true){
+
+                                                        correctOption = index;
+                                                        setStateC(() {
+                                                        });
+                                                      }
+
+                                                    },),
+                                                      title: Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+                                                        child: TextFormField(onChanged: (String s){
+                                                          Options[index] = s ;
+                                                        },controller: c,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 10),label: Text("Option "+(index+1).toString())),),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                                TextButton(onPressed: (){
+
+                                                  setStateC(() {
+                                                    Options.add("");
+                                                  });
+
+
+
+                                                }, child: Text("Add Options")),
+                                                InkWell( onTap: (){
+
+
+
+                                                  Provider.of<AddedProvider>(context, listen: false).add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
+                                                  setState(() {
+                                                  });
+                                                  Navigator.pop(context);
+
+                                                },
+                                                  child: Card(color: Colors.blue,child: Padding(
+                                                    padding: const EdgeInsets.all(10.0),
+                                                    child: Text("Save",style: TextStyle(color: Colors.white),),
+                                                  ),),
+                                                ),
+
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),);
+                                    }
+                                ));
+                          },
+                            child: Card(color: Colors.blue,child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
+                              child: Text("Select Question",style: TextStyle(color: Colors.white),),
+                            ),),
+                          ),
+                        ],
                       ),
 
 
@@ -920,7 +1213,7 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
 
                                         InkWell(onTap: (){
                                           FirebaseFirestore.instance.collection("questions").add(json);
-                                          FirebaseFirestore.instance.collection("questionsN").add(json);
+                                          FirebaseFirestore.instance.collection("questions").add(json);
                                           Navigator.pop(context);
 
 

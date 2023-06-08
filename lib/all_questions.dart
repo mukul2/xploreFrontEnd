@@ -36,7 +36,7 @@ class _Questions_AllState extends State<Questions_All> {
     super.initState();
     Provider.of<AddedProvider>(context, listen: false).questions = [];
     
-    http.get(Uri.parse("https://mmuenglish.com/api/import_batches")).then((value) {
+   if(false) http.get(Uri.parse("https://mmuenglish.com/api/import_batches")).then((value) {
 
       dynamic d = jsonDecode(value.body);
       List data = d["data"];
@@ -165,7 +165,7 @@ class _Questions_AllState extends State<Questions_All> {
                             }, child: Text("Add Options")),
                             InkWell( onTap: (){
                               
-                              FirebaseFirestore.instance.collection("questionsN").add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
+                              FirebaseFirestore.instance.collection("questions").add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
 
 
 
@@ -762,7 +762,7 @@ class _Questions_AllState extends State<Questions_All> {
 
                                         InkWell(onTap: (){
                                           FirebaseFirestore.instance.collection("questions").add(json);
-                                          FirebaseFirestore.instance.collection("questionsN").add(json);
+                                          FirebaseFirestore.instance.collection("questions").add(json);
                                           Navigator.pop(context);
 
 
@@ -953,7 +953,7 @@ class _Questions_AllState extends State<Questions_All> {
           ),
           Expanded(
             child: FirestoreQueryBuilder(pageSize: 20,
-              query: FirebaseFirestore.instance.collection(widget.type ==questionbank.type1? "questions":"questionsN").where("quize_type",isEqualTo: "SC") ,
+              query: FirebaseFirestore.instance.collection(widget.type ==questionbank.type1? "questions":"questions").where("quize_type",isEqualTo: "SC") ,
               builder: (context, snapshot, _) {
                 if (snapshot.isFetching) {
                   return Center(child: const Text("Please wait"));
@@ -1040,7 +1040,7 @@ class _Questions_AllState extends State<Questions_All> {
 
                        if(false)   InkWell(onTap: (){
                           FirebaseFirestore.instance.collection("questions").add(json);
-                          FirebaseFirestore.instance.collection("questionsN").add(json);
+                          FirebaseFirestore.instance.collection("questions").add(json);
                           Navigator.pop(context);
 
 
@@ -1261,7 +1261,7 @@ class _Questions_AllState extends State<Questions_All> {
                                 //
                                 InkWell(onTap: (){
                                   FirebaseFirestore.instance.collection("questions").add(json);
-                                  FirebaseFirestore.instance.collection("questionsN").add(json);
+                                  FirebaseFirestore.instance.collection("questions").add(json);
                                   Navigator.pop(context);
 
 
@@ -1622,7 +1622,7 @@ class _HoverButtonsState extends State<HoverButtons> {
 
                       if(false)   InkWell(onTap: (){
                         FirebaseFirestore.instance.collection("questions").add(json);
-                        FirebaseFirestore.instance.collection("questionsN").add(json);
+                        FirebaseFirestore.instance.collection("questions").add(json);
                         Navigator.pop(context);
 
 
@@ -1713,7 +1713,7 @@ class _HoverButtonsState extends State<HoverButtons> {
 
                           InkWell(onTap: (){
                             FirebaseFirestore.instance.collection("questions").add(json);
-                            FirebaseFirestore.instance.collection("questionsN").add(json);
+                            FirebaseFirestore.instance.collection("questions").add(json);
                             Navigator.pop(context);
 
 

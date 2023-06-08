@@ -195,7 +195,7 @@ class _Questions_AllState extends State<Questions_All_new> {
                                           json["ans"] = d;
                                         },initialValue:json["ans"] ,),
                                         InkWell(onTap: (){
-                                          FirebaseFirestore.instance.collection("questionsN").add(json);
+                                          FirebaseFirestore.instance.collection("questions").add(json);
 
 
                                         },
@@ -355,7 +355,7 @@ class _Questions_AllState extends State<Questions_All_new> {
       children: [
         Expanded(
           child: FirestoreQueryBuilder(pageSize: 20,
-            query: FirebaseFirestore.instance.collection("questionsN").where("quize_type",isEqualTo: "SC") ,
+            query: FirebaseFirestore.instance.collection("questions").where("quize_type",isEqualTo: "SC") ,
             builder: (context, snapshot, _) {
               if (snapshot.isFetching) {
                 return Center(child: const Text("Please wait"));
@@ -407,7 +407,7 @@ class _Questions_AllState extends State<Questions_All_new> {
         ),
         Expanded(
           child: FirestoreQueryBuilder(pageSize: 20,
-            query: FirebaseFirestore.instance.collection("questionsN").where("quize_type",isEqualTo: "MC") ,
+            query: FirebaseFirestore.instance.collection("questions").where("quize_type",isEqualTo: "MC") ,
             builder: (context, snapshot, _) {
               if (snapshot.isFetching) {
                 return Center(child: const Text("Please wait"));
