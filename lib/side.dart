@@ -1,3 +1,5 @@
+import 'package:admin/tab_questions.dart';
+import 'package:admin/tab_quiz.dart';
 import 'package:flutter/material.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'Quizes.dart';
@@ -109,7 +111,7 @@ class ExampleSidebarX extends StatelessWidget {
         ),
       ),
       extendedTheme: const SidebarXTheme(
-        width: 200,
+        width: 300,
         decoration: BoxDecoration(
           color: canvasColor,
         ),
@@ -120,7 +122,7 @@ class ExampleSidebarX extends StatelessWidget {
           height: 100,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Image.asset('assets/images/avatar.png'),
+            child: Text("Logo",style: TextStyle(fontSize: 35,color: Colors.white),),
           ),
         );
       },
