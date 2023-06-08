@@ -11,7 +11,7 @@ import 'all_quizes.dart';
 import 'drawer.dart';
 import 'firebase_options.dart';
 import 'utils.dart';
-
+import 'package:http/http.dart' as http;
 Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -86,6 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+
   }
 
   @override

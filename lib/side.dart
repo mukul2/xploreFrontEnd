@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sidebarx/sidebarx.dart';
+import 'Quizes.dart';
 import 'utils.dart';
 import 'Questions_new.dart';
 import 'all_questions.dart';
@@ -133,20 +134,9 @@ class ExampleSidebarX extends StatelessWidget {
         ),
         const SidebarXItem(
           icon: Icons.search,
-          label: 'Search',
+          label: 'Quiz',
         ),
-        const SidebarXItem(
-          icon: Icons.people,
-          label: 'People',
-        ),
-        const SidebarXItem(
-          icon: Icons.favorite,
-          label: 'Favorites',
-        ),
-        const SidebarXItem(
-          iconWidget: FlutterLogo(size: 20),
-          label: 'Flutter',
-        ),
+
       ],
     );
   }
@@ -170,6 +160,8 @@ class _ScreensExample extends StatelessWidget {
         switch (controller.selectedIndex) {
           case 0:
             return Questions_All(type: questionbank.type2,);
+            case 1:
+            return QuizFromFirebase();
           default:
             return Text(
               pageTitle,
