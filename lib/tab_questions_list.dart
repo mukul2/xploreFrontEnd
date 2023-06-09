@@ -517,12 +517,12 @@ class _tab_questions_list_itemsState extends State<tab_questions_list_items> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                      child: data.get("title").toString().length==0? Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(data.get("title")),
                           HtmlWidget(data.get("q")),
                         ],
-                      ),
+                      ):Text(data.get("title")),
                     ),
 
                   ],

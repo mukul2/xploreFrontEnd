@@ -1,8 +1,12 @@
+import 'package:admin/courses.dart';
 import 'package:admin/tab_questions.dart';
 import 'package:admin/tab_quiz.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'Quizes.dart';
+import 'login.dart';
 import 'utils.dart';
 import 'Questions_new.dart';
 import 'all_questions.dart';
@@ -11,15 +15,55 @@ void main() {
   runApp(SidebarXExampleApp());
 }
 
-class SidebarXExampleApp extends StatelessWidget {
+class SidebarXExampleApp extends StatefulWidget {
   SidebarXExampleApp({Key? key}) : super(key: key);
 
+  @override
+  State<SidebarXExampleApp> createState() => _SidebarXExampleAppState();
+}
+
+class _SidebarXExampleAppState extends State<SidebarXExampleApp> {
   final _controller = SidebarXController(selectedIndex: 0, extended: true);
+
   final _key = GlobalKey<ScaffoldState>();
+
+  bool loggedIn = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    FirebaseAuth.instance
+        .authStateChanges()
+        .listen((User? user) {
+      if (user == null) {
+        setState(() {
+          loggedIn = false;
+        });
+        print('User is currently signed out!');
+      } else {
+
+        FirebaseFirestore.instance.collection("mmu-users").where("uid",isEqualTo: FirebaseAuth.instance.currentUser!.uid).get().then((value) {
+
+          try{
+            if(value.docs.first.get("type")=="admin"){
+              setState(() {
+                loggedIn = true;
+
+              });
+
+            }
+          }catch(e){
+
+          }
+        });
+        print('User is signed in!');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Builder(
+    return loggedIn? Builder(
       builder: (context) {
         final isSmallScreen = MediaQuery.of(context).size.width < 600;
         return Scaffold(
@@ -54,7 +98,7 @@ class SidebarXExampleApp extends StatelessWidget {
           ),
         );
       },
-    );
+    ):Login();
   }
 }
 
@@ -111,7 +155,7 @@ class ExampleSidebarX extends StatelessWidget {
         ),
       ),
       extendedTheme: const SidebarXTheme(
-        width: 300,
+        width: 250,
         decoration: BoxDecoration(
           color: canvasColor,
         ),
@@ -137,6 +181,16 @@ class ExampleSidebarX extends StatelessWidget {
         const SidebarXItem(
           icon: Icons.search,
           label: 'Quiz',
+        ),
+        const SidebarXItem(
+          icon: Icons.search,
+          label: 'Courses',
+        ),
+         SidebarXItem(
+          icon: Icons.logout,
+          label: 'Logout',onTap: (){
+            FirebaseAuth.instance.signOut();
+         },
         ),
 
       ],
@@ -164,6 +218,8 @@ class _ScreensExample extends StatelessWidget {
             return Questions_All(type: questionbank.type1,);
             case 1:
             return QuizFromFirebase();
+          case 2:
+            return  CourseTab();
           default:
             return Text(
               pageTitle,

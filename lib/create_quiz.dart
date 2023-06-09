@@ -168,24 +168,28 @@ class _Create_quiz_activityState extends State<Create_quiz_activity> {
             ),
           ),
 
-          InkWell( onTap: (){
+          Center(
+            child: InkWell( onTap: (){
 
-            FirebaseFirestore.instance.collection("questions").add({"created_at":DateTime.now().microsecondsSinceEpoch,"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
+              FirebaseFirestore.instance.collection("questions").add({"created_at":DateTime.now().microsecondsSinceEpoch,"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
 
 
 
-            // Provider.of<AddedProvider>(context, listen: false).add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
-            // setState(() {
-            // });
-            Navigator.pop(context);
+              // Provider.of<AddedProvider>(context, listen: false).add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
+              // setState(() {
+              // });
+              Navigator.pop(context);
 
-          },
-            child: Card(color: Colors.blue,child: Container(
-              child: Padding(
-                padding:  EdgeInsets.symmetric(vertical: 10,horizontal: 18),
-                child: Text("Save",style: TextStyle(color: Colors.white),),
-              ),
-            ),),
+            },
+              child: Card(color: Colors.blue,child: Container(width: MediaQuery.of(context).size.width * 0.5,
+                child: Center(
+                  child: Padding(
+                    padding:  EdgeInsets.symmetric(vertical: 10,horizontal: 18),
+                    child: Text("Save",style: TextStyle(color: Colors.white),),
+                  ),
+                ),
+              ),),
+            ),
           ),
 
         ],

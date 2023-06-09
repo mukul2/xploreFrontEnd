@@ -177,6 +177,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.12"
+  dropdown_search:
+    dependency: "direct main"
+    description:
+      name: dropdown_search
+      sha256: "55106e8290acaa97ed15bea1fdad82c3cf0c248dd410e651f5a8ac6870f783ab"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.6"
+  duration_picker:
+    dependency: "direct main"
+    description:
+      name: duration_picker
+      sha256: "052b34dac04c29f3849bb3817a26c5aebe9e5f0697c3a374be87db2b84d75753"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   email_validator:
     dependency: transitive
     description:
@@ -210,7 +226,7 @@ packages:
     source: hosted
     version: "6.1.4"
   firebase_auth:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_auth
       sha256: "19508428ca37f611ae47067ee6ebb3ba5a27014941177cc224f71bf7d0720cdd"
@@ -318,6 +334,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.0"
+  flutter_datetime_picker:
+    dependency: "direct main"
+    description:
+      name: flutter_datetime_picker
+      sha256: "8e695c63c769350e541951227c2775190ec73ceda774a315b1dc9a99d5facfe5"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.5.1"
   flutter_facebook_auth:
     dependency: transitive
     description:

@@ -31,11 +31,12 @@ class MyApp extends StatelessWidget {
     ChangeNotifierProvider<DrawerProviderProvider>(create: (context) => DrawerProviderProvider()),
     ChangeNotifierProvider<QuestionsSelectedProvider>(create: (context) => QuestionsSelectedProvider()),
     ChangeNotifierProvider<AddedProvider>(create: (context) => AddedProvider()),
+    ChangeNotifierProvider<AddedProviderOnlyNew>(create: (context) => AddedProviderOnlyNew()),
 
         ],
       child: MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(fontFamily: 'Nexa',inputDecorationTheme: InputDecorationTheme( border:  OutlineInputBorder(
+      theme: ThemeData(fontFamily: 'Nexa',inputDecorationTheme: InputDecorationTheme( labelStyle: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),border:  OutlineInputBorder(
       // width: 0.0 produces a thin "hairline" border
       borderSide:  BorderSide(color:Colors.black.withOpacity(0.8), width: 0.5,),borderRadius: BorderRadius.circular(3),
       ),

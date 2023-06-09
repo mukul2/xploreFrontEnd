@@ -816,7 +816,7 @@ class _Questions_AllState extends State<Questions_All> {
     return Scaffold(key:scaffoldKey ,
 
 
-      body: Container(margin: EdgeInsets.all(10), decoration: BoxDecoration(border: Border.all(color: Colors.grey.withOpacity(0.2)),
+      body: Container(margin: EdgeInsets.all(2), decoration: BoxDecoration(border: Border.all(color: Colors.grey.withOpacity(0.2)),
         color: Colors.white,
         borderRadius: BorderRadius.only(
             topLeft: Radius.circular(2),

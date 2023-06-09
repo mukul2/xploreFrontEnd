@@ -104,3 +104,23 @@ class AddedProvider extends ChangeNotifier {
 
 
 }
+class AddedProviderOnlyNew extends ChangeNotifier {
+
+  List _questions = [];
+
+  List get questions => _questions;
+
+  set questions(List value) {
+    _questions = value;
+    notifyListeners();
+  }
+  void add(dynamic s){
+    _questions.add(s);
+    notifyListeners();
+  }
+
+
+
+
+
+}

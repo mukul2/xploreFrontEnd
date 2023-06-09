@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'dart:html';
+import 'package:intl/intl.dart';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:duration_picker/duration_picker.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:pdf/pdf.dart';
@@ -22,6 +26,16 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   BuildContext? ccc;
   questionType qt = questionType.singleChoice;
+  TextEditingController controller1 = TextEditingController();
+  TextEditingController controller2 = TextEditingController();
+  TextEditingController controller3 = TextEditingController();
+  TextEditingController controller4 = TextEditingController();
+  TextEditingController controller5 = TextEditingController();
+  TextEditingController controller6 = TextEditingController();
+  TextEditingController controller7 = TextEditingController();
+  TextEditingController controller8 = TextEditingController();
+  TextEditingController controller9 = TextEditingController();
+  TextEditingController controller10 = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold( key: scaffoldKey,appBar: PreferredSize(preferredSize: Size(0,60),child: Container(height: 60,child: Column(
@@ -30,7 +44,7 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
           children: [
             InkWell( onTap: (){
 
-              scaffoldKey.currentState!.showBottomSheet((context) => Container(
+             scaffoldKey.currentState!.showBottomSheet((context) => Container(
                   color: Colors.white,
                   height: MediaQuery.of(context).size.height,child: SingleChildScrollView(
                   child: Padding(
@@ -39,6 +53,11 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
                       Padding(
                         padding:  EdgeInsets.only(bottom: 10),
                         child: InkWell( onTap: (){
+
+                          Provider.of<QuestionsSelectedProvider>(context, listen: false).totalMarks = 0;
+                          Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestionsBody =[];
+                          Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestions = [];
+
                           Navigator.pop(context);
                         },
                           child: Row(
@@ -57,13 +76,70 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
                           Expanded(flex: 3,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Title")),),
+                              child: TextField(controller: controller1,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Title")),),
                             ),
                           ),
                           Expanded(flex: 1,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Number of quiz takes")),),
+                              child: TextField(controller: controller2,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Number of quiz takes")),),
+                            ),
+                          ),
+                        ],
+                      ),
+
+    Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child:true?FutureBuilder<QuerySnapshot>(
+                                  future: FirebaseFirestore.instance.collection("courses").orderBy("course_title").get(), // a previously-obtained Future<String> or null
+                                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                    if(snapshot.hasData){
+                                      List<String>all = [];
+                                      for(int  i = 0; i < snapshot.data!.docs.length ; i++){
+                                        all.add(snapshot.data!.docs[i].get("course_title"));
+                                      }
+
+                                      return DropdownSearch<String>(
+                                        items: all,
+                                      );
+                                    }else{
+                                      return CupertinoActivityIndicator();
+                                    }
+                                  }): TextField(controller: controller3,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Course")),),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(textAlign: TextAlign.end,onTap: () async {
+                                var duration = await showDurationPicker(
+                                  context: context,
+                                  initialTime: Duration(minutes: 30),
+                                );
+                               setState(() {
+                                 String twoDigits(int n) => n.toString().padLeft(2, "0");
+                                 String twoDigitMinutes = twoDigits(duration!.inMinutes.remainder(60));
+                                 String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+
+                                 controller4.text = "${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+                               });
+
+                              },controller: controller4,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Eaxm Duration Time(H:M:S)")),),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(controller: controller5,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Total Exam Marks")),),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextField(controller: controller6,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Pass Mark")),),
                             ),
                           ),
                         ],
@@ -73,47 +149,54 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child:TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Course")),),
+                              child: TextField(onTap: () async {
+                                DatePicker.showDatePicker(
+                                  context,
+                                  dateFormat: 'dd MMMM yyyy HH:mm',
+                                  initialDateTime: DateTime.now(),
+                                  minDateTime: DateTime(2000),
+                                  maxDateTime: DateTime(3000),
+                                  onMonthChangeStartWithFirstDate: true,
+                                  onConfirm: (dateTime, List<int> index) {
+                                    DateTime selectdate = dateTime;
+                                    final selIOS = DateFormat('dd-MMM-yyyy - HH:mm').format(selectdate);
+                                    print(selIOS);
+                                  },
+                                );
+                                // DateTime? pickedDate = await showDatePicker(
+                                //     context: context,
+                                //     initialDate: DateTime.now(),
+                                //     firstDate: DateTime(1950),
+                                //     //DateTime.now() - not to allow to choose before today.
+                                //     lastDate: DateTime(2100));
+                                //
+                                // if (pickedDate != null) {
+                                //   print(
+                                //       pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                                //   String formattedDate =
+                                //   DateFormat('yyyy-MM-dd HH:mm').format(pickedDate);
+                                //   print(
+                                //       formattedDate); //formatted date output using intl package =>  2021-03-16
+                                //   setState(() {
+                                //     controller7.text = formattedDate; //set output date to TextField value.
+                                //   });
+                                // } else {}
+
+
+
+                              },controller: controller7,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Exam Start Date")),),
                             ),
                           ),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Eaxm Duration Time(H:M:S)")),),
+                              child: TextField(controller: controller8,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Exam End Date")),),
                             ),
                           ),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Total Exam Marks")),),
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Pass Mark")),),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Exam Start Date")),),
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Exam End Date")),),
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Published")),),
+                              child: TextField(controller: controller9,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Published")),),
                             ),
                           ),
                           Expanded(
@@ -127,7 +210,7 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
 
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: TextField(minLines: 7,maxLines: 10,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),label: Text("Quiz Content")),),
+                        child: TextField(controller: controller10,minLines: 7,maxLines: 10,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),label: Text("Quiz Content")),),
                       ),
                       Consumer<AddedProvider>(
                         builder: (_, bar, __) =>ListView.builder(shrinkWrap: true,
@@ -195,7 +278,7 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
                       ),
 
 
-                      Row(
+                      Row(mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           InkWell( onTap: (){
                             //questions
@@ -320,6 +403,7 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
 
 
                                                   Provider.of<AddedProvider>(context, listen: false).add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
+                                                  Provider.of<AddedProviderOnlyNew>(context, listen: false).add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
                                                   setState(() {
                                                   });
                                                   Navigator.pop(context);
@@ -387,9 +471,29 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
                                           final data = snapshot.docs[index];
                                           ccc = context;
                                           //QuestionsSelectedProvider
-                                          return  true?HoverButtons(data: data,onCl: (String d){
+                                          return  true?Consumer<QuestionsSelectedProvider>(
+                                              builder: (_, bar, __) => InkWell(onTap: (){},child: Row(children: [
+                                                Checkbox(value: bar.selectedQuestions.contains(data.id),onChanged: (val){
+                                                  if(val!){
+                                                    bar.add(data.id,data);
+                                                    //Provider.of<QuestionsSelectedProvider>(context, listen: false).
 
-                                          },): Consumer<QuestionsSelectedProvider>(
+                                                  }else{
+                                                    bar.remove(data.id);
+                                                  }
+
+                                                },),
+                                                Expanded(
+                                                  child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,children: [
+                                                    Text(data["title"]),
+                                                    HtmlWidget(data["q"]),
+                                                  ],),
+                                                ),
+
+
+
+
+                                              ],))): Consumer<QuestionsSelectedProvider>(
                                               builder: (_, bar, __) =>InkWell(onTap: (){
                                                 Map<String,dynamic> json = data.data() as Map<String,dynamic>;
                                                 json["created_at"] = DateTime.now().millisecondsSinceEpoch;
@@ -626,7 +730,20 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
                                         ),
                                       ),);
                                     }
-                                ));
+                                )).whenComplete(() {
+
+                                  for(int  i = 0; i < Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestionsBody.length ; i++){
+                                    Provider.of<AddedProvider>(context, listen: false).add(Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestionsBody[i]);
+
+                                  }
+
+
+
+                              Provider.of<QuestionsSelectedProvider>(context, listen: false).totalMarks = 0;
+                              Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestionsBody =[];
+                              Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestions = [];
+
+                            });
                           },
                             child: Card(color: Colors.blue,child: Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
@@ -637,9 +754,52 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
                       ),
 
 
+                      Center(
+                        child: InkWell( onTap: (){
+
+                          FirebaseFirestore.instance.collection("quizes").add({"created_at":DateTime.now().microsecondsSinceEpoch,
+                            "course_id":controller3.text,
+                            "exam_end":controller8.text,
+                            "exam_start":controller7.text,
+                            "exam_time":controller4.text,
+                            "id":"",
+                            "num_retakes":controller2.text,
+                            "pass_mark":controller6.text,
+
+                            "quiz":[],
+                            "retakes":"",
+                            "section_details":controller10.text,
+                            "status":controller9.text,
+                            "title":controller1.text,
+                            "total_point":controller5.text,
+
+
+                          });
+
+
+
+                          // Provider.of<AddedProvider>(context, listen: false).add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
+                          // setState(() {
+                          // });
+                          Navigator.pop(context);
+
+                        },
+                          child: Card(color: Colors.blue,child: Container(width: MediaQuery.of(context).size.width * 0.5,
+                            child: Center(
+                              child: Padding(
+                                padding:  EdgeInsets.symmetric(vertical: 10,horizontal: 18),
+                                child: Text("Save & Close",style: TextStyle(color: Colors.white),),
+                              ),
+                            ),
+                          ),),
+                        ),
+                      ),
+
+
 
                     ],),
                   ))));
+
 
               BuildContext cN ;
 
