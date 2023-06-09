@@ -42,7 +42,7 @@ class _Questions_AllState extends State<Questions_All> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<AddedProvider>(context, listen: false).questions = [];
+    //Provider.of<AddedProvider>(context, listen: false).questions = [];
   if(false)  allWidgets.add(Card(margin: EdgeInsets.zero,shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(0.0),
     ),

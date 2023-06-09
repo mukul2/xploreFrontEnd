@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:html';
+import 'package:admin/picker.dart';
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +14,7 @@ import 'package:pdf/pdf.dart';
 import 'package:provider/provider.dart';
 import 'AppProviders/DrawerProvider.dart';
 import 'all_questions.dart';
+import 'all_quiz_con.dart';
 import 'enums.dart';
 import 'utils.dart';import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -38,18 +41,20 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
   TextEditingController controller10 = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    return Scaffold(key: scaffoldKey,body: false?Text("OKOK"): Quizes_tabs_context(scaffoldKey: scaffoldKey,),);
     return Scaffold( key: scaffoldKey,appBar: PreferredSize(preferredSize: Size(0,60),child: Container(height: 60,child: Column(
       children: [
         Container(color: Colors.white,height: 59,child: Row(
           children: [
             InkWell( onTap: (){
-
+              final format = DateFormat("yyyy-MM-dd HH:mm");
              scaffoldKey.currentState!.showBottomSheet((context) => Container(
                   color: Colors.white,
                   height: MediaQuery.of(context).size.height,child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Column(children: [
+
                       Padding(
                         padding:  EdgeInsets.only(bottom: 10),
                         child: InkWell( onTap: (){
@@ -98,11 +103,15 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
                                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                                     if(snapshot.hasData){
                                       List<String>all = [];
+                                      List<String>allId = [];
                                       for(int  i = 0; i < snapshot.data!.docs.length ; i++){
                                         all.add(snapshot.data!.docs[i].get("course_title"));
+                                        allId.add(snapshot.data!.docs[i].id);
                                       }
 
-                                      return DropdownSearch<String>(
+                                      return DropdownSearch<String>(onChanged: (String? s){
+                                        controller3.text =allId[all.indexOf(s!)];
+                                      },
                                         items: all,
                                       );
                                     }else{
@@ -148,21 +157,57 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: TextField(onTap: () async {
-                                DatePicker.showDatePicker(
-                                  context,
-                                  dateFormat: 'dd MMMM yyyy HH:mm',
-                                  initialDateTime: DateTime.now(),
-                                  minDateTime: DateTime(2000),
-                                  maxDateTime: DateTime(3000),
-                                  onMonthChangeStartWithFirstDate: true,
-                                  onConfirm: (dateTime, List<int> index) {
-                                    DateTime selectdate = dateTime;
-                                    final selIOS = DateFormat('dd-MMM-yyyy - HH:mm').format(selectdate);
-                                    print(selIOS);
-                                  },
-                                );
+                              padding:  EdgeInsets.all(8.0),
+                              child: true? Wrap(
+                                children: [
+                                  Text("Exam start time"),
+                                  DateTimeField(controller:controller7 ,
+                                    format: format,
+                                    onShowPicker: (context, currentValue) async {
+                                      return await showDatePicker(
+                                        context: context,
+                                        firstDate: DateTime(1900),
+                                        initialDate: currentValue ?? DateTime.now(),
+                                        lastDate: DateTime(2100),
+                                      ).then((DateTime? date) async {
+                                        if (date != null) {
+                                          final time = await showTimePicker(
+                                            context: context,
+                                            initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+                                          );
+                                          return DateTimeField.combine(date, time);
+                                        } else {
+                                          return currentValue;
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ): TextField(onTap: () async {
+
+
+                                // dt. DatePicker.showDateTimePicker(context,
+                                //     showTitleActions: true,
+                                //     minTime: DateTime(2020, 5, 5, 20, 50),
+                                //     maxTime: DateTime(2020, 6, 7, 05, 09), onChanged: (date) {
+                                //       print('change $date in time zone ' +
+                                //           date.timeZoneOffset.inHours.toString());
+                                //     }, onConfirm: (date) {
+                                //       print('confirm $date');
+                                //     }, locale: dt.LocaleType.en);
+                                // DatePicker.showDatePicker(
+                                //   context,
+                                //   dateFormat: 'dd MMMM yyyy HH:mm',
+                                //   initialDateTime: DateTime.now(),
+                                //   minDateTime: DateTime(2000),
+                                //   maxDateTime: DateTime(3000),
+                                //   onMonthChangeStartWithFirstDate: true,
+                                //   onConfirm: (dateTime, List<int> index) {
+                                //     DateTime selectdate = dateTime;
+                                //     final selIOS = DateFormat('dd-MMM-yyyy - HH:mm').format(selectdate);
+                                //     print(selIOS);
+                                //   },
+                                // );
                                 // DateTime? pickedDate = await showDatePicker(
                                 //     context: context,
                                 //     initialDate: DateTime.now(),
@@ -190,13 +235,47 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: TextField(controller: controller8,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Exam End Date")),),
+                              child:  Wrap(
+                                children: [
+                                  Text("Exam start time"),
+                                  DateTimeField(controller:controller8 ,
+                                    format: format,
+                                    onShowPicker: (context, currentValue) async {
+                                      return await showDatePicker(
+                                        context: context,
+                                        firstDate: DateTime(1900),
+                                        initialDate: currentValue ?? DateTime.now(),
+                                        lastDate: DateTime(2100),
+                                      ).then((DateTime? date) async {
+                                        if (date != null) {
+                                          final time = await showTimePicker(
+                                            context: context,
+                                            initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+                                          );
+                                          return DateTimeField.combine(date, time);
+                                        } else {
+                                          return currentValue;
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: TextField(controller: controller9,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Published")),),
+                              child: true?Wrap(
+                                children: [
+                                  Text("Published"),
+                                  DropdownSearch<String>(
+                                    items: ["Yes","No"],onChanged: (String? s){
+                                    controller9.text = s!;
+                                  },
+                                  ),
+                                ],
+                              ): TextField(controller: controller9,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Published")),),
                             ),
                           ),
                           Expanded(
@@ -757,31 +836,55 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
                       Center(
                         child: InkWell( onTap: (){
 
-                          FirebaseFirestore.instance.collection("quizes").add({"created_at":DateTime.now().microsecondsSinceEpoch,
-                            "course_id":controller3.text,
-                            "exam_end":controller8.text,
-                            "exam_start":controller7.text,
-                            "exam_time":controller4.text,
-                            "id":"",
-                            "num_retakes":controller2.text,
-                            "pass_mark":controller6.text,
+                          try{
+                            List q = [];
+                            print("total AddedProvider ");
+                            print(Provider.of<AddedProvider>(context, listen: false).questions.length);
 
-                            "quiz":[],
-                            "retakes":"",
-                            "section_details":controller10.text,
-                            "status":controller9.text,
-                            "title":controller1.text,
-                            "total_point":controller5.text,
+                            for(int i = 0 ; i < Provider.of<AddedProvider>(context, listen: false).questions.length ; i++){
+                              //print(Provider.of<AddedProvider>(context, listen: false).questions[i].data() );
+                              try{
+                               q.add(Provider.of<AddedProvider>(context, listen: false).questions[i].data() );
+                               // q.add({"1":1} );
+                              }catch(e){
+                                q.add(Provider.of<AddedProvider>(context, listen: false).questions[i] );
+                              //  q.add(Provider.of<AddedProvider>(context, listen: false).questions[i] );
+                              }
+
+                            }
+
+                           FirebaseFirestore.instance.collection("quizz2").add({"created_at":DateTime.now().microsecondsSinceEpoch,
+                              "course_id":controller3.text,
+                              "exam_end":controller8.text,
+                              "exam_start":controller7.text,
+                              "exam_time":controller4.text,
+                              "id":"",
+                              "num_retakes":controller2.text,
+                              "pass_mark":controller6.text,
+
+                              "quiz":q,
+                              "retakes":"",
+                              "section_details":controller10.text,
+                              "status":controller9.text,
+                              "title":controller1.text,
+                              "total_point":controller5.text,
 
 
-                          });
+                            });
 
 
 
-                          // Provider.of<AddedProvider>(context, listen: false).add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
-                          // setState(() {
-                          // });
-                          Navigator.pop(context);
+                            // Provider.of<AddedProvider>(context, listen: false).add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
+                            // setState(() {
+                            // });
+                            Navigator.pop(context);
+                          }catch(e){
+                            showDialog(
+                                context: context,
+                                builder: (_) =>AlertDialog(title: Text("Quiz save error"),content: Text(e.toString()),));
+
+                          }
+
 
                         },
                           child: Card(color: Colors.blue,child: Container(width: MediaQuery.of(context).size.width * 0.5,
@@ -1558,9 +1661,9 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 15),
-                  child: Text(movie.get("questions").length.toString()+" questions"),
+                  child: Text(movie.get("quiz").length.toString()+" questions"),
                 ),
-                Text(movie.get("totalMarks").toString()+" marks")
+                Text(movie.get("total_point").toString()+" marks")
               ],
             ),);
             return Text(movie.get("title") );
