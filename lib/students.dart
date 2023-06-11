@@ -34,9 +34,9 @@ class _StudentsState extends State<Students> {
   @override
   Widget build(BuildContext context) {
 
-    return  FutureBuilder(
+    return  StreamBuilder(
 
-        future:FirebaseFirestore.instance.collection('users') .get(),
+        stream:FirebaseFirestore.instance.collection('users') .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snap) {
 
 

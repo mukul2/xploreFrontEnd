@@ -92,9 +92,9 @@ class _StudentsState extends State<QuestionsTable> {
   @override
   Widget build(BuildContext context) {
 
-    return  FutureBuilder(
+    return StreamBuilder(
 
-        future:FirebaseFirestore.instance.collection("questionsN").get(),
+        stream:FirebaseFirestore.instance.collection("questionsN").snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snap) {
 
         //  final DataTableSource _allUsers = MyData(snap.data!.docs,widget.scaffoldKey);

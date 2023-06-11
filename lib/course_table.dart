@@ -46,9 +46,9 @@ class _StudentsState extends State<CourseTable> {
   Widget build(BuildContext context) {
 
     return  Scaffold(
-      body: FutureBuilder(
+      body: StreamBuilder(
 
-          future:FirebaseFirestore.instance.collection('courses').get(),
+          stream:FirebaseFirestore.instance.collection('courses').snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snap) {
 
 
