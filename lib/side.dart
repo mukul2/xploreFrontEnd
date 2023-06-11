@@ -1,4 +1,5 @@
 import 'package:admin/courses.dart';
+import 'package:admin/students.dart';
 import 'package:admin/tab_questions.dart';
 import 'package:admin/tab_quiz.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'Quizes.dart';
+import 'course_table.dart';
 import 'login.dart';
 import 'utils.dart';
 import 'Questions_new.dart';
@@ -186,6 +188,10 @@ class ExampleSidebarX extends StatelessWidget {
           icon: Icons.search,
           label: 'Courses',
         ),
+        const SidebarXItem(
+          icon: Icons.search,
+          label: 'Students',
+        ),
          SidebarXItem(
           icon: Icons.logout,
           label: 'Logout',onTap: (){
@@ -219,7 +225,9 @@ class _ScreensExample extends StatelessWidget {
             case 1:
             return QuizFromFirebase();
           case 2:
-            return  CourseTab();
+            return  CourseTable();
+          case 3:
+            return  Students();
           default:
             return Text(
               pageTitle,

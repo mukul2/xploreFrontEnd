@@ -1,3 +1,4 @@
+import 'package:admin/quizes_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'dart:convert';
@@ -43,7 +44,8 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
   TextEditingController controller10 = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: PreferredSize(preferredSize: Size(0,60),child: Container(height: 60,child: Column(
+    return Scaffold(
+      appBar: PreferredSize(preferredSize: Size(0,60),child: Container(height: 60,child: Column(
       children: [
         Container(color: Colors.white,height: 59,child: Row(
           children: [
@@ -511,7 +513,7 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
                         },
                           child: Card(color: Colors.blue,child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 8),
-                            child: Text("Add Question",style: TextStyle(color: Colors.white),),
+                            child: Text("Create Question",style: TextStyle(color: Colors.white),),
                           ),),
                         ),
                         InkWell( onTap: (){
@@ -533,7 +535,14 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
                           showDialog(
                               context: context,
                               builder: (_) => true?Dialog(
-                                child: FirestoreQueryBuilder(pageSize: 20,
+                                child:Scaffold(appBar: PreferredSize(preferredSize: Size(0,50),child: Row(
+                                  children: [
+                                    TextButton(onPressed: (){
+                                      Navigator.pop(context);
+
+                                    }, child: Text("Done")),
+                                  ],
+                                ) ,),body:  FirestoreQueryBuilder(pageSize: 20,
                                   query: FirebaseFirestore.instance.collection( "questions").where("quize_type",isEqualTo: "SC") ,
                                   builder: (context, snapshot, _) {
                                     if (snapshot.isFetching) {
@@ -555,7 +564,7 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
                                         }
 
                                         final data = snapshot.docs[index];
-                                      //  ccc = context;
+                                        //  ccc = context;
                                         //QuestionsSelectedProvider
                                         return  true?Consumer<QuestionsSelectedProvider>(
                                             builder: (_, bar, __) => InkWell(onTap: (){},child: Row(children: [
@@ -691,7 +700,7 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
                                       }, separatorBuilder: (BuildContext context, int index) { return Container(height: 0.5,width: double.infinity,color: Colors.grey,); },
                                     );
                                   },
-                                ),
+                                ),),
                               ): StatefulBuilder(
                                   builder: (BuildContext context, StateSetter setStateC) {
                                     return Dialog(child: Container(width: 500,height: 900,
@@ -854,11 +863,16 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
                               q.add(Provider.of<AddedProvider>(context, listen: false).questions[i].data() );
                               // q.add({"1":1} );
                             }catch(e){
+                              dynamic d = Provider.of<AddedProvider>(context, listen: false).questions[i];
+                              d["created_at"] = DateTime.now().microsecondsSinceEpoch;
+                              FirebaseFirestore.instance.collection("questions").add(d);
+
                               q.add(Provider.of<AddedProvider>(context, listen: false).questions[i] );
                               //  q.add(Provider.of<AddedProvider>(context, listen: false).questions[i] );
                             }
 
                           }
+                          Provider.of<AddedProvider>(context, listen: false).questions = [];
 
                           FirebaseFirestore.instance.collection("quizz2").add({"created_at":DateTime.now().microsecondsSinceEpoch,
                             "course_id":controller3.text,
@@ -1218,7 +1232,7 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
         )),
         Container(height: 0.5,width: double.infinity,color: Colors.grey,),
       ],
-    )),),body: FirestoreQueryBuilder(
+    )),),body:  true?QuizesTable(scaffoldKey:widget.scaffoldKey): FirestoreQueryBuilder(
       query: FirebaseFirestore.instance.collection("quizz2"),
       builder: (context, snapshot, _) {
         if (snapshot.isFetching) {
@@ -1241,47 +1255,51 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
 
             final movie = snapshot.docs[index];
             return ListTile(onTap: (){
-              widget. scaffoldKey.currentState!.showBottomSheet((context) => Container(height: MediaQuery.of(context).size.height,child: Column(
-                children: [
-                  Card(margin: EdgeInsets.zero,shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0.0),
-                  ) ,
-                    child: Padding(
-                      padding:  EdgeInsets.only(bottom: 10,top: 15),
-                      child: Column(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell( onTap: (){
+              widget. scaffoldKey.currentState!.showBottomSheet((context) => Container(height: MediaQuery.of(context).size.height,child: false?Edit_quiz_activity(ref:movie): SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Card(margin: EdgeInsets.zero,shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0.0),
+                    ) ,
+                      child: Padding(
+                        padding:  EdgeInsets.only(bottom: 10,top: 15),
+                        child: Column(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            InkWell( onTap: (){
 
-                            Provider.of<QuestionsSelectedProvider>(context, listen: false).totalMarks = 0;
-                            Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestionsBody =[];
-                            Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestions = [];
+                              Provider.of<QuestionsSelectedProvider>(context, listen: false).totalMarks = 0;
+                              Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestionsBody =[];
+                              Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestions = [];
 
-                            Navigator.pop(context);
-                          },
-                            child: Row(
-                              children: [
-                                Icon(Icons.navigate_before,color: Colors.blue,),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text("Close",style: TextStyle(color: Colors.blue),),
-                                ),
-                              ],
+                              Navigator.pop(context);
+                            },
+                              child: Row(
+                                children: [
+                                  Icon(Icons.navigate_before,color: Colors.blue,),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Text("Close",style: TextStyle(color: Colors.blue),),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 30),
-                            child: Text("Edit",style: TextStyle(fontSize: 25),),
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.only(left: 30),
+                              child: Text("Edit",style: TextStyle(fontSize: 25),),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
 
-                  Container(height: 25,),
-                  Edit_quiz_activity(ref:movie),
+                    Container(height: 25,),
+                    Edit_quiz_activity(ref:movie),
 
-                ],
+                  ],
+                ),
               ),));
+
+
             },trailing: IconButton(onPressed: (){movie.reference.delete();},icon: Icon(Icons.delete),),title:Text(movie.get("title")) ,subtitle: Row(
               children: [
                 Padding(

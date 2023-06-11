@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:html';
 import 'dart:typed_data';
 
+import 'package:admin/questions_table.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
@@ -470,7 +471,7 @@ class _tab_questions_list_itemsState extends State<tab_questions_list_items> {
             ],
           ),
         )),
-      ),),body: FirestoreQueryBuilder(pageSize: 20,
+      ),),body:   true?QuestionsTable(scaffoldKey: widget.scaffoldKey,):  FirestoreQueryBuilder(pageSize: 20,
       //.where("quize_type",isEqualTo: "SC")
       query: FirebaseFirestore.instance.collection("questions").orderBy("created_at",descending: true) ,
       builder: (context, snapshot, _) {
