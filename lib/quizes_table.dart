@@ -111,11 +111,13 @@ class _StudentsState extends State<QuizesTable> {
 
         //  final DataTableSource _allUsers = MyData(snap.data!.docs,widget.scaffoldKey);
           if(snap.hasData){
+            int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
             final DataTableSource _allUsers = MyData(snap.data!.docs,widget.scaffoldKey);
             return SingleChildScrollView(
               child: PaginatedDataTable(
-                header: const Text("Quizes"),
-                rowsPerPage: 15,
+
+                header: null,
+                rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
                 columns: const [
                   DataColumn(label: Text('Quiz title')),
                    DataColumn(label: Text('Number of questions')),

@@ -48,7 +48,7 @@ class _LoginState extends State<Login> {
                   ),),),
                 ),
               ),
-              Padding(
+            if(false)  Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextButton(onPressed: (){
                   Navigator.pushNamed(context, "/signup");

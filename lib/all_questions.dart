@@ -205,7 +205,7 @@ class _HoverButtonsState extends State<HoverButtons> {
 
                           InkWell(onTap: (){
                             FirebaseFirestore.instance.collection("questions").add(json);
-                            FirebaseFirestore.instance.collection("questions").add(json);
+                            //FirebaseFirestore.instance.collection("questions").add(json);
                             Navigator.pop(context);
 
 

@@ -1,4 +1,5 @@
 import 'package:admin/courses.dart';
+import 'package:admin/student_activity.dart';
 import 'package:admin/students.dart';
 import 'package:admin/tab_questions.dart';
 import 'package:admin/tab_quiz.dart';
@@ -174,22 +175,22 @@ class ExampleSidebarX extends StatelessWidget {
       },
       items: [
         SidebarXItem(
-          icon: Icons.home,
+          icon: Icons.question_mark,
           label: 'Questions',
           onTap: () {
             debugPrint('Home');
           },
         ),
         const SidebarXItem(
-          icon: Icons.search,
+          icon: Icons.quiz,
           label: 'Quiz',
         ),
         const SidebarXItem(
-          icon: Icons.search,
+          icon: Icons.book,
           label: 'Courses',
         ),
         const SidebarXItem(
-          icon: Icons.search,
+          icon: Icons.supervised_user_circle_outlined,
           label: 'Students',
         ),
          SidebarXItem(
@@ -227,7 +228,7 @@ class _ScreensExample extends StatelessWidget {
           case 2:
             return  CourseTable();
           case 3:
-            return  Students();
+            return  StudentActivity();
           default:
             return Text(
               pageTitle,

@@ -54,10 +54,11 @@ class _StudentsState extends State<CourseTable> {
 
             if(snap.hasData){
               final DataTableSource _allUsers = MyData(snap.data!.docs);
+              int n =( ( MediaQuery.of(context).size.height - 100 ) / 55 ).toInt() ;
               return SingleChildScrollView(
                 child: PaginatedDataTable(
-                  header: const Text("Course"),
-                  rowsPerPage: 15,
+                  header: null,
+                  rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
                   columns: const [
                     DataColumn(label: Text('Batch name')),
                      DataColumn(label: Text('Number of students')),
