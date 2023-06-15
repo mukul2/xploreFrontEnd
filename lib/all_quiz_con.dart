@@ -568,21 +568,30 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
                                         //QuestionsSelectedProvider
                                         return  true?Consumer<QuestionsSelectedProvider>(
                                             builder: (_, bar, __) => InkWell(onTap: (){},child: Row(children: [
-                                              Checkbox(value: bar.selectedQuestions.contains(data.id),onChanged: (val){
-                                                if(val!){
-                                                  bar.add(data.id,data);
-                                                  //Provider.of<QuestionsSelectedProvider>(context, listen: false).
+                                              Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                                child: Checkbox(value: bar.selectedQuestions.contains(data.id),onChanged: (val){
+                                                  if(val!){
+                                                    bar.add(data.id,data);
+                                                    //Provider.of<QuestionsSelectedProvider>(context, listen: false).
 
-                                                }else{
-                                                  bar.remove(data.id);
-                                                }
+                                                  }else{
+                                                    bar.remove(data.id);
+                                                  }
 
-                                              },),
-                                              Expanded(
-                                                child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,children: [
-                                                  Text(data["title"]),
-                                                  HtmlWidget(data["q"]),
-                                                ],),
+                                                },),
+                                              ),
+                                              data["title"]==""? HtmlWidget(data["q"]):  Row(
+                                               children: [
+                                                 Text(data["title"]),
+                                                 HtmlWidget(data["q"]),
+                                                 Wrap(
+                                                   children:data["choice"].map<Widget>((e) => Padding(
+                                                     padding: const EdgeInsets.all(8.0),
+                                                     child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(3),border: Border.all()),width: 150,child: Center(child: Text(e,overflow: TextOverflow.fade,))),
+                                                   )).toList(),
+                                                 ),
+                                               ],
                                               ),
 
 
@@ -864,7 +873,7 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
                               // q.add({"1":1} );
                             }catch(e){
                               dynamic d = Provider.of<AddedProvider>(context, listen: false).questions[i];
-                              d["created_at"] = DateTime.now().microsecondsSinceEpoch;
+                              d["created_at"] = DateTime.now().millisecondsSinceEpoch;
                               FirebaseFirestore.instance.collection("questions").add(d);
 
                               q.add(Provider.of<AddedProvider>(context, listen: false).questions[i] );
@@ -874,7 +883,7 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
                           }
                           Provider.of<AddedProvider>(context, listen: false).questions = [];
 
-                          FirebaseFirestore.instance.collection("quizz2").add({"created_at":DateTime.now().microsecondsSinceEpoch,
+                          FirebaseFirestore.instance.collection("quizz2").add({"created_at":DateTime.now().millisecondsSinceEpoch,
                             "course_id":controller3.text,
                             "exam_end":controller8.text,
                             "exam_start":controller7.text,

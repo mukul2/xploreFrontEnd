@@ -56,7 +56,7 @@ class _Create_quiz_activityState extends State<Create_quiz_activity> {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 20,left: 20,right: 20),
-            child: TextField(controller: c2,decoration: InputDecoration(label: Text("Question body")),),
+            child: TextField(minLines: 5,maxLines: 7,controller: c2,decoration: InputDecoration(label: Text("Question body")),),
           ),
          if(false) Padding(
             padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 8),
@@ -171,7 +171,7 @@ class _Create_quiz_activityState extends State<Create_quiz_activity> {
           Center(
             child: InkWell( onTap: (){
 
-              FirebaseFirestore.instance.collection("questions").add({"created_at":DateTime.now().microsecondsSinceEpoch,"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
+              FirebaseFirestore.instance.collection("questions").add({"created_at":DateTime.now().millisecondsSinceEpoch,"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
 
 
 

@@ -853,7 +853,7 @@ class _QuizFromFirebaseState extends State<QuizFromFirebase> {
 
                             }
 
-                           FirebaseFirestore.instance.collection("quizz2").add({"created_at":DateTime.now().microsecondsSinceEpoch,
+                           FirebaseFirestore.instance.collection("quizz2").add({"created_at":DateTime.now().millisecondsSinceEpoch,
                               "course_id":controller3.text,
                               "exam_end":controller8.text,
                               "exam_start":controller7.text,

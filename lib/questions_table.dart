@@ -35,68 +35,94 @@ class MyData extends DataTableSource {
        DataCell(Text(_data[index].get("score").toString())),
        DataCell(TextButton(onPressed: (){
 
-         List ch = _data[index].get("choice");
+
+
+         //_data[index].reference
+
 
 
          key.currentState!.showBottomSheet((context) => Container(
            color: Colors.white,
            height: MediaQuery.of(context).size.height,child: SingleChildScrollView(
-           child: Column(
-             children: [
-               Row(
-                 children: [
-                   IconButton(onPressed: (){
-                     Navigator.pop(context);
-                   }, icon: Icon(Icons.arrow_back_rounded)),
-                 ],
-               ),
+           child:   StreamBuilder(
 
-               Padding(
-                 padding: const EdgeInsets.all(8.0),
-                 child: TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Question")),onChanged: (String d){
-                   _data[index].reference.update({"q":d});
-                 },initialValue:_data[index].get("q") ,),
-               ),
-
-               Padding(
-                 padding: const EdgeInsets.all(8.0),
-                 child: TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Title")),onChanged: (String d){
-                   _data[index].reference.update({"title":d});
-
-                 },initialValue:_data[index].get("title") ,),
-               ),
-
-               ListView.builder(shrinkWrap: true,
-                   itemCount:ch.length,
-                   itemBuilder: (context, index2) {
-                     return Padding(
-                       padding: const EdgeInsets.all(8.0),
-                       child: true?CheckboxListTile(value: , onChanged: onChanged): TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Option "+(index2+1).toString())),onChanged: (String d){
-                         ch[index2] = d;
-                       },initialValue:ch[index2]),
-                     );
-                   }),
-
-               // Padding(
-               //   padding: const EdgeInsets.all(8.0),
-               //   child: TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Correct ans")),onChanged: (String d){
-               //     json["ans"] = d;
-               //   },initialValue:json["ans"] ,),
-               // ),
-
-               TextButton(onPressed: (){
-                 _data[index].reference.update({"choice":ch});
-                // data.reference.update(json);
-
-                 Navigator.pop(context);
-               }, child: Text("Update")),
+               stream:_data[index].reference.snapshots(),
+               builder: (context, AsyncSnapshot<DocumentSnapshot> snap) {
 
 
+                 if(snap.hasData){
+
+                   List ch =   snap.data!.get("choice");
+                   return  Column(
+                     children: [
+                       Row(
+                         children: [
+                           IconButton(onPressed: (){
+                             Navigator.pop(context);
+                           }, icon: Icon(Icons.arrow_back_rounded)),
+                         ],
+                       ),
+
+                       Padding(
+                         padding: const EdgeInsets.all(8.0),
+                         child: TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Question")),onChanged: (String d){
+                           snap.data!.reference.update({"q":d});
+                         },initialValue:snap.data!.get("q") ,),
+                       ),
+
+                       Padding(
+                         padding: const EdgeInsets.all(8.0),
+                         child: TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Title")),onChanged: (String d){
+                           snap.data!.reference.update({"title":d});
+
+                         },initialValue:snap.data!.get("title") ,),
+                       ),
+
+                       ListView.builder(shrinkWrap: true,
+                           itemCount:ch.length,
+                           itemBuilder: (context, index2) {
+                             return Padding(
+                               padding: const EdgeInsets.all(8.0),
+                               child: true?  true?Row(
+                                 children: [
+                                   Checkbox(value:  index2 == (snap.data!["correctOption"]??0) , onChanged: (bool? changed){
+
+                                     if(changed == true)snap.data!.reference.update({"correctOption":index2});
+
+                                   }),
+                                   Text(ch[index2]),
+                                 ],
+                               ): CheckboxListTile(title: Text(ch[index2]),value: true, onChanged:(bool? b){
+
+                               } ): TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Option "+(index2+1).toString())),onChanged: (String d){
+                                 ch[index2] = d;
+                               },initialValue:ch[index2]),
+                             );
+                           }),
+
+                       // Padding(
+                       //   padding: const EdgeInsets.all(8.0),
+                       //   child: TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Correct ans")),onChanged: (String d){
+                       //     json["ans"] = d;
+                       //   },initialValue:json["ans"] ,),
+                       // ),
+
+                       TextButton(onPressed: (){
+                         snap.data!.reference.update({"choice":ch});
+                         // data.reference.update(json);
+
+                         Navigator.pop(context);
+                       }, child: Text("Close")),
 
 
 
-             ],
-           ),
+
+
+                     ],
+                   );
+                 }else{
+                   return Center(child: CircularProgressIndicator(),);
+                 }}),
          ),
          ));
 
@@ -171,7 +197,7 @@ class _StudentsState extends State<QuestionsTable> {
 
         //  final DataTableSource _allUsers = MyData(snap.data!.docs,widget.scaffoldKey);
 
-          if(snap.hasData){
+          if(snap.hasData && snap.data!.docs.length>0){
             final DataTableSource _allUsers = MyData(snap.data!.docs,widget.scaffoldKey);
             return SingleChildScrollView(
               child: PaginatedDataTable(
@@ -192,7 +218,7 @@ class _StudentsState extends State<QuestionsTable> {
             );
           }
           else{
-            return new Text('No data...');
+            return Center(child: new Text('No data...'));
           }
         });
 
