@@ -44,8 +44,8 @@ class MyData extends DataTableSource {
              }
              
            })),
-      DataCell(Text(_data[index].data()["exam_start"])),
-      DataCell(Text(_data[index].data()["exam_end"])),
+      DataCell(Text(DateTime.fromMillisecondsSinceEpoch(_data[index].data()["exam_start"]).toIso8601String())),
+      DataCell(Text(DateTime.fromMillisecondsSinceEpoch(_data[index].data()["exam_end"]).toIso8601String())),
       DataCell(Text(_data[index].data()["exam_time"])),
       DataCell(TextButton(onPressed: (){
 

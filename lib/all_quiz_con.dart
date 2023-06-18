@@ -50,7 +50,7 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
         Container(color: Colors.white,height: 59,child: Row(
           children: [
             InkWell( onTap: (){
-              final format = DateFormat("yyyy-MM-dd HH:mm");
+              final format = DateFormat("yyyy-MM-dd HH:mm:ss");
                widget. scaffoldKey.currentState!.showBottomSheet((context) => Container(
                   color: Colors.white,
                   height: MediaQuery.of(context).size.height,child: SingleChildScrollView(

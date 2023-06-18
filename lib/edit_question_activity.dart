@@ -27,8 +27,10 @@ class _Edit_quiz_activityState extends State<Edit_quiz_activity> {
     controller4.text = widget.ref.get("exam_time");
     controller5.text = widget.ref.get("total_point");
     controller6.text = widget.ref.get("pass_mark");
-    controller7.text = widget.ref.get("exam_start");
-    controller8.text = widget.ref.get("exam_end");
+    controller7.text =  DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.fromMillisecondsSinceEpoch(widget.ref.get("exam_start"))) ;
+    //controller7.text = "";
+
+    controller8.text = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.fromMillisecondsSinceEpoch(widget.ref.get("exam_end"))) ;;
     controller9.text = widget.ref.get("status");
     controller10.text = widget.ref.get("section_details");
     setState(() {
@@ -153,8 +155,9 @@ class _Edit_quiz_activityState extends State<Edit_quiz_activity> {
                         child:  Wrap(
                           children: [
                             Text("Exam start time"),
-                            DateTimeField(controller:controller7 ,
-                              format: DateFormat("yyyy-MM-dd HH:mm"),
+                            DateTimeField(
+                              controller:controller7 ,
+                              format: DateFormat("yyyy-MM-dd HH:mm:ss"),
                               onShowPicker: (context, currentValue) async {
                                 return await showDatePicker(
                                   context: context,
@@ -168,11 +171,11 @@ class _Edit_quiz_activityState extends State<Edit_quiz_activity> {
                                       initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
                                     );
 
-                                      widget.ref.reference.update({"exam_start": DateFormat('yyyy-MM-dd HH:mm').format(DateTimeField.combine(date, time)) });
+                                      widget.ref.reference.update({"exam_start": DateTimeField.combine(date, time).millisecondsSinceEpoch });
 
                                     return DateTimeField.combine(date, time);
                                   } else {
-                                    widget.ref.reference.update({"exam_start": DateFormat('yyyy-MM-dd HH:mm').format(currentValue!) });
+                                    widget.ref.reference.update({"exam_start": currentValue!.millisecondsSinceEpoch });
 
                                     return currentValue;
                                   }
@@ -190,7 +193,7 @@ class _Edit_quiz_activityState extends State<Edit_quiz_activity> {
                           children: [
                             Text("Exam end time"),
                             DateTimeField(controller:controller8 ,
-                              format:  DateFormat("yyyy-MM-dd HH:mm"),
+                              format:  DateFormat("yyyy-MM-dd HH:mm:ss"),
                               onShowPicker: (context, currentValue) async {
                                 return await showDatePicker(
                                   context: context,
@@ -203,11 +206,11 @@ class _Edit_quiz_activityState extends State<Edit_quiz_activity> {
                                       context: context,
                                       initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
                                     );
-                                    widget.ref.reference.update({"exam_end": DateFormat('yyyy-MM-dd HH:mm').format(DateTimeField.combine(date, time)) });
+                                    widget.ref.reference.update({"exam_end": DateTimeField.combine(date, time).millisecondsSinceEpoch });
 
                                     return DateTimeField.combine(date, time);
                                   } else {
-                                    widget.ref.reference.update({"exam_end": DateFormat('yyyy-MM-dd HH:mm').format(currentValue!) });
+                                    widget.ref.reference.update({"exam_end":  currentValue!.millisecondsSinceEpoch });
 
                                     return currentValue;
                                   }
