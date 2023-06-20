@@ -28,22 +28,40 @@ class MyData extends DataTableSource {
   int get selectedRowCount => 0;
   @override
   DataRow getRow(int index) {
+
+    DataCell wo(){
+      try{
+       return DataCell(Text( _data[index].data()["quiz"]==null?"--": _data[index].data()["quiz"].length.toString()+" questions"));
+      }catch(e){
+        return DataCell(Text("--"));
+      }
+    }
+    DataCell wo2(){
+      try{
+        return DataCell(FutureBuilder(
+
+            future:FirebaseFirestore.instance.collection('courses').doc(_data[index].data()["course_id"]).get(),
+            builder: (context, AsyncSnapshot<DocumentSnapshot> snap) {
+              if(snap.hasData && snap.data!.exists){
+                return Text(snap.data!.get("course_title"));
+
+              }else{
+                return Text("--");
+                return Center(child: CupertinoActivityIndicator(),);
+              }
+
+            }));
+      }catch(e){
+        return DataCell(Text("--"));
+      }
+    }
+
     return DataRow(cells: [
       DataCell(Text(_data[index].data()['title'])),
-       DataCell(Text(_data[index].data()["quiz"].length.toString()+" questions")),
-    //   DataCell(Text(_data[index].data()["course_id"])),
-       DataCell(FutureBuilder(
 
-           future:FirebaseFirestore.instance.collection('courses').doc(_data[index].data()["course_id"]).get(),
-           builder: (context, AsyncSnapshot<DocumentSnapshot> snap) {
-             if(snap.hasData){
-               return Text(snap.data!.get("course_title"));
-               
-             }else{
-               return Center(child: CupertinoActivityIndicator(),);
-             }
-             
-           })),
+      wo(),
+    //   DataCell(Text(_data[index].data()["course_id"])),
+      wo2(),
       DataCell(Text(DateTime.fromMillisecondsSinceEpoch(_data[index].data()["exam_start"]).toIso8601String())),
       DataCell(Text(DateTime.fromMillisecondsSinceEpoch(_data[index].data()["exam_end"]).toIso8601String())),
       DataCell(Text(_data[index].data()["exam_time"])),
