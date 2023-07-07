@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './utils.dart';
 import 'enums.dart';
@@ -171,14 +172,20 @@ class _Create_quiz_activityState extends State<Create_quiz_activity> {
           Center(
             child: InkWell( onTap: (){
 
-              FirebaseFirestore.instance.collection("questions").add({"created_at":DateTime.now().millisecondsSinceEpoch,"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
+              Map data = {"uid":FirebaseAuth.instance.currentUser!.uid,"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"};
+
+              showDialog(
+                  context: context,
+                  builder: (_) =>AlertDialog(content: Text(data.toString(),)));
+
+                   if(false)   FirebaseFirestore.instance.collection("questions").add({"created_at":DateTime.now().millisecondsSinceEpoch,"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
 
 
 
               // Provider.of<AddedProvider>(context, listen: false).add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"choice":Options,"title":c1.text,"q":c2.text,"quize_type":"SC"});
               // setState(() {
               // });
-              Navigator.pop(context);
+             // Navigator.pop(context);
 
             },
               child: Card(color: Colors.blue,child: Container(width: MediaQuery.of(context).size.width * 0.5,

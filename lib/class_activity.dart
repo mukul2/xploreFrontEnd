@@ -9,17 +9,17 @@ import 'AppProviders/DrawerProvider.dart';
 import 'RestApi.dart';
 import 'edit_question_activity.dart';
 
-class CourseTable extends StatefulWidget {
- // GlobalKey<ScaffoldState> scaffoldKey;
+class ClassActivity extends StatefulWidget {
+  // GlobalKey<ScaffoldState> scaffoldKey;
   //CourseTable({required this.scaffoldKey});
-  CourseTable();
+  ClassActivity();
   @override
-  State<CourseTable> createState() => _StudentsState();
+  State<ClassActivity> createState() => _StudentsState();
 }
 // The "soruce" of the table
 class MyData extends DataTableSource {
   MyData(this._data);
- // GlobalKey<ScaffoldState> key;
+  // GlobalKey<ScaffoldState> key;
   final List<dynamic> _data;
 
 
@@ -35,6 +35,7 @@ class MyData extends DataTableSource {
 
     return DataRow(cells: [
       DataCell(Text(_data[index]['name']??"--")),
+      DataCell(Text(_data[index]['created_at']??"--")),
 
 
 
@@ -44,13 +45,13 @@ class MyData extends DataTableSource {
 }
 
 
-class _StudentsState extends State<CourseTable> {
+class _StudentsState extends State<ClassActivity> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Data().batches().then((value) {
-      Provider.of<Batchprovider>(context, listen: false).items = value;
+    Data().classes().then((value) {
+      Provider.of<Classprovider>(context, listen: false).items = value;
     });
   }
   @override
@@ -61,32 +62,33 @@ class _StudentsState extends State<CourseTable> {
 //Batchprovider
     return Scaffold(
       appBar: AppBar(elevation: 1,backgroundColor: Colors.white,actions: [
-      TextButton(onPressed: (){
-        TextEditingController c = TextEditingController();
+        TextButton(onPressed: (){
+          TextEditingController c = TextEditingController();
 
 
-        showDialog(
-            context: context,
-            builder: (_) =>AlertDialog(title: Text("Create Batch"),actions: [
-              ElevatedButton(onPressed: (){
+          showDialog(
+              context: context,
+              builder: (_) =>AlertDialog(title: Text("Create Batch"),actions: [
+                ElevatedButton(onPressed: (){
 
-                Data().saveBatches(data: {"name":c.text,"created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
+                  Data().saveClasses(data: {"name":c.text,"created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
+                    Data().classes().then((value) {
+                      Provider.of<Classprovider>(context, listen: false).items = value;
+                    });
 
-                  Data().batches().then((value) {
-                    Provider.of<Batchprovider>(context, listen: false).items = value;
                   });
-                });
-                Navigator.pop(context);
 
-              }, child: Text("Create batch")),
-            ],content: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(controller:c ,decoration: InputDecoration(hintText: "Batch name"),),
-            ),));
+                  Navigator.pop(context);
 
-      }, child: Text("Create Batch"))
-    ],),
-      body: true?Consumer<Batchprovider>(
+                }, child: Text("Create Class")),
+              ],content: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(controller:c ,decoration: InputDecoration(hintText: "Batch name"),),
+              ),));
+
+        }, child: Text("Create Batch"))
+      ],),
+      body: true?Consumer<Classprovider>(
         builder: (_, bar, __) {
 
           if(bar.items.isEmpty)return Center(child: Text("No data"),);
@@ -101,6 +103,7 @@ class _StudentsState extends State<CourseTable> {
 
               columns: const [
                 DataColumn(label: Text('Name')),
+                DataColumn(label: Text('Created at')),
 
                 // DataColumn(label: Text('Id')),
                 // DataColumn(label: Text('Phone'))
@@ -122,7 +125,7 @@ class _StudentsState extends State<CourseTable> {
                 child: PaginatedDataTable(
 
                   header:null,
-                 rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
+                  rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
 
                   columns: const [
                     DataColumn(label: Text('Name')),
@@ -157,8 +160,8 @@ class _StudentsState extends State<CourseTable> {
                   rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
                   columns: const [
                     DataColumn(label: Text('Batch name')),
-                     DataColumn(label: Text('Number of students')),
-                     DataColumn(label: Text('Total apply')),
+                    DataColumn(label: Text('Number of students')),
+                    DataColumn(label: Text('Total apply')),
 
                     // DataColumn(label: Text('Id')),
                     // DataColumn(label: Text('Phone'))

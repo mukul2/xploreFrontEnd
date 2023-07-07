@@ -32,6 +32,11 @@ class MyApp extends StatelessWidget {
     ChangeNotifierProvider<QuestionsSelectedProvider>(create: (context) => QuestionsSelectedProvider()),
     ChangeNotifierProvider<AddedProvider>(create: (context) => AddedProvider()),
     ChangeNotifierProvider<AddedProviderOnlyNew>(create: (context) => AddedProviderOnlyNew()),
+    ChangeNotifierProvider<Batchprovider>(create: (context) => Batchprovider()),
+    ChangeNotifierProvider<Classprovider>(create: (context) => Classprovider()),
+    ChangeNotifierProvider<Studentsprovider>(create: (context) => Studentsprovider()),
+    ChangeNotifierProvider<Quizessprovider>(create: (context) => Quizessprovider()),
+    ChangeNotifierProvider<Questionsprovider>(create: (context) => Questionsprovider()),
 
         ],
       child: MaterialApp(

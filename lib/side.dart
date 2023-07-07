@@ -1,6 +1,8 @@
 import 'package:admin/courses.dart';
+import 'package:admin/sql_questions.dart';
 import 'package:admin/student_activity.dart';
 import 'package:admin/students.dart';
+import 'package:admin/students_activity.dart';
 import 'package:admin/tab_questions.dart';
 import 'package:admin/tab_quiz.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'Quizes.dart';
+import 'class_activity.dart';
 import 'course_table.dart';
 import 'login.dart';
 import 'utils.dart';
@@ -45,20 +48,25 @@ class _SidebarXExampleAppState extends State<SidebarXExampleApp> {
         print('User is currently signed out!');
       } else {
 
-        FirebaseFirestore.instance.collection("mmu-users").where("uid",isEqualTo: FirebaseAuth.instance.currentUser!.uid).get().then((value) {
+        setState(() {
+          loggedIn = true;
 
-          try{
-            if(value.docs.first.get("type")=="admin"){
-              setState(() {
-                loggedIn = true;
-
-              });
-
-            }
-          }catch(e){
-
-          }
         });
+
+        // FirebaseFirestore.instance.collection("mmu-users").where("uid",isEqualTo: FirebaseAuth.instance.currentUser!.uid).get().then((value) {
+        //
+        //   try{
+        //     if(value.docs.first.get("type")=="admin"){
+        //       setState(() {
+        //         loggedIn = true;
+        //
+        //       });
+        //
+        //     }
+        //   }catch(e){
+        //
+        //   }
+        // });
         print('User is signed in!');
       }
     });
@@ -169,7 +177,7 @@ class ExampleSidebarX extends StatelessWidget {
           height: 100,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text("Logo",style: TextStyle(fontSize: 35,color: Colors.white),),
+            child: Text(FirebaseAuth.instance.currentUser!.email!,style: TextStyle(fontSize: 16,color: Colors.white),),
           ),
         );
       },
@@ -192,6 +200,10 @@ class ExampleSidebarX extends StatelessWidget {
         const SidebarXItem(
           icon: Icons.supervised_user_circle_outlined,
           label: 'Students',
+        ),
+        const SidebarXItem(
+          icon: Icons.supervised_user_circle_outlined,
+          label: 'Class',
         ),
          SidebarXItem(
           icon: Icons.logout,
@@ -222,13 +234,15 @@ class _ScreensExample extends StatelessWidget {
         final pageTitle = _getTitleByIndex(controller.selectedIndex);
         switch (controller.selectedIndex) {
           case 0:
-            return Questions_All(type: questionbank.type1,);
+            return true?QuestionsActivitySQL(): Questions_All(type: questionbank.type1,);
             case 1:
             return QuizFromFirebase();
           case 2:
             return  CourseTable();
           case 3:
-            return  StudentActivity();
+            return  StudentActivitySql();
+          case 4:
+            return  ClassActivity();
           default:
             return Text(
               pageTitle,
@@ -268,3 +282,5 @@ const accentCanvasColor = Color(0xFF3E3E61);
 const white = Colors.white;
 final actionColor = const Color(0xFF5F5FA7).withOpacity(0.6);
 final divider = Divider(color: white.withOpacity(0.3), height: 1);
+
+

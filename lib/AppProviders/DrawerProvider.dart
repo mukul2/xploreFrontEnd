@@ -124,3 +124,71 @@ class AddedProviderOnlyNew extends ChangeNotifier {
 
 
 }
+class Batchprovider extends ChangeNotifier {
+
+  List _items = [];
+
+  List get items => _items;
+
+  set items(List value) {
+    _items = value;
+    notifyListeners();
+  }
+
+
+
+
+
+
+}
+class Classprovider extends ChangeNotifier {
+
+  List _items = [];
+
+  List get items => _items;
+
+  set items(List value) {
+    _items = value;
+    notifyListeners();
+  }
+
+
+
+
+
+
+}
+class Quizessprovider extends ChangeNotifier {
+
+  List _items = [];
+
+  List get items => _items;
+
+  set items(List value) {
+    _items = value;
+    notifyListeners();
+  }
+}
+class Studentsprovider extends ChangeNotifier {
+
+  List _items = [];
+
+  List get items => _items;
+
+  set items(List value) {
+    _items = value;
+    notifyListeners();
+  }
+}
+
+class Questionsprovider extends ChangeNotifier {
+
+  List _items = [];
+
+  List get items => _items;
+
+  set items(List value) {
+    _items = value;
+    notifyListeners();
+  }
+}

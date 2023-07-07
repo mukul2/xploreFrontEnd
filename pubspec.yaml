@@ -42,6 +42,7 @@ dependencies:
   firebase_auth: ^4.6.2
   pdf: ^3.10.4
   sidebarx: ^0.15.0
+  intl:
   http:
   dropdown_search: ^5.0.6
   duration_picker: ^1.1.1

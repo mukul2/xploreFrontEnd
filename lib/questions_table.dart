@@ -190,7 +190,7 @@ class _StudentsState extends State<QuestionsTable> {
 
     return StreamBuilder(
 
-        stream:FirebaseFirestore.instance.collection("questions").snapshots(),
+        stream:FirebaseFirestore.instance.collection("questions").limit(10).snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snap) {
 
           int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;

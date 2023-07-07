@@ -53,12 +53,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDZp12IY9BafrRwks-W_6zHObDZWk9iQjI',
-    appId: '1:782813816644:web:00b77e0c6a4ea1191b1911',
-    messagingSenderId: '782813816644',
-    projectId: 'brain-sugar',
-    authDomain: 'brain-sugar.firebaseapp.com',
-    storageBucket: 'brain-sugar.appspot.com',
-    measurementId: 'G-3L9ERG0K95',
+
+    apiKey: "AIzaSyD5-B3z8MSRQYCFRhtEzqR1fKkcE2Ie5mk",
+    authDomain: "xplore-education.firebaseapp.com",
+    projectId: "xplore-education",
+    storageBucket: "xplore-education.appspot.com",
+    messagingSenderId: "236257928052",
+    appId: "1:236257928052:web:f508b9f8a90f3969970221"
+
+    // apiKey: 'AIzaSyDZp12IY9BafrRwks-W_6zHObDZWk9iQjI',
+    // appId: '1:782813816644:web:00b77e0c6a4ea1191b1911',
+    // messagingSenderId: '782813816644',
+    // projectId: 'brain-sugar',
+    // authDomain: 'brain-sugar.firebaseapp.com',
+    // storageBucket: 'brain-sugar.appspot.com',
+    // measurementId: 'G-3L9ERG0K95',
   );
 }

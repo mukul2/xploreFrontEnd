@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'AppProviders/DrawerProvider.dart';
+import 'RestApi.dart';
 import 'edit_question_activity.dart';
 
 class QuizesTable extends StatefulWidget {
@@ -28,10 +30,18 @@ class MyData extends DataTableSource {
   int get selectedRowCount => 0;
   @override
   DataRow getRow(int index) {
+    DataCell safeDate(dynamic d,String key){
 
+      try{
+
+        return DataCell(Text( DateFormat('yyyy-MM-dd – kk:mm').format( DateTime.fromMillisecondsSinceEpoch(_data[index][key]*1000))));
+      }catch(e){
+        return DataCell(Text(e.toString()));
+      }
+    }
     DataCell wo(){
       try{
-       return DataCell(Text( _data[index].data()["quiz"]==null?"--": _data[index].data()["quiz"].length.toString()+" questions"));
+       return DataCell(Text( _data[index]["quiz"]==null?"--": _data[index]["quiz"].length.toString()+" questions"));
       }catch(e){
         return DataCell(Text("--"));
       }
@@ -40,7 +50,7 @@ class MyData extends DataTableSource {
       try{
         return DataCell(FutureBuilder(
 
-            future:FirebaseFirestore.instance.collection('courses').doc(_data[index].data()["course_id"]).get(),
+            future:FirebaseFirestore.instance.collection('courses').doc(_data[index]["course_id"]).get(),
             builder: (context, AsyncSnapshot<DocumentSnapshot> snap) {
               if(snap.hasData && snap.data!.exists){
                 return Text(snap.data!.get("course_title"));
@@ -57,14 +67,17 @@ class MyData extends DataTableSource {
     }
 
     return DataRow(cells: [
-      DataCell(Text(_data[index].data()['title'])),
-
-      wo(),
+      DataCell(Text(_data[index]['title'])),
+      DataCell(Text(_data[index]['section_details'])),
+      DataCell(Text(_data[index]['total_point'].toString())),
+    //  wo(),
     //   DataCell(Text(_data[index].data()["course_id"])),
-      wo2(),
-      DataCell(Text(DateTime.fromMillisecondsSinceEpoch(_data[index].data()["exam_start"]).toIso8601String())),
-      DataCell(Text(DateTime.fromMillisecondsSinceEpoch(_data[index].data()["exam_end"]).toIso8601String())),
-      DataCell(Text(_data[index].data()["exam_time"])),
+    //  wo2(),
+      safeDate(_data[index],"exam_start"),
+      safeDate(_data[index],"exam_end"),
+   //   DataCell(Text(DateTime.fromMillisecondsSinceEpoch(_data[index].data()["exam_start"]).toIso8601String())),
+    //  DataCell(Text(DateTime.fromMillisecondsSinceEpoch(_data[index].data()["exam_end"]).toIso8601String())),
+      DataCell(Text(_data[index]["exam_time_minute"].toString())),
       DataCell(TextButton(onPressed: (){
 
         key.currentState!.showBottomSheet((context) => Container(height: MediaQuery.of(context).size.height,child: SingleChildScrollView(
@@ -119,12 +132,82 @@ class MyData extends DataTableSource {
 
 
 class _StudentsState extends State<QuizesTable> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Data().quizes().then((value) {
+      Provider.of<Quizessprovider>(context, listen: false).items = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
+    return  Consumer<Quizessprovider>(
+        builder: (_, bar, __) {
+          if (bar.items.isEmpty) return Center(child: Text("No data"),);
+          int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
+          final DataTableSource _allUsers = MyData(bar.items,widget.scaffoldKey);
+          return SingleChildScrollView(
+            child: PaginatedDataTable(
+
+              header: null,
+              rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
+              columns: const [
+                DataColumn(label: Text('Quiz title')),
+                DataColumn(label: Text('Details')),
+                DataColumn(label: Text('Total')),
+                DataColumn(label: Text('Exam start')),
+                DataColumn(label: Text('Exam end')),
+                DataColumn(label: Text('Exam duration')),
+                DataColumn(label: Text('Actions')),
+                // DataColumn(label: Text('Id')),
+                // DataColumn(label: Text('Phone'))
+              ],
+              source: _allUsers,
+            ),
+          );
+        });
+
+   return FutureBuilder(
+
+        future:Data().quizes(),
+    builder: (context, AsyncSnapshot<List> snap) {
+          if(snap.hasData && snap.data!.length>0){
+              int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
+            final DataTableSource _allUsers = MyData(snap.data!,widget.scaffoldKey);
+            return SingleChildScrollView(
+              child: PaginatedDataTable(
+
+                header: null,
+                rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
+                columns: const [
+                  DataColumn(label: Text('Quiz title')),
+                  DataColumn(label: Text('Details')),
+                  DataColumn(label: Text('Total')),
+                  DataColumn(label: Text('Exam start')),
+                  DataColumn(label: Text('Exam end')),
+                  DataColumn(label: Text('Exam duration')),
+                  DataColumn(label: Text('Actions')),
+                  // DataColumn(label: Text('Id')),
+                  // DataColumn(label: Text('Phone'))
+                ],
+                source: _allUsers,
+              ),
+            );
+          }else{
+            return Center(child: Text("No data"),);
+          }
+
+    });
+
+    return Text("Quiz here");
+
     return  StreamBuilder(
 
-        stream:FirebaseFirestore.instance.collection('quizz2').snapshots(),
+        stream:FirebaseFirestore.instance.collection('quizz2').orderBy("created_at",descending: true).limit(100).snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snap) {
 
         //  final DataTableSource _allUsers = MyData(snap.data!.docs,widget.scaffoldKey);
