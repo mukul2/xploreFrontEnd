@@ -34,7 +34,7 @@ class MyData extends DataTableSource {
 
       try{
 
-        return DataCell(Text( DateFormat('yyyy-MM-dd – kk:mm').format( DateTime.fromMillisecondsSinceEpoch(_data[index][key]*1000))));
+        return DataCell(Text( DateFormat('yyyy-MM-dd').format( DateTime.fromMillisecondsSinceEpoch(_data[index][key]*1000))));
       }catch(e){
         return DataCell(Text(e.toString()));
       }
@@ -67,7 +67,9 @@ class MyData extends DataTableSource {
     }
 
     return DataRow(cells: [
-      DataCell(Text(_data[index]['title'])),
+      DataCell(Text(_data[index]['batchName'].toString())),
+      DataCell(Text(_data[index]['quiztitle'])),
+
       DataCell(Text(_data[index]['section_details'])),
       DataCell(Text(_data[index]['total_point'].toString())),
     //  wo(),
@@ -81,7 +83,7 @@ class MyData extends DataTableSource {
       DataCell(TextButton(onPressed: (){
 
         key.currentState!.showBottomSheet((context) => Container(height: MediaQuery.of(context).size.height,child: SingleChildScrollView(
-          child: Column(
+          child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Card(margin: EdgeInsets.zero,shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(0.0),
@@ -117,8 +119,8 @@ class MyData extends DataTableSource {
                 ),
               ),
 
-              Container(height: 25,),
-              Edit_quiz_activity(ref:_data[index]),
+             // Container(height: 25,),
+              Edit_quiz_activitySQL(ref:_data[index]),
 
             ],
           ),
@@ -156,6 +158,7 @@ class _StudentsState extends State<QuizesTable> {
               header: null,
               rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
               columns: const [
+                DataColumn(label: Text('Batch')),
                 DataColumn(label: Text('Quiz title')),
                 DataColumn(label: Text('Details')),
                 DataColumn(label: Text('Total')),

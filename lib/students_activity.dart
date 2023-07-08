@@ -66,118 +66,121 @@ class _StudentsState extends State<StudentActivitySql> {
     ],);
 //Batchprovider
     return Scaffold(
-      appBar: AppBar(elevation: 1,backgroundColor: Colors.white,actions: [
-        TextButton(onPressed: (){
-          TextEditingController lastname = TextEditingController();
-          TextEditingController firstname = TextEditingController();
-          TextEditingController address = TextEditingController();
-          TextEditingController email = TextEditingController();
-          TextEditingController phone = TextEditingController();
-          String batch = "";
+      appBar: PreferredSize(preferredSize: Size(0,50),child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(children: [
+          ElevatedButton(onPressed: (){
+            TextEditingController lastname = TextEditingController();
+            TextEditingController firstname = TextEditingController();
+            TextEditingController address = TextEditingController();
+            TextEditingController email = TextEditingController();
+            TextEditingController phone = TextEditingController();
+            String batch = "";
 
 
 
-          showDialog(
-              context: context,
-              builder: (_) =>StatefulBuilder(
-                builder: (context,set) {
-                  return AlertDialog(title: Text("Create Student"),actions: [
-                    ElevatedButton(onPressed: () async {
-                      saveDb(String id){
-                        Data().saveStudents(data: {"id":id,"LastName":lastname.text,"FirstName":firstname.text,"Address":address.text,"Email":email.text,"Phone":phone.text,
-                        "class_id":batch,"created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
-                          Data().students().then((value) {
-                            Provider.of<Studentsprovider>(context, listen: false).items = value;
-                          });
+            showDialog(
+                context: context,
+                builder: (_) =>StatefulBuilder(
+                    builder: (context,set) {
+                      return AlertDialog(title: Text("Create Student"),actions: [
+                        ElevatedButton(onPressed: () async {
+                          saveDb(String id){
+                            Data().saveStudents(data: {"id":id,"LastName":lastname.text,"FirstName":firstname.text,"Address":address.text,"Email":email.text,"Phone":phone.text,
+                              "class_id":batch,"created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
+                              Data().students().then((value) {
+                                Provider.of<Studentsprovider>(context, listen: false).items = value;
+                              });
 
 
-                        });
-                      }
-                      try{
-                        FirebaseApp app =await Firebase.initializeApp(
-                            name:"Default",
-                            options: FirebaseOptions(
-                                apiKey: "AIzaSyD5-B3z8MSRQYCFRhtEzqR1fKkcE2Ie5mk",
-                                authDomain: "xplore-education.firebaseapp.com",
-                                projectId: "xplore-education",
-                                storageBucket: "xplore-education.appspot.com",
-                                messagingSenderId: "236257928052",
-                                appId: "1:236257928052:web:f508b9f8a90f3969970221"
-                            )
-                        );
-                        FirebaseAuth firebaseAuth = FirebaseAuth.instanceFor(app: app);
-                        FirebaseAuth auth = firebaseAuth;
-                        auth.createUserWithEmailAndPassword(email: email.text, password: "123456").then((value) {
-                         // value.user!.sendEmailVerification();
-                          auth.currentUser!.updateDisplayName(firstname.text+" "+lastname.text);
-                          auth.sendPasswordResetEmail(email: email.text);
-                          saveDb(value.user!.uid);
+                            });
+                          }
+                          try{
+                            FirebaseApp app =await Firebase.initializeApp(
+                                name:"Default",
+                                options: FirebaseOptions(
+                                    apiKey: "AIzaSyD5-B3z8MSRQYCFRhtEzqR1fKkcE2Ie5mk",
+                                    authDomain: "xplore-education.firebaseapp.com",
+                                    projectId: "xplore-education",
+                                    storageBucket: "xplore-education.appspot.com",
+                                    messagingSenderId: "236257928052",
+                                    appId: "1:236257928052:web:f508b9f8a90f3969970221"
+                                )
+                            );
+                            FirebaseAuth firebaseAuth = FirebaseAuth.instanceFor(app: app);
+                            FirebaseAuth auth = firebaseAuth;
+                            auth.createUserWithEmailAndPassword(email: email.text, password: "123456").then((value) {
+                              // value.user!.sendEmailVerification();
+                              auth.currentUser!.updateDisplayName(firstname.text+" "+lastname.text);
+                              auth.sendPasswordResetEmail(email: email.text);
+                              saveDb(value.user!.uid);
 
-                        });
-                      }catch(e){
-                        FirebaseAuth firebaseAuth= FirebaseAuth.instanceFor(app:  Firebase.app("Default"));
-                        FirebaseAuth auth = firebaseAuth;
-                        auth.createUserWithEmailAndPassword(email: email.text, password: "123456").then((value) {
-                          auth.sendPasswordResetEmail(email: email.text);
-                          auth.currentUser!.updateDisplayName(firstname.text+" "+lastname.text);
+                            });
+                          }catch(e){
+                            FirebaseAuth firebaseAuth= FirebaseAuth.instanceFor(app:  Firebase.app("Default"));
+                            FirebaseAuth auth = firebaseAuth;
+                            auth.createUserWithEmailAndPassword(email: email.text, password: "123456").then((value) {
+                              auth.sendPasswordResetEmail(email: email.text);
+                              auth.currentUser!.updateDisplayName(firstname.text+" "+lastname.text);
 
-                          saveDb(value.user!.uid);
-                        });
+                              saveDb(value.user!.uid);
+                            });
 
-                      }
-
-
-
+                          }
 
 
 
 
 
 
-                      Navigator.pop(context);
 
-                    }, child: Text("Create Student")),
-                  ],content: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(width: 400,
-                      child: Wrap(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(controller:lastname ,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 8),hintText: "Last Name"),),
+
+
+                          Navigator.pop(context);
+
+                        }, child: Text("Create Student")),
+                      ],content: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(width: 400,
+                          child: Wrap(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(controller:lastname ,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 8),hintText: "Last Name"),),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(controller:firstname ,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 8),hintText: "First Name"),),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(controller:address ,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 8),hintText: "Address"),),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(controller:email ,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 8),hintText: "Email"),),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: TextFormField(controller:phone ,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 8),hintText: "Phone"),),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ClassSelectDropdown(onSelected: (String id){
+                                  print("Seleected id"+id);
+                                  batch = id;
+                                },),
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(controller:firstname ,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 8),hintText: "First Name"),),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(controller:address ,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 8),hintText: "Address"),),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(controller:email ,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 8),hintText: "Email"),),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(controller:phone ,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 8),hintText: "Phone"),),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ClassSelectDropdown(onSelected: (String id){
-                              print("Seleected id"+id);
-                              batch = id;
-                            },),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),);
-                }
-              ));
+                        ),
+                      ),);
+                    }
+                ));
 
-        }, child: Text("Create Student"))
-      ],),
+          }, child: Text("Create Student"))
+        ],),
+      ),),
       body: true? Consumer<Studentsprovider>(
         builder: (_, bar, __) {
 

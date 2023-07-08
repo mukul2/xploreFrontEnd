@@ -58,11 +58,25 @@ class Data{
       return [];
 
     }
-  }  Future<List>questions () async {
+  }
+
+  Future<List>questions () async {
     print("get questions");
 
     try{
       http.Response r =  await http.get(Uri.parse(base+"/questions"));
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return [];
+
+    }
+  }
+  Future<List>quizAuestions ({required String id}) async {
+    print("get questions");
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/quizequestions/"+id));
       print(r.body);
       return jsonDecode(r.body);
     }catch(e){

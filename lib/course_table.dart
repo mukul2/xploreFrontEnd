@@ -60,32 +60,35 @@ class _StudentsState extends State<CourseTable> {
     ],);
 //Batchprovider
     return Scaffold(
-      appBar: AppBar(elevation: 1,backgroundColor: Colors.white,actions: [
-      TextButton(onPressed: (){
-        TextEditingController c = TextEditingController();
+      appBar: PreferredSize(preferredSize: Size(0,50),child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(children: [
+          ElevatedButton(onPressed: (){
+            TextEditingController c = TextEditingController();
 
 
-        showDialog(
-            context: context,
-            builder: (_) =>AlertDialog(title: Text("Create Batch"),actions: [
-              ElevatedButton(onPressed: (){
+            showDialog(
+                context: context,
+                builder: (_) =>AlertDialog(title: Text("Create Batch"),actions: [
+                  ElevatedButton(onPressed: (){
 
-                Data().saveBatches(data: {"name":c.text,"created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
+                    Data().saveBatches(data: {"name":c.text,"created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
 
-                  Data().batches().then((value) {
-                    Provider.of<Batchprovider>(context, listen: false).items = value;
-                  });
-                });
-                Navigator.pop(context);
+                      Data().batches().then((value) {
+                        Provider.of<Batchprovider>(context, listen: false).items = value;
+                      });
+                    });
+                    Navigator.pop(context);
 
-              }, child: Text("Create batch")),
-            ],content: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(controller:c ,decoration: InputDecoration(hintText: "Batch name"),),
-            ),));
+                  }, child: Text("Create batch")),
+                ],content: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(controller:c ,decoration: InputDecoration(hintText: "Batch name"),),
+                ),));
 
-      }, child: Text("Create Batch"))
-    ],),
+          }, child: Text("Create Batch"))
+        ],),
+      ),),
       body: true?Consumer<Batchprovider>(
         builder: (_, bar, __) {
 
@@ -100,7 +103,7 @@ class _StudentsState extends State<CourseTable> {
               rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
 
               columns: const [
-                DataColumn(label: Text('Name')),
+                DataColumn(label: Text('Batch Name',style: TextStyle(color: Colors.blue),)),
 
                 // DataColumn(label: Text('Id')),
                 // DataColumn(label: Text('Phone'))

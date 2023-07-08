@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import 'RestApi.dart';
 import 'enums.dart';
 
 class Edit_quiz_activity extends StatefulWidget {
@@ -313,6 +314,129 @@ class _Edit_quiz_activityState extends State<Edit_quiz_activity> {
     }else{
           return Center(child: CircularProgressIndicator(),);
     }});
+
+  }
+}
+
+
+
+class Edit_quiz_activitySQL extends StatefulWidget {
+  Map ref;
+  Edit_quiz_activitySQL({required this.ref});
+
+  @override
+  State<Edit_quiz_activitySQL> createState() => _Edit_quiz_activitySQLState();
+}
+
+class _Edit_quiz_activitySQLState extends State<Edit_quiz_activitySQL> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // controller1.text = widget.ref["title"];
+    // controller2.text = widget.ref["num_retakes"];
+    // controller3.text = widget.ref["course_id"];
+    // controller4.text = widget.ref["exam_time"];
+    // controller5.text = widget.ref["total_point"];
+    // controller6.text = widget.ref["pass_mark"];
+    // controller7.text =  DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.fromMillisecondsSinceEpoch(widget.ref["exam_start"])) ;
+    // //controller7.text = "";
+    //
+    // controller8.text = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.fromMillisecondsSinceEpoch(widget.ref["exam_end"])) ;;
+    // controller9.text = widget.ref["status"];
+    // controller10.text = widget.ref["section_details"];
+    // setState(() {
+    //
+    // });
+  }
+  questionType qt = questionType.singleChoice;
+  TextEditingController controller1 = TextEditingController();
+  TextEditingController controller2 = TextEditingController();
+  TextEditingController controller3 = TextEditingController();
+  TextEditingController controller4 = TextEditingController();
+  TextEditingController controller5 = TextEditingController();
+  TextEditingController controller6 = TextEditingController();
+  TextEditingController controller7 = TextEditingController();
+  TextEditingController controller8 = TextEditingController();
+  TextEditingController controller9 = TextEditingController();
+  TextEditingController controller10 = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    //quizAuestions
+
+    return  FutureBuilder(
+
+        future:Data().quizAuestions(id: widget.ref["id"].toString()),
+        builder: (context, AsyncSnapshot<List> snap) {
+          if(snap.hasData && snap.data!.length>0){
+         return   Wrap(children:  snap.data!.map((e) => Container(width: 300,margin: EdgeInsets.all(5), decoration: BoxDecoration(border: Border.all(color: Colors.grey),borderRadius: BorderRadius.circular(4)),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(  e["title"],style: TextStyle(color: Colors.grey),),
+                        Text(  "Score : "+e["score"].toString(),style: TextStyle(color: Colors.grey),),
+                      ],
+                    ),
+                    Text( e["q"],style: TextStyle(color: Colors.blue),),
+                    Text( e["explanation"],style: TextStyle(color: Colors.grey),),
+                    Text("Options"),
+                    ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
+                        itemCount:e["options"].length,
+                        itemBuilder: (BuildContext context, int index2) {
+                          return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text((index2+1).toString()),
+                              Text(  e["options"][index2]["body"]),
+                            ],
+                          );
+                        }),
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text( "Right ans",style: TextStyle(color: Colors.grey),),
+                      Text(  e["ans"],style: TextStyle(color: Colors.grey),),
+                    ],
+                  ),
+
+                  ],
+                ),
+              ),
+            )).toList(),);
+          return  ListView.builder(shrinkWrap: true,
+                itemCount:  snap.data!.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(width: 300,margin: EdgeInsets.all(5), decoration: BoxDecoration(border: Border.all(color: Colors.grey),borderRadius: BorderRadius.circular(4)),
+                    child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(  snap.data![index]["title"]),
+                        Text(  snap.data![index]["q"]),
+                        Text(  snap.data![index]["explanation"]),
+                        ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
+                            itemCount: snap.data![index]["options"].length,
+                            itemBuilder: (BuildContext context, int index2) {
+                              return Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(  snap.data![index]["options"][index2]["body"]),
+                                ],
+                              );
+                            }),
+                        Text(  snap.data![index]["ans"]),
+                      ],
+                    ),
+                  );
+                });
+
+
+
+          }else{
+            return Text("--");
+            return Center(child: CupertinoActivityIndicator(),);
+          }
+
+        });
+    return  Text(widget.ref.toString());
 
   }
 }

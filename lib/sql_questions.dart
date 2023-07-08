@@ -35,6 +35,7 @@ class MyData extends DataTableSource {
 
     return DataRow(cells: [
       DataCell(Text(_data[index]['title']??"--")),
+      DataCell(Text(_data[index]['q']??"--")),
       DataCell(Text(_data[index]['ans']??"--")),
 
 
@@ -61,33 +62,36 @@ class _StudentsState extends State<QuestionsActivitySQL> {
     ],);
 //Batchprovider
     return Scaffold(
-      appBar: AppBar(elevation: 1,backgroundColor: Colors.white,actions: [
-        TextButton(onPressed: (){
-          TextEditingController c = TextEditingController();
+      appBar: PreferredSize(preferredSize: Size(0,50),child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(children: [
+          ElevatedButton(onPressed: (){
+            TextEditingController c = TextEditingController();
 
 
-          showDialog(
-              context: context,
-              builder: (_) =>AlertDialog(title: Text("Create Batch"),actions: [
-                ElevatedButton(onPressed: (){
+            showDialog(
+                context: context,
+                builder: (_) =>AlertDialog(title: Text("Create Question"),actions: [
+                  ElevatedButton(onPressed: (){
 
-                  Data().saveClasses(data: {"name":c.text,"created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
-                    Data().classes().then((value) {
-                      Provider.of<Classprovider>(context, listen: false).items = value;
+                    Data().saveClasses(data: {"name":c.text,"created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
+                      Data().classes().then((value) {
+                        Provider.of<Classprovider>(context, listen: false).items = value;
+                      });
+
                     });
 
-                  });
+                    Navigator.pop(context);
 
-                  Navigator.pop(context);
+                  }, child: Text("Create Question")),
+                ],content: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextFormField(controller:c ,decoration: InputDecoration(hintText: "Batch name"),),
+                ),));
 
-                }, child: Text("Create Class")),
-              ],content: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(controller:c ,decoration: InputDecoration(hintText: "Batch name"),),
-              ),));
-
-        }, child: Text("Create Batch"))
-      ],),
+          }, child: Text("Create Question"))
+        ],),
+      ),),
       body: true?Consumer<Questionsprovider>(
         builder: (_, bar, __) {
 
@@ -103,6 +107,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
 
               columns: const [
                 DataColumn(label: Text('Title')),
+                DataColumn(label: Text('Question')),
                 DataColumn(label: Text('Answer')),
 
                 // DataColumn(label: Text('Id')),

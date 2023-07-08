@@ -395,6 +395,7 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
 
                           TextEditingController c1 = TextEditingController();
                           TextEditingController c2 = TextEditingController();
+                          TextEditingController c3 = TextEditingController();
 
 
 
@@ -423,11 +424,15 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
                                               ),),
                                               Padding(
                                                 padding: const EdgeInsets.all(8.0),
-                                                child: TextField(controller: c1,decoration: InputDecoration(label: Text("Question title")),),
+                                                child: TextField(controller: c1,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 8),label: Text("Question title")),),
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.all(8.0),
-                                                child: TextField(controller: c2,decoration: InputDecoration(label: Text("Question body")),),
+                                                child: TextField(controller: c2,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 8),label: Text("Question body")),),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: TextField(controller: c3,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 8),label: Text("Explanation")),),
                                               ),
                                             if(false)  Padding(
                                                 padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 8),
@@ -508,8 +513,8 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
 
 
 
-                                                Provider.of<AddedProvider>(context, listen: false).add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"options":Options,"title":c1.text,"q":c2.text,"type":"SC"});
-                                                Provider.of<AddedProviderOnlyNew>(context, listen: false).add({"score":1,"correctOption":correctOption,"ans":Options[correctOption],"options":Options,"title":c1.text,"q":c2.text,"type":"SC"});
+                                                Provider.of<AddedProvider>(context, listen: false).add({"explanation":c3.text,"score":1,"correctOption":correctOption,"ans":Options[correctOption],"options":Options,"title":c1.text,"q":c2.text,"type":"SC"});
+                                                Provider.of<AddedProviderOnlyNew>(context, listen: false).add({"explanation":c3.text,"score":1,"correctOption":correctOption,"ans":Options[correctOption],"options":Options,"title":c1.text,"q":c2.text,"type":"SC"});
                                                 setState(() {
                                                 });
                                                 Navigator.pop(context);
