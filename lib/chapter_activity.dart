@@ -1,3 +1,4 @@
+import 'package:admin/students_activity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,12 +10,12 @@ import 'AppProviders/DrawerProvider.dart';
 import 'RestApi.dart';
 import 'edit_question_activity.dart';
 
-class ClassActivity extends StatefulWidget {
+  class ChapterActivity extends StatefulWidget {
   // GlobalKey<ScaffoldState> scaffoldKey;
   //CourseTable({required this.scaffoldKey});
-  ClassActivity();
+    ChapterActivity();
   @override
-  State<ClassActivity> createState() => _StudentsState();
+  State<ChapterActivity> createState() => _StudentsState();
 }
 // The "soruce" of the table
 class MyData extends DataTableSource {
@@ -34,8 +35,10 @@ class MyData extends DataTableSource {
 
 
     return DataRow(cells: [
-      DataCell(Text(_data[index]['name']??"--")),
-      DataCell(Text(_data[index]['created_at']??"--")),
+      DataCell(Text(_data[index]['class_name'].toString()??"--")),
+      DataCell(Text(_data[index]['sName']??"--")),
+      DataCell(Text(_data[index]['cname']??"--")),
+      //DataCell(Text(_data[index]['created_at']??"--")),
 
 
 
@@ -45,19 +48,19 @@ class MyData extends DataTableSource {
 }
 
 
-class _StudentsState extends State<ClassActivity> {
+class _StudentsState extends State<ChapterActivity> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Data().classesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
-      Provider.of<Classprovider>(context, listen: false).items = value;
+    Data().chaptersidx(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
+      Provider.of<Chapterprovider>(context, listen: false).items = value;
     });
   }
   @override
   Widget build(BuildContext context) {
     Widget actions = Row(children: [
-      TextButton(onPressed: (){}, child: Text("Create Batch"))
+      TextButton(onPressed: (){}, child: Text("Create Chapter"))
     ],);
 //Batchprovider
     return Scaffold(
@@ -67,33 +70,52 @@ class _StudentsState extends State<ClassActivity> {
           children: [
             ElevatedButton(onPressed: (){
               TextEditingController c = TextEditingController();
+              String selectedClassId= "";
+              String selectedSubjectID= "";
 
 
               showDialog(
                   context: context,
-                  builder: (_) =>AlertDialog(title: Text("Create Class"),actions: [
+                  builder: (_) =>AlertDialog(title: Text("Create Chapter"),actions: [
                     ElevatedButton(onPressed: (){
 
-                      Data().saveClasses(data: {"name":c.text,"created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
-                        Data().classesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
-                          Provider.of<Classprovider>(context, listen: false).items = value;
+                      Data().saveChapters(data: {"subject_id":selectedSubjectID,"class_id":selectedClassId,"name":c.text,"created_by":FirebaseAuth.instance.currentUser!.uid,}).then((value) {
+                        Data().chaptersidx(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
+                          Provider.of<Chapterprovider>(context, listen: false).items = value;
                         });
 
                       });
 
                       Navigator.pop(context);
 
-                    }, child: Text("Create Class")),
-                  ],content: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(controller:c ,decoration: InputDecoration(hintText: "Class name"),),
+                    }, child: Text("Create Chapter")),
+                  ],content: Wrap(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(controller:c ,decoration: InputDecoration(hintText: "Class Chapter"),),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClassSelectDropdown(onSelected: (String id){
+
+                          selectedClassId = id;
+                        },),
+                      ),  Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SubjectSelectDropdown(onSelected: (String id){
+
+                          selectedSubjectID = id;
+                        },),
+                      ),
+                    ],
                   ),));
 
-            }, child: Text("Create Class")),
+            }, child: Text("Create Chapter")),
           ],
         ),
       ),),
-      body: true?Consumer<Classprovider>(
+      body: true?Consumer<Chapterprovider>(
         builder: (_, bar, __) {
 
           if(bar.items.isEmpty)return Center(child: Text("No data"),);
@@ -107,8 +129,10 @@ class _StudentsState extends State<ClassActivity> {
               rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
 
               columns: const [
-                DataColumn(label: Text('Name')),
-                DataColumn(label: Text('Created at')),
+                DataColumn(label: Text('Class')),
+                DataColumn(label: Text('Subject')),
+                DataColumn(label: Text('Chapter')),
+                //DataColumn(label: Text('Created at')),
 
                 // DataColumn(label: Text('Id')),
                 // DataColumn(label: Text('Phone'))

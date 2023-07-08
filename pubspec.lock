@@ -493,6 +493,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.0+2"
+  go_router:
+    dependency: "direct main"
+    description:
+      name: go_router
+      sha256: b33a88c67816312597e5e0f5906c5139a0b9bd9bb137346e872c788da7af8ea0
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.0.3"
   google_sign_in:
     dependency: transitive
     description:
@@ -958,10 +966,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher
-      sha256: eb1e00ab44303d50dd487aab67ebc575456c146c6af44422f9c13889984c00f3
+      sha256: "781bd58a1eb16069412365c98597726cd8810ae27435f04b3b4d3a470bacd61e"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.11"
+    version: "6.1.12"
   url_launcher_android:
     dependency: transitive
     description:
@@ -1148,4 +1156,4 @@ packages:
     version: "6.3.0"
 sdks:
   dart: ">=3.0.0 <4.0.0"
-  flutter: ">=3.3.0"
+  flutter: ">=3.10.0"

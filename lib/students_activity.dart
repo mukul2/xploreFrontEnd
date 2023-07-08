@@ -383,7 +383,7 @@ class _ClassSelectDropdownState extends State<ClassSelectDropdown> {
       padding: const EdgeInsets.only(top: 8),
       child: FutureBuilder<List>(
 
-          future:Data().classes(),
+          future:Data().classesid(id: FirebaseAuth.instance.currentUser!.uid),
           builder: (context, AsyncSnapshot<List> snap) {
             if(snap.hasData){
               List<String> dropdownItems = [];
@@ -408,6 +408,90 @@ class _ClassSelectDropdownState extends State<ClassSelectDropdown> {
                     for(int j = 0 ; j < snap.data!.length ;j++){
                       if(snap.data![j]["name"] == s!){
                         widget.onSelected(snap.data![j]["id"].toString());
+                        break;
+                      }
+                    }
+
+
+                    selected = s!;
+                  });
+                },
+                selectedItem:selected,
+              );
+              return  Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(3),border: Border.all(color: Colors.grey)),
+                  child: DropdownButton<String>(
+                    //value: dropDownString,
+                    items:dropdownItems.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Container(width: 352,child: Text(value)),
+                      );
+                    }).toList(),
+                    onChanged: (String? s) {
+                      setState(() {
+
+                      });
+                    },
+                  ),
+                ),
+              );
+
+
+            }else{
+              return Container(height: 0,width: 0,);
+            }
+
+          }),
+    );
+  }
+}
+
+
+class SubjectSelectDropdown extends StatefulWidget {
+  Function(String)onSelected;
+  SubjectSelectDropdown({required this.onSelected});
+
+  @override
+  State<SubjectSelectDropdown> createState() => _SubjectSelectDropdownState();
+}
+
+class _SubjectSelectDropdownState extends State<SubjectSelectDropdown> {
+  String selected = "";
+  @override
+  Widget build(BuildContext context) {
+    return  Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: FutureBuilder<List>(
+
+          future:Data().subjectsidx(id: FirebaseAuth.instance.currentUser!.uid),
+          builder: (context, AsyncSnapshot<List> snap) {
+
+            if(snap.hasData){
+             // return Text(snap.data!.toString());
+              List<String> dropdownItems = [];
+
+              for(int i = 0 ; i < snap.data!.length ;i++){
+                dropdownItems.add(snap.data![i]["sName"]);
+              }
+              return  DropdownSearch<String>(
+                popupProps: PopupProps.menu(
+                  showSelectedItems: true,
+                  // disabledItemFn: (String s) => s.startsWith('I'),
+                ),
+                items:dropdownItems,
+                dropdownDecoratorProps: DropDownDecoratorProps(
+                  dropdownSearchDecoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal:8),
+                    labelText: "Subjects",
+                    hintText: "Select subject",
+                  ),
+                ),
+                onChanged: (String? s){
+                  setState(() {
+                    for(int j = 0 ; j < snap.data!.length ;j++){
+                      if(snap.data![j]["sName"] == s!){
+                        widget.onSelected(snap.data![j]["sid"].toString());
                         break;
                       }
                     }

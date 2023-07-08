@@ -913,7 +913,8 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
                           for(int k = 0 ; k < allTimes.length ; k++){
                             min = min+int.parse(allTimes[k]);
                           }
-                          Map dataToSave = {"uid":FirebaseAuth.instance.currentUser!.uid,
+                          Map dataToSave = {
+                            "created_by":FirebaseAuth.instance.currentUser!.uid,
                             "course_id":controller3.text,
                             "exam_end":exm_end/1000,
                             "exam_start":exm_start/1000,

@@ -13,6 +13,46 @@ class Data{
 
    }
   }
+  Future<List>chaptersidx ({required String id}) async {
+    print("subjectsidx");
+
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/getchaptersbyteacher",),headers: {'Content-Type': 'application/json',},body: jsonEncode({"created_by":id}));
+      print("res start");
+      print(r.body);
+      print("res end");
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return [];
+
+    }
+  }
+  Future<List>subjectsidx ({required String id}) async {
+    print("subjectsidx");
+
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/getsubjects",),headers: {'Content-Type': 'application/json',},body: jsonEncode({"created_by":id}));
+      print("res start");
+      print(r.body);
+      print("res end");
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return [];
+
+    }
+  }
+  Future<List>quizesidx ({required String id}) async {
+
+   try{
+     http.Response r =  await http.post(Uri.parse(base+"/quizes",),headers: {'Content-Type': 'application/json',},body: jsonEncode({"uid":id}));
+     return jsonDecode(r.body);
+   }catch(e){
+     return [];
+
+   }
+  }
 
   Future<List>batches () async {
 
@@ -37,7 +77,9 @@ class Data{
       return{};
 
     }
-  }  Future saveQuiz ({required dynamic data}) async {
+  }
+
+  Future saveQuiz ({required dynamic data}) async {
 
     try{
       http.Response r =  await http.post(Uri.parse(base+"/savequiz",),headers: {'Content-Type': 'application/json',},body: jsonEncode( data));
@@ -59,7 +101,19 @@ class Data{
 
     }
   }
+  Future<List>options ({required String id}) async {
+    print("get questions");
 
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/options/"+id));
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return [];
+
+    }
+  }
   Future<List>questions () async {
     print("get questions");
 
@@ -85,6 +139,18 @@ class Data{
 
     }
   }
+  Future saveTeacher ({required dynamic data}) async {
+
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/saveteacher",),headers: {'Content-Type': 'application/json',},body: jsonEncode( data));
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return{};
+
+    }
+  }
   Future saveStudents ({required dynamic data}) async {
 
     try{
@@ -97,6 +163,18 @@ class Data{
 
     }
   }
+  Future<List>classesid ({required String id}) async {
+
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/getclasses"),headers: {'Content-Type': 'application/json',},body: jsonEncode({"created_by":id}));
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return [];
+
+    }
+  }
   Future<List>classes () async {
 
     try{
@@ -104,6 +182,30 @@ class Data{
       return jsonDecode(r.body);
     }catch(e){
       return [];
+
+    }
+  }
+  Future saveChapters ({required dynamic data}) async {
+
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/saveschapters",),headers: {'Content-Type': 'application/json',},body: jsonEncode( data));
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return{};
+
+    }
+  }
+  Future saveSubjects ({required dynamic data}) async {
+
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/savesubjects",),headers: {'Content-Type': 'application/json',},body: jsonEncode( data));
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return{};
 
     }
   }

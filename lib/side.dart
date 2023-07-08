@@ -3,6 +3,7 @@ import 'package:admin/sql_questions.dart';
 import 'package:admin/student_activity.dart';
 import 'package:admin/students.dart';
 import 'package:admin/students_activity.dart';
+import 'package:admin/subject_activity.dart';
 import 'package:admin/tab_questions.dart';
 import 'package:admin/tab_quiz.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'Quizes.dart';
+import 'chapter_activity.dart';
 import 'class_activity.dart';
 import 'course_table.dart';
 import 'login.dart';
@@ -205,6 +207,13 @@ class ExampleSidebarX extends StatelessWidget {
           icon: Icons.supervised_user_circle_outlined,
           label: 'Class',
         ),
+        const SidebarXItem(
+          icon: Icons.supervised_user_circle_outlined,
+          label: 'Subject',
+        ),        const SidebarXItem(
+          icon: Icons.supervised_user_circle_outlined,
+          label: 'Chapters',
+        ),
          SidebarXItem(
           icon: Icons.logout,
           label: 'Logout',onTap: (){
@@ -243,6 +252,10 @@ class _ScreensExample extends StatelessWidget {
             return  StudentActivitySql();
           case 4:
             return  ClassActivity();
+            case 5:
+          return  SubjectActivity();
+          case 6:
+            return  ChapterActivity();
           default:
             return Text(
               pageTitle,

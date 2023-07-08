@@ -18,7 +18,8 @@ class QuestionsActivitySQL extends StatefulWidget {
 }
 // The "soruce" of the table
 class MyData extends DataTableSource {
-  MyData(this._data);
+  BuildContext context;
+  MyData(this._data,this.context);
   // GlobalKey<ScaffoldState> key;
   final List<dynamic> _data;
 
@@ -37,6 +38,68 @@ class MyData extends DataTableSource {
       DataCell(Text(_data[index]['title']??"--")),
       DataCell(Text(_data[index]['q']??"--")),
       DataCell(Text(_data[index]['ans']??"--")),
+      DataCell(ElevatedButton(onPressed: (){
+
+        //options
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(actions: [
+              TextButton(onPressed: (){
+                Navigator.pop(context);
+              }, child: Text("Close")),
+              TextButton(onPressed: (){
+                Navigator.pop(context);
+              }, child: Text("Delete",style: TextStyle(color: Colors.redAccent),)),
+            ],title: Wrap(
+              children: [
+                Row(
+                  children: [
+                    Text(_data[index]['title']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
+                  ],
+                ),
+                Row(
+                  children: [
+                    Text(_data[index]['q']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
+                  ],
+                ),
+                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Right ans : ",style: TextStyle(color: Colors.grey,fontSize:13 ),),
+                    Text(_data[index]['ans']??"--",style: TextStyle(color: Colors.black54,fontSize:13 ),)
+                  ],
+                ),
+                Text("Options are",style: TextStyle(color: Colors.grey,fontSize:13 ),),
+              ],
+            ),
+              content: FutureBuilder(
+
+                  future:Data().options(id: _data[index]['id'].toString()),
+                  builder: (context, AsyncSnapshot<List> snap) {
+                    if(snap.hasData && snap.data!.length>0){
+                  //    return Text(snap.data!.toString());
+                      return Wrap(children: snap.data!.map((e) => Container(margin: EdgeInsets.all(5),decoration: BoxDecoration(borderRadius: BorderRadius.circular(2),
+                          border: Border.all(color: Colors.blue,width: 0.3)),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(children: [
+                           Text( e["body"],style: TextStyle(color: Colors.blue),),
+                          ],),
+                        ),
+                      )).toList(),);
+                      return ListView.builder(shrinkWrap: true,
+                          itemCount: snap.data!.length,
+
+                          // display each item of the product list
+                          itemBuilder: (context, index) {
+                            return Text(snap.data![index]["body"].toString());
+                          });
+                    }else{
+                      return Container(height: 100,child: Center(child: CupertinoActivityIndicator(),));
+                    }
+
+                  }),
+            ));
+      },child: Text("View options"),)),
 
 
 
@@ -62,7 +125,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
     ],);
 //Batchprovider
     return Scaffold(
-      appBar: PreferredSize(preferredSize: Size(0,50),child: Padding(
+      appBar: true?null: PreferredSize(preferredSize: Size(0,50),child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(children: [
           ElevatedButton(onPressed: (){
@@ -98,7 +161,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
           if(bar.items.isEmpty)return Center(child: Text("No data"),);
 
           int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
-          final DataTableSource _allUsers = MyData(bar.items);
+          final DataTableSource _allUsers = MyData(bar.items,context);
           return SingleChildScrollView(
             child: PaginatedDataTable(
 
@@ -109,6 +172,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
                 DataColumn(label: Text('Title')),
                 DataColumn(label: Text('Question')),
                 DataColumn(label: Text('Answer')),
+                DataColumn(label: Text('Options')),
 
                 // DataColumn(label: Text('Id')),
                 // DataColumn(label: Text('Phone'))
@@ -125,7 +189,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
             if(snap.hasData && snap.data!.length>0){
 
               int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
-              final DataTableSource _allUsers = MyData(snap.data!);
+              final DataTableSource _allUsers = MyData(snap.data!,context);
               return SingleChildScrollView(
                 child: PaginatedDataTable(
 
@@ -157,7 +221,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
 
 
             if(snap.hasData){
-              final DataTableSource _allUsers = MyData(snap.data!.docs);
+              final DataTableSource _allUsers = MyData(snap.data!.docs,context);
               int n =( ( MediaQuery.of(context).size.height - 100 ) / 55 ).toInt() ;
               return SingleChildScrollView(
                 child: PaginatedDataTable(

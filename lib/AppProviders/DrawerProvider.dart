@@ -192,3 +192,25 @@ class Questionsprovider extends ChangeNotifier {
     notifyListeners();
   }
 }
+class Chapterprovider extends ChangeNotifier {
+
+  List _items = [];
+
+  List get items => _items;
+
+  set items(List value) {
+    _items = value;
+    notifyListeners();
+  }
+}
+class Subjectsprovider extends ChangeNotifier {
+
+  List _items = [];
+
+  List get items => _items;
+
+  set items(List value) {
+    _items = value;
+    notifyListeners();
+  }
+}

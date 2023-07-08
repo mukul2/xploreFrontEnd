@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -24,8 +25,9 @@ class _LoginState extends State<Login> {
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
                 Text("Login",style: TextStyle(fontSize: 40),),
                 TextButton(onPressed: (){
-                  //context.push("/signup");
-                }, child: Text("Sign up your company")),
+                  context.go("/signup");
+                 // context.push("/signup");
+                }, child: Text("Sign up as Tutor")),
               ],),
             ),
             Padding(

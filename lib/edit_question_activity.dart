@@ -366,7 +366,7 @@ class _Edit_quiz_activitySQLState extends State<Edit_quiz_activitySQL> {
 
     return  FutureBuilder(
 
-        future:Data().quizAuestions(id: widget.ref["id"].toString()),
+        future:Data().quizAuestions(id: widget.ref["quizid"].toString()),
         builder: (context, AsyncSnapshot<List> snap) {
           if(snap.hasData && snap.data!.length>0){
          return   Wrap(children:  snap.data!.map((e) => Container(width: 300,margin: EdgeInsets.all(5), decoration: BoxDecoration(border: Border.all(color: Colors.grey),borderRadius: BorderRadius.circular(4)),
