@@ -49,7 +49,7 @@ class _StudentsState extends State<CourseTable> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Data().batches().then((value) {
+    Data().batchesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
       Provider.of<Batchprovider>(context, listen: false).items = value;
     });
   }
@@ -74,7 +74,7 @@ class _StudentsState extends State<CourseTable> {
 
                     Data().saveBatches(data: {"name":c.text,"created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
 
-                      Data().batches().then((value) {
+                      Data().batchesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
                         Provider.of<Batchprovider>(context, listen: false).items = value;
                       });
                     });

@@ -101,7 +101,8 @@ class _StudentsState extends State<ChapterActivity> {
 
                           selectedClassId = id;
                         },),
-                      ),  Padding(
+                      ),
+                      Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SubjectSelectDropdown(onSelected: (String id){
 

@@ -55,7 +55,7 @@ class _StudentsState extends State<StudentActivitySql> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Data().students().then((value) {
+    Data().studentsid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
       Provider.of<Studentsprovider>(context, listen: false).items = value;
     });
   }
@@ -88,7 +88,7 @@ class _StudentsState extends State<StudentActivitySql> {
                           saveDb(String id){
                             Data().saveStudents(data: {"id":id,"LastName":lastname.text,"FirstName":firstname.text,"Address":address.text,"Email":email.text,"Phone":phone.text,
                               "class_id":batch,"created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
-                              Data().students().then((value) {
+                              Data().studentsid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
                                 Provider.of<Studentsprovider>(context, listen: false).items = value;
                               });
 
@@ -386,6 +386,7 @@ class _ClassSelectDropdownState extends State<ClassSelectDropdown> {
           future:Data().classesid(id: FirebaseAuth.instance.currentUser!.uid),
           builder: (context, AsyncSnapshot<List> snap) {
             if(snap.hasData){
+              // Text(snap.data![0].toString());
               List<String> dropdownItems = [];
 
               for(int i = 0 ; i < snap.data!.length ;i++){
@@ -492,6 +493,90 @@ class _SubjectSelectDropdownState extends State<SubjectSelectDropdown> {
                     for(int j = 0 ; j < snap.data!.length ;j++){
                       if(snap.data![j]["sName"] == s!){
                         widget.onSelected(snap.data![j]["sid"].toString());
+                        break;
+                      }
+                    }
+
+
+                    selected = s!;
+                  });
+                },
+                selectedItem:selected,
+              );
+              return  Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(3),border: Border.all(color: Colors.grey)),
+                  child: DropdownButton<String>(
+                    //value: dropDownString,
+                    items:dropdownItems.map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Container(width: 352,child: Text(value)),
+                      );
+                    }).toList(),
+                    onChanged: (String? s) {
+                      setState(() {
+
+                      });
+                    },
+                  ),
+                ),
+              );
+
+
+            }else{
+              return Container(height: 0,width: 0,);
+            }
+
+          }),
+    );
+  }
+}
+
+
+class ChapterSelectDropdown extends StatefulWidget {
+  Function(String)onSelected;
+  ChapterSelectDropdown({required this.onSelected});
+
+  @override
+  State<ChapterSelectDropdown> createState() => _ChapterSelectDropdownState();
+}
+
+class _ChapterSelectDropdownState extends State<ChapterSelectDropdown> {
+  String selected = "";
+  @override
+  Widget build(BuildContext context) {
+    return  Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: FutureBuilder<List>(
+
+          future:Data().chaptersidx(id: FirebaseAuth.instance.currentUser!.uid),
+          builder: (context, AsyncSnapshot<List> snap) {
+
+            if(snap.hasData){
+            //  return Text(snap.data!.toString());
+              List<String> dropdownItems = [];
+
+              for(int i = 0 ; i < snap.data!.length ;i++){
+                dropdownItems.add(snap.data![i]["cname"]);
+              }
+              return  DropdownSearch<String>(
+                popupProps: PopupProps.menu(
+                  showSelectedItems: true,
+                  // disabledItemFn: (String s) => s.startsWith('I'),
+                ),
+                items:dropdownItems,
+                dropdownDecoratorProps: DropDownDecoratorProps(
+                  dropdownSearchDecoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal:8),
+                    labelText: "Chapter",
+                    hintText: "Select chapter",
+                  ),
+                ),
+                onChanged: (String? s){
+                  setState(() {
+                    for(int j = 0 ; j < snap.data!.length ;j++){
+                      if(snap.data![j]["cname"] == s!){
+                        widget.onSelected(snap.data![j]["cId"].toString());
                         break;
                       }
                     }

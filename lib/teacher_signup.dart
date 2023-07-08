@@ -79,7 +79,10 @@ class _TeacherSignupState extends State<TeacherSignup> {
                     email: email.text,
                     password: password.text
                 );
-                Data().saveTeacher(data: {"id":credential.user!.uid,"LastName":lname.text,"FirstName":fname.text,"Address":address.text,"Email":email.text,"Phone":phone.text,});
+                Data().saveTeacher(data: {"id":credential.user!.uid,"LastName":lname.text,"FirstName":fname.text,"Address":address.text,"Email":email.text,"Phone":phone.text,}).then((value) {
+                  context.go("/home");
+
+                });
                 credential.user!.updateDisplayName(fname.text+" "+lname.text);
                 print("logged in");
                 setState(() {

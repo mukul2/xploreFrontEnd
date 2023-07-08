@@ -140,7 +140,7 @@ class _StudentsState extends State<QuizesTable> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Data().quizes().then((value) {
+    Data().quizesHandelerid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
       Provider.of<Quizessprovider>(context, listen: false).items = value;
     });
   }
@@ -175,37 +175,7 @@ class _StudentsState extends State<QuizesTable> {
           );
         });
 
-   return FutureBuilder(
 
-        future:Data().quizes(),
-    builder: (context, AsyncSnapshot<List> snap) {
-          if(snap.hasData && snap.data!.length>0){
-              int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
-            final DataTableSource _allUsers = MyData(snap.data!,widget.scaffoldKey);
-            return SingleChildScrollView(
-              child: PaginatedDataTable(
-
-                header: null,
-                rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
-                columns: const [
-                  DataColumn(label: Text('Quiz title')),
-                  DataColumn(label: Text('Details')),
-                  DataColumn(label: Text('Total')),
-                  DataColumn(label: Text('Exam start')),
-                  DataColumn(label: Text('Exam end')),
-                  DataColumn(label: Text('Exam duration')),
-                  DataColumn(label: Text('Actions')),
-                  // DataColumn(label: Text('Id')),
-                  // DataColumn(label: Text('Phone'))
-                ],
-                source: _allUsers,
-              ),
-            );
-          }else{
-            return Center(child: Text("No data"),);
-          }
-
-    });
 
     return Text("Quiz here");
 

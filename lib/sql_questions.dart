@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'AppProviders/DrawerProvider.dart';
 import 'RestApi.dart';
+import 'create_question_activity.dart';
 import 'edit_question_activity.dart';
 
 class QuestionsActivitySQL extends StatefulWidget {
@@ -35,6 +36,9 @@ class MyData extends DataTableSource {
 
 
     return DataRow(cells: [
+      DataCell(Text(_data[index]['class'].toString())),
+      DataCell(Text(_data[index]['subject'].toString())),
+      DataCell(Text(_data[index]['chapter'].toString())),
       DataCell(Text(_data[index]['title']??"--")),
       DataCell(Text(_data[index]['q']??"--")),
       DataCell(Text(_data[index]['ans']??"--")),
@@ -114,7 +118,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Data().questions().then((value) {
+    Data().questionsbyid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
       Provider.of<Questionsprovider>(context, listen: false).items = value;
     });
   }
@@ -125,7 +129,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
     ],);
 //Batchprovider
     return Scaffold(
-      appBar: true?null: PreferredSize(preferredSize: Size(0,50),child: Padding(
+      appBar: false?null: PreferredSize(preferredSize: Size(0,50),child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(children: [
           ElevatedButton(onPressed: (){
@@ -134,22 +138,9 @@ class _StudentsState extends State<QuestionsActivitySQL> {
 
             showDialog(
                 context: context,
-                builder: (_) =>AlertDialog(title: Text("Create Question"),actions: [
-                  ElevatedButton(onPressed: (){
-
-                    Data().saveClasses(data: {"name":c.text,"created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
-                      Data().classes().then((value) {
-                        Provider.of<Classprovider>(context, listen: false).items = value;
-                      });
-
-                    });
-
-                    Navigator.pop(context);
-
-                  }, child: Text("Create Question")),
-                ],content: Padding(
+                builder: (_) =>AlertDialog(content: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(controller:c ,decoration: InputDecoration(hintText: "Batch name"),),
+                  child: Create_question(),
                 ),));
 
           }, child: Text("Create Question"))
@@ -165,10 +156,13 @@ class _StudentsState extends State<QuestionsActivitySQL> {
           return SingleChildScrollView(
             child: PaginatedDataTable(
 
-              header:null,
+              header:Text("Questions"),
               rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
 
               columns: const [
+                DataColumn(label: Text('Class')),
+                DataColumn(label: Text('Subject')),
+                DataColumn(label: Text('Chapter')),
                 DataColumn(label: Text('Title')),
                 DataColumn(label: Text('Question')),
                 DataColumn(label: Text('Answer')),

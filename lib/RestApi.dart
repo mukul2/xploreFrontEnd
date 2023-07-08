@@ -2,11 +2,20 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 class Data{
-  String base ="http://139.59.74.58";
-  Future<List>quizes () async {
+  String base ="https://quizhub.online";
+  Future<List>quizesX () async {
 
    try{
      http.Response r =  await http.get(Uri.parse(base+"/quizes"));
+     return jsonDecode(r.body);
+   }catch(e){
+     return [];
+
+   }
+  }  Future<List>quizesHandelerid ({required String id}) async {
+
+   try{
+     http.Response r =  await http.post(Uri.parse(base+"/quizesHandelerid"),headers: {'Content-Type': 'application/json',},body: jsonEncode({"uid":id}));
      return jsonDecode(r.body);
    }catch(e){
      return [];
@@ -53,7 +62,17 @@ class Data{
 
    }
   }
+  Future<List>batchesid ({required String id}) async {
 
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/batches"),headers: {'Content-Type': 'application/json',},body: jsonEncode({"created_by":id}));
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      return [];
+
+    }
+  }
   Future<List>batches () async {
 
     try{
@@ -78,6 +97,18 @@ class Data{
 
     }
   }
+  Future savequestion ({required dynamic data}) async {
+
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/savesquestion",),headers: {'Content-Type': 'application/json',},body: jsonEncode( data));
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return{};
+
+    }
+  }
 
   Future saveQuiz ({required dynamic data}) async {
 
@@ -88,6 +119,16 @@ class Data{
     }catch(e){
       print(e);
       return{};
+
+    }
+  }
+  Future<List>studentsid ({required String id}) async {
+
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/getstudents"),headers: {'Content-Type': 'application/json',},body: jsonEncode({"created_by":id}));
+      return jsonDecode(r.body);
+    }catch(e){
+      return [];
 
     }
   }
@@ -106,6 +147,19 @@ class Data{
 
     try{
       http.Response r =  await http.get(Uri.parse(base+"/options/"+id));
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return [];
+
+    }
+  }
+  Future<List>questionsbyid ({required String id}) async {
+    print("get questions");
+
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/questions"),headers: {'Content-Type': 'application/json',},body: jsonEncode({"created_by":id}));
       print(r.body);
       return jsonDecode(r.body);
     }catch(e){

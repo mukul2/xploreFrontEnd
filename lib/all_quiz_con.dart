@@ -937,11 +937,11 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
 
 
                           Data().saveQuiz(data: dataToSave).then((value) {
-
-                            Data().quizes().then((value) {
+                            Data().quizesHandelerid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
                               Provider.of<Quizessprovider>(context, listen: false).items = value;
                               Navigator.pop(context);
                             });
+
 
                           });
 

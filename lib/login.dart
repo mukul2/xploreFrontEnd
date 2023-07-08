@@ -60,6 +60,7 @@ class _LoginState extends State<Login> {
                     password: password.text
                 );
                 print("logged in");
+                context.go("/home");
                 setState(() {
                   busy = false;
                 });
