@@ -133,7 +133,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
       TextButton(onPressed: (){}, child: Text("Create Batch"))
     ],);
 //Batchprovider
-    return Scaffold(
+    return Scaffold(backgroundColor: Colors.grey.shade50,
       appBar: false?null: PreferredSize(preferredSize: Size(0,120),child: Card(margin: EdgeInsets.zero,shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0.0),
       ),
@@ -276,7 +276,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
 
               int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
               final DataTableSource _allUsers = MyData(sorted,context);
-              return PaginatedDataTable(
+              return PaginatedDataTable(showCheckboxColumn: true,showFirstLastButtons: true,
 
                 header:true?null:Row(
                   children: [
