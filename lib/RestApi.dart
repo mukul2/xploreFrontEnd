@@ -100,6 +100,18 @@ class Data{
 
     }
   }
+  Future buycourse ({required dynamic data}) async {
+
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/buycourse",),headers: {'Content-Type': 'application/json',},body: jsonEncode( data));
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return{};
+
+    }
+  }
   Future savequestion ({required dynamic data}) async {
 
     try{
@@ -129,6 +141,15 @@ class Data{
 
     try{
       http.Response r =  await http.post(Uri.parse(base+"/getstudents"),headers: {'Content-Type': 'application/json',},body: jsonEncode({"created_by":id}));
+      return jsonDecode(r.body);
+    }catch(e){
+      return [];
+
+    }
+  }  Future<List>getcourse ({required String id}) async {
+
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/getcourse"),headers: {'Content-Type': 'application/json',},body: jsonEncode({"uid":id}));
       return jsonDecode(r.body);
     }catch(e){
       return [];

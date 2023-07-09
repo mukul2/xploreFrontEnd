@@ -243,3 +243,23 @@ class QuestionSortsprovider extends ChangeNotifier {
 
   }
 }
+
+class Questionprovider extends ChangeNotifier {
+
+  List _items = [];
+
+  List get items => _items;
+
+  set items(List value) {
+    _items = value;
+    notifyListeners();
+  }
+  addData(int i){
+    _items.add(i);
+    notifyListeners();
+  }
+  removeData(int i){
+    _items.remove(i);
+    notifyListeners();
+  }
+}

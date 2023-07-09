@@ -1,3 +1,4 @@
+import 'package:admin/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,13 +23,14 @@ class MyData extends DataTableSource {
   GlobalKey<ScaffoldState> key;
   final List<dynamic> _data;
 
-
+  List selected_quiz = [];
   @override
   bool get isRowCountApproximate => false;
   @override
   int get rowCount => _data.length;
   @override
   int get selectedRowCount => 0;
+
   @override
   DataRow getRow(int index) {
     DataCell safeDate(dynamic d,String key){
@@ -67,7 +69,18 @@ class MyData extends DataTableSource {
       }
     }
 
-    return DataRow(cells: [
+    return DataRow(selected: selected_quiz.contains(_data[index]['id']),onSelectChanged: (bool? b){
+     print(b);
+      if( selected_quiz.contains(_data[index]['id'] )){
+        selected_quiz.remove(_data[index]['id']);
+      }else{
+        selected_quiz.add(_data[index]['id']);
+      }
+      print(selected_quiz);
+
+
+
+    },cells: [
       DataCell(Text(_data[index]['class']??"--")),
       DataCell(Text(_data[index]['subject']??"--")),
       DataCell(Text(_data[index]['chapter']??"--")),
@@ -156,7 +169,7 @@ class _StudentsState extends State<QuizesTable> {
           int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
           final DataTableSource _allUsers = MyData(bar.items,widget.scaffoldKey);
           return SingleChildScrollView(
-            child: PaginatedDataTable(
+            child: PaginatedDataTable(showCheckboxColumn: true,
 
               header: null,
               rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,

@@ -24,10 +24,11 @@ class _LoginState extends State<Login> {
               padding:  EdgeInsets.symmetric(horizontal: 8),
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
                 Text("Login",style: TextStyle(fontSize: 40),),
+
                 TextButton(onPressed: (){
-                  context.go("/signup");
+                  context.go("/student-registration");
                  // context.push("/signup");
-                }, child: Text("Sign up as Tutor")),
+                }, child: Text("Student registration")),
               ],),
             ),
             Padding(
@@ -39,7 +40,11 @@ class _LoginState extends State<Login> {
               child: TextFormField(controller: password,obscureText: true,decoration: InputDecoration(hintText: "Password",contentPadding: EdgeInsets.symmetric(horizontal: 10,vertical: 0)),),
             ),
 
-            Row(mainAxisAlignment: MainAxisAlignment.end,children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+              TextButton(onPressed: (){
+                context.go("/signup");
+                // context.push("/signup");
+              }, child: Text("Sign up as Tutor")),
               TextButton(onPressed: (){
                // GoRouter.of(context).push("/forgot-password");
                 // context.push("forgot-password");

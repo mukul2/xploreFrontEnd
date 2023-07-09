@@ -37,6 +37,17 @@ class MyData extends DataTableSource {
 
 
     return DataRow(cells: [
+      // Questionprovider
+      DataCell(Consumer<Questionprovider>(
+    builder: (_, bar, __) =>Checkbox(value: bar.items.contains(_data[index]['id']), onChanged: (bool? b){
+
+      if(bar.items.contains(_data[index]['id'])){
+        bar.removeData(_data[index]['id']);
+      }else{
+        bar.addData(_data[index]['id']);
+      }
+
+    }))),
       DataCell(Text(_data[index]['class'].toString())),
       DataCell(Text(_data[index]['subject'].toString())),
       DataCell(Text(_data[index]['chapter'].toString())),
@@ -397,7 +408,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
 
               int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
               final DataTableSource _allUsers = MyData(sorted,context);
-              return PaginatedDataTable(showCheckboxColumn: true,showFirstLastButtons: true,
+              return PaginatedDataTable(columnSpacing: 10,horizontalMargin: 0,showCheckboxColumn: true,showFirstLastButtons: true,
 
                 header:true?null:Row(
                   children: [
@@ -435,7 +446,10 @@ class _StudentsState extends State<QuestionsActivitySQL> {
                 ),
                 rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
 
-                columns: const [
+                columns:  [
+                  DataColumn(label:Checkbox(value: false, onChanged: (bool? b){
+
+                  })),
                   DataColumn(label: Text('Class')),
                   DataColumn(label: Text('Subject')),
                   DataColumn(label: Text('Chapter')),

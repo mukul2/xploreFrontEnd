@@ -1,3 +1,4 @@
+import 'package:admin/students_activity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,6 +36,8 @@ class MyData extends DataTableSource {
 
     return DataRow(cells: [
       DataCell(Text(_data[index]['name']??"--")),
+      DataCell(Text(_data[index]['description']??"--")),
+      DataCell(Text(_data[index]['price'].toString()??"--")),
 
 
 
@@ -65,28 +68,62 @@ class _StudentsState extends State<CourseTable> {
         child: Row(children: [
           ElevatedButton(onPressed: (){
             TextEditingController c = TextEditingController();
+            TextEditingController c_description = TextEditingController();
+            TextEditingController c_price = TextEditingController();
+            String? class_id;
+            String? subject_id;
 
 
             showDialog(
                 context: context,
-                builder: (_) =>AlertDialog(title: Text("Create Batch"),actions: [
-                  ElevatedButton(onPressed: (){
+                builder: (_) =>AlertDialog(title: Text("Create Course"),actions: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 25),
+                    child: ElevatedButton(onPressed: (){
 
-                    Data().saveBatches(data: {"name":c.text,"created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
+                      Data().saveBatches(data: {"price":c_price.text,"class_id":class_id,"subject_id":subject_id,"description":c_description.text,"name":c.text,
+                        "created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
 
-                      Data().batchesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
-                        Provider.of<Batchprovider>(context, listen: false).items = value;
+                        Data().batchesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
+                          Provider.of<Batchprovider>(context, listen: false).items = value;
+                        });
                       });
-                    });
-                    Navigator.pop(context);
+                      Navigator.pop(context);
 
-                  }, child: Text("Create batch")),
-                ],content: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextFormField(controller:c ,decoration: InputDecoration(hintText: "Batch name"),),
+                    }, child: Container(width: double.infinity,child: Center(child: Text("Create Course")))),
+                  ),
+                ],content: Wrap(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(controller:c ,decoration: InputDecoration(hintText: "Course name"),),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(controller:c_description ,decoration: InputDecoration(hintText: "Description"),),
+                    ),  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(controller:c_price ,decoration: InputDecoration(hintText: "Price"),),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                      child: ClassSelectDropdown(onSelected: (String id){
+                        class_id = id;
+                        // selectedClassId = id;
+                      },),
+                    ) ,Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: SubjectSelectDropdown(onSelected: (String id){
+                        subject_id = id;
+
+                        // selectedClassId = id;
+                      },),
+                    )
+
+                  ],
                 ),));
 
-          }, child: Text("Create Batch"))
+          }, child: Text("Create Course"))
         ],),
       ),),
       body: true?Consumer<Batchprovider>(
@@ -103,7 +140,9 @@ class _StudentsState extends State<CourseTable> {
               rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
 
               columns: const [
-                DataColumn(label: Text('Batch Name',style: TextStyle(color: Colors.blue),)),
+                DataColumn(label: Text('Course Name',style: TextStyle(color: Colors.blue),)),
+                DataColumn(label: Text('Description',style: TextStyle(color: Colors.blue),)),
+                DataColumn(label: Text('Price',style: TextStyle(color: Colors.blue),)),
 
                 // DataColumn(label: Text('Id')),
                 // DataColumn(label: Text('Phone'))

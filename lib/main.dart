@@ -1,4 +1,5 @@
 import 'package:admin/side.dart';
+import 'package:admin/student_side.dart';
 import 'package:admin/teacher_signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -48,9 +49,24 @@ final GoRouter _router = GoRouter(
           },
         ),
         GoRoute(
+          path: 'shome',
+          builder: (BuildContext context, GoRouterState state) {
+            return StreamBuilder<User?>(
+                stream: FirebaseAuth.instance.authStateChanges(), // a previously-obtained Future<String> or null
+                builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+                  return FirebaseAuth.instance.currentUser==null?Login():   StudentApp();
+                });
+          },
+        ),
+        GoRoute(
           path: 'signup',
           builder: (BuildContext context, GoRouterState state) {
             return TeacherSignup();
+          },
+        ),   GoRoute(
+          path: 'student-registration',
+          builder: (BuildContext context, GoRouterState state) {
+            return StudentSignup();
           },
         ),
         GoRoute(
@@ -98,11 +114,15 @@ class MyApp extends StatelessWidget {
     ChangeNotifierProvider<Subjectsprovider>(create: (context) => Subjectsprovider()),
     ChangeNotifierProvider<Chapterprovider>(create: (context) => Chapterprovider()),
     ChangeNotifierProvider<QuestionSortsprovider>(create: (context) => QuestionSortsprovider()),
+    ChangeNotifierProvider<Questionprovider>(create: (context) => Questionprovider()),
 
         ],
       child: MaterialApp.router(
       title: 'Flutter Demo',
-      theme: ThemeData(fontFamily: 'Nexa',inputDecorationTheme: InputDecorationTheme( labelStyle: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),border:  OutlineInputBorder(
+      theme: ThemeData( appBarTheme: AppBarTheme(elevation: 1,
+        iconTheme: IconThemeData(color: Colors.black),
+        color: Colors.white, //<-- SEE HERE
+      ),fontFamily: 'Nexa',inputDecorationTheme: InputDecorationTheme( labelStyle: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),border:  OutlineInputBorder(
       // width: 0.0 produces a thin "hairline" border
       borderSide:  BorderSide(color:Colors.black.withOpacity(0.8), width: 0.5,),borderRadius: BorderRadius.circular(3),
       ),
