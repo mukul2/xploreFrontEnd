@@ -142,6 +142,19 @@ class Data{
 
     }
   }
+  Future saveoptions ({required Map data}) async {
+    print("get questions");
+
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/options"),headers: {'Content-Type': 'application/json',},body: jsonEncode(data));
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return [];
+
+    }
+  }
   Future<List>options ({required String id}) async {
     print("get questions");
 

@@ -44,65 +44,186 @@ class MyData extends DataTableSource {
       DataCell(Text(_data[index]['q']??"--")),
       DataCell(Text(_data[index]['ans']??"--")),
       DataCell(ElevatedButton(onPressed: (){
-
+//saveoptions
+      List newOptions = [];
+      List allOptions = [];
         //options
         showDialog(
             context: context,
-            builder: (_) => AlertDialog(actions: [
-              TextButton(onPressed: (){
-                Navigator.pop(context);
-              }, child: Text("Close")),
-              TextButton(onPressed: (){
-                Navigator.pop(context);
-              }, child: Text("Delete",style: TextStyle(color: Colors.redAccent),)),
-            ],title: Wrap(
-              children: [
-                Row(
-                  children: [
-                    Text(_data[index]['title']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text(_data[index]['q']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
-                  ],
-                ),
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text("Right ans : ",style: TextStyle(color: Colors.grey,fontSize:13 ),),
-                    Text(_data[index]['ans']??"--",style: TextStyle(color: Colors.black54,fontSize:13 ),)
-                  ],
-                ),
-                Text("Options are",style: TextStyle(color: Colors.grey,fontSize:13 ),),
-              ],
-            ),
-              content: FutureBuilder(
+            builder: (_) => StatefulBuilder(
+              builder: (context,setS) {
+                return AlertDialog(actions: [
+                  TextButton(onPressed: (){
+                    Navigator.pop(context);
+                  }, child: Text("Close")),
+                  TextButton(onPressed: (){
 
-                  future:Data().options(id: _data[index]['id'].toString()),
-                  builder: (context, AsyncSnapshot<List> snap) {
-                    if(snap.hasData && snap.data!.length>0){
-                  //    return Text(snap.data!.toString());
-                      return Wrap(children: snap.data!.map((e) => Container(margin: EdgeInsets.all(5),decoration: BoxDecoration(borderRadius: BorderRadius.circular(2),
-                          border: Border.all(color: Colors.blue,width: 0.3)),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Row(children: [
-                           Text( e["body"],style: TextStyle(color: Colors.blue),),
-                          ],),
+                    Map data = {"id":_data[index]['id'].toString(),"options":newOptions};
+                    print(data);
+                    Data().saveoptions(data: data).then((value) {
+                      Navigator.pop(context);
+
+                    });
+
+                  }, child: Text("Update",style: TextStyle(color: Colors.redAccent),)),
+                ],title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+                  Text("Question"),
+                  IconButton(onPressed: (){
+                    Navigator.pop(context);
+
+                  },  icon: Icon(Icons.close))
+                ],),
+                  content:Container(width: 800,height: MediaQuery.of(context).size.height,
+                    child:true?Row(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(width: 400,child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(initialValue:_data[index]['title']??"--" ,enabled: false,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Title")),),
+                            ),
+                            // Row(
+                            //   children: [
+                            //     Text(_data[index]['title']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
+                            //   ],
+                            // ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(initialValue:_data[index]['q']??"--" ,enabled: false,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Question")),),
+                            ),
+                            // Row(
+                            //   children: [
+                            //     Text(_data[index]['q']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
+                            //   ],
+                            // ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(initialValue:_data[index]['ans']??"--" ,enabled: false,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Right ans")),),
+                            ),
+
+                          ],
+                        ),),
+                        Container(width: 400,child:Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Options"),
+                                  ElevatedButton(onPressed: (){
+
+                                    setS(() {
+                                      newOptions.add("");
+                                    });
+                                  }, child: Text("Add option"))
+                                ],
+                              ),
+                            ),
+                            Column(
+                              children: [
+                                FutureBuilder(
+
+                                    future:Data().options(id: _data[index]['id'].toString()),
+                                    builder: (context, AsyncSnapshot<List> snap) {
+                                      if(snap.hasData && snap.data!.length>0){
+                                        allOptions = snap.data!;
+                                        //    return Text(snap.data!.toString());
+                                        return ListView.builder(shrinkWrap: true,
+                                            itemCount: allOptions.length,
+                                            itemBuilder: (BuildContext context, int index) {
+                                          try{
+                                            return Container(margin: EdgeInsets.all(5),decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
+                                                border: Border.all(color: Colors.blue,width: 0.3)),
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                                                child: Row(children: [
+                                                  Text( allOptions[index]["body"],style: TextStyle(color: Colors.blue),),
+                                                ],),
+                                              ),
+                                            );
+                                          }catch(e){
+                                            return Container(height: 0,width: 0,);
+                                          }
+
+                                            });
+                                        return Wrap(children: allOptions.map((e) => Container(margin: EdgeInsets.all(5),decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
+                                            border: Border.all(color: Colors.blue,width: 0.3)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                                            child: Row(children: [
+                                              Text( e["body"],style: TextStyle(color: Colors.blue),),
+                                            ],),
+                                          ),
+                                        )).toList(),);
+                                        return ListView.builder(shrinkWrap: true,
+                                            itemCount: snap.data!.length,
+
+                                            // display each item of the product list
+                                            itemBuilder: (context, index) {
+                                              return Text(snap.data![index]["body"].toString());
+                                            });
+                                      }else{
+                                        return Container(height: 100,child: Center(child: CupertinoActivityIndicator(),));
+                                      }
+
+                                    }),
+                                ListView.builder(shrinkWrap: true,
+                                    itemCount: newOptions.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return Container(margin: EdgeInsets.all(0),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),
+                                          child:true?TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 8,)),initialValue:newOptions[index] ,onChanged: (String s){
+                                            newOptions[index] = s ;
+                                          },): Row(children: [
+                                            Text( newOptions[index]["body"],style: TextStyle(color: Colors.blue),),
+                                          ],),
+                                        ),
+                                      );
+                                    }),
+                                // Wrap(children: newOptions.map((e) => Container(margin: EdgeInsets.all(5),decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
+                                //     border: Border.all(color: Colors.blue,width: 0.3)),
+                                //   child: Padding(
+                                //     padding: const EdgeInsets.symmetric(vertical: 6,horizontal: 10),
+                                //     child: Row(children: [
+                                //       Text( e["body"],style: TextStyle(color: Colors.blue),),
+                                //     ],),
+                                //   ),
+                                // )).toList(),),
+                              ],
+                            ),
+                          ],
+                        ) ,),
+
+                      ],
+                    ): Wrap(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(initialValue:_data[index]['title']??"--" ,enabled: false,decoration: InputDecoration(label: Text("Title")),),
                         ),
-                      )).toList(),);
-                      return ListView.builder(shrinkWrap: true,
-                          itemCount: snap.data!.length,
-
-                          // display each item of the product list
-                          itemBuilder: (context, index) {
-                            return Text(snap.data![index]["body"].toString());
-                          });
-                    }else{
-                      return Container(height: 100,child: Center(child: CupertinoActivityIndicator(),));
-                    }
-
-                  }),
+                        // Row(
+                        //   children: [
+                        //     Text(_data[index]['title']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
+                        //   ],
+                        // ),
+                        Row(
+                          children: [
+                            Text(_data[index]['q']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
+                          ],
+                        ),
+                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Right ans : ",style: TextStyle(color: Colors.grey,fontSize:13 ),),
+                            Text(_data[index]['ans']??"--",style: TextStyle(color: Colors.black54,fontSize:13 ),)
+                          ],
+                        ),
+                        Text("Options are",style: TextStyle(color: Colors.grey,fontSize:13 ),),
+                      ],
+                    ),
+                  ),
+                );
+              }
             ));
       },child: Text("View options"),)),
 
