@@ -386,8 +386,8 @@ class _ClassSelectDropdownState extends State<ClassSelectDropdown> {
           future:Data().classesid(id: FirebaseAuth.instance.currentUser!.uid),
           builder: (context, AsyncSnapshot<List> snap) {
             if(snap.hasData){
-              // Text(snap.data![0].toString());
-              List<String> dropdownItems = [];
+               Text(snap.data!.toString());
+              List<String> dropdownItems = ["All"];
 
               for(int i = 0 ; i < snap.data!.length ;i++){
                 dropdownItems.add(snap.data![i]["name"]);
@@ -405,17 +405,28 @@ class _ClassSelectDropdownState extends State<ClassSelectDropdown> {
                   ),
                 ),
                 onChanged: (String? s){
-                  setState(() {
-                    for(int j = 0 ; j < snap.data!.length ;j++){
-                      if(snap.data![j]["name"] == s!){
-                        widget.onSelected(snap.data![j]["id"].toString());
-                        break;
-                      }
-                    }
+                 if(s == "All"){
+                   widget.onSelected("0");
+                 }else{
+                   setState(() {
+                     try{
+                       for(int j = 0 ; j < snap.data!.length ;j++){
+                         if(snap.data![j]["name"] == s!){
+                           widget.onSelected(snap.data![j]["id"].toString());
+                           break;
+                         }
+                       }
+                     }catch(e){
+                       print(e);
+                       widget.onSelected("0");
+                     }
 
 
-                    selected = s!;
-                  });
+
+                     selected = s!;
+                   });
+                 }
+
                 },
                 selectedItem:selected,
               );
@@ -441,6 +452,7 @@ class _ClassSelectDropdownState extends State<ClassSelectDropdown> {
 
 
             }else{
+              return Text("Geting Data");
               return Container(height: 0,width: 0,);
             }
 
@@ -471,8 +483,7 @@ class _SubjectSelectDropdownState extends State<SubjectSelectDropdown> {
 
             if(snap.hasData){
              // return Text(snap.data!.toString());
-              List<String> dropdownItems = [];
-
+              List<String> dropdownItems = ["All"];
               for(int i = 0 ; i < snap.data!.length ;i++){
                 dropdownItems.add(snap.data![i]["sName"]);
               }
@@ -489,17 +500,26 @@ class _SubjectSelectDropdownState extends State<SubjectSelectDropdown> {
                   ),
                 ),
                 onChanged: (String? s){
-                  setState(() {
-                    for(int j = 0 ; j < snap.data!.length ;j++){
-                      if(snap.data![j]["sName"] == s!){
-                        widget.onSelected(snap.data![j]["sid"].toString());
-                        break;
-                      }
-                    }
+
+    if(s == "All"){
+      Provider.of<QuestionSortsprovider>(context, listen: false).subject_id = 0;
+      widget.onSelected("0");
+    }else{
+      setState(() {
+        for(int j = 0 ; j < snap.data!.length ;j++){
+          if(snap.data![j]["sName"] == s!){
+            widget.onSelected(snap.data![j]["sid"].toString());
+            Provider.of<QuestionSortsprovider>(context, listen: false).subject_id = snap.data![j]["sid"];
+            break;
+          }
+        }
 
 
-                    selected = s!;
-                  });
+        selected = s!;
+      });
+    }
+
+
                 },
                 selectedItem:selected,
               );
@@ -555,7 +575,7 @@ class _ChapterSelectDropdownState extends State<ChapterSelectDropdown> {
 
             if(snap.hasData){
             //  return Text(snap.data!.toString());
-              List<String> dropdownItems = [];
+              List<String> dropdownItems = ["All"];
 
               for(int i = 0 ; i < snap.data!.length ;i++){
                 dropdownItems.add(snap.data![i]["cname"]);
@@ -573,17 +593,24 @@ class _ChapterSelectDropdownState extends State<ChapterSelectDropdown> {
                   ),
                 ),
                 onChanged: (String? s){
-                  setState(() {
-                    for(int j = 0 ; j < snap.data!.length ;j++){
-                      if(snap.data![j]["cname"] == s!){
-                        widget.onSelected(snap.data![j]["cId"].toString());
-                        break;
-                      }
-                    }
+    if(s == "All"){
+    widget.onSelected("0");
+    Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id = 0;
+    }else{
+      setState(() {
+        for(int j = 0 ; j < snap.data!.length ;j++){
+          if(snap.data![j]["cname"] == s!){
+            widget.onSelected(snap.data![j]["cId"].toString());
+            Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id = snap.data![j]["cId"];
+            break;
+          }
+        }
 
 
-                    selected = s!;
-                  });
+        selected = s!;
+      });
+    }
+
                 },
                 selectedItem:selected,
               );

@@ -1,3 +1,4 @@
+import 'package:admin/students_activity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -118,10 +119,14 @@ class _StudentsState extends State<QuestionsActivitySQL> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    Provider.of<QuestionSortsprovider>(context, listen: false).class_id = null;
+    Provider.of<QuestionSortsprovider>(context, listen: false).subject_id = null;
+    Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id = null;
     Data().questionsbyid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
       Provider.of<Questionsprovider>(context, listen: false).items = value;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     Widget actions = Row(children: [
@@ -129,53 +134,206 @@ class _StudentsState extends State<QuestionsActivitySQL> {
     ],);
 //Batchprovider
     return Scaffold(
-      appBar: false?null: PreferredSize(preferredSize: Size(0,50),child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(children: [
-          ElevatedButton(onPressed: (){
-            TextEditingController c = TextEditingController();
+      appBar: false?null: PreferredSize(preferredSize: Size(0,120),child: Card(margin: EdgeInsets.zero,shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(0.0),
+      ),
+         child: Padding(
+           padding: const EdgeInsets.symmetric(horizontal: 20),
+           child: Column(
+             children: [
+               Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+                  Text("Question management",style: TextStyle(fontSize: 25),),
+                  ElevatedButton(onPressed: (){
+                    TextEditingController c = TextEditingController();
 
 
-            showDialog(
-                context: context,
-                builder: (_) =>AlertDialog(content: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Create_question(),
-                ),));
+                    showDialog(
+                        context: context,
+                        builder: (_) =>AlertDialog(content: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Create_question(),
+                        ),));
 
-          }, child: Text("Create Question"))
-        ],),
+                  }, child: Text("Create Question"))
+                ],),
+        ),
+               Row(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: ClassSelectDropdown(onSelected: (String id){
+                            print("class selested "+id);
+                            Provider.of<QuestionSortsprovider>(context, listen: false).class_id =  int.parse(id);
+                            // selectedClassId = id;
+                          },),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: SubjectSelectDropdown(onSelected: (String id){
+                            print("sub selested "+id);
+                       //     Provider.of<QuestionSortsprovider>(context, listen: false).subject_id =  int.parse(id);
+
+                            // selectedClassId = id;
+                          },),
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: ChapterSelectDropdown(onSelected: (String id){
+                            print("class selested "+id);
+
+                            // selectedClassId = id;
+                          },),
+                        ),
+                      ),
+                    ],
+                  )
+             ],
+           ),
+         ),
       ),),
-      body: true?Consumer<Questionsprovider>(
-        builder: (_, bar, __) {
+      body: true?Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+        child: Consumer<Questionsprovider>(
+          builder: (_, bar, __) {
 
-          if(bar.items.isEmpty)return Center(child: Text("No data"),);
+            if(bar.items.isEmpty)return Center(child: Text("No data"),);
 
-          int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
-          final DataTableSource _allUsers = MyData(bar.items,context);
-          return SingleChildScrollView(
-            child: PaginatedDataTable(
 
-              header:Text("Questions"),
-              rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
+          return  Consumer<QuestionSortsprovider>(
+            builder: (_, bar1, __) {
 
-              columns: const [
-                DataColumn(label: Text('Class')),
-                DataColumn(label: Text('Subject')),
-                DataColumn(label: Text('Chapter')),
-                DataColumn(label: Text('Title')),
-                DataColumn(label: Text('Question')),
-                DataColumn(label: Text('Answer')),
-                DataColumn(label: Text('Options')),
 
-                // DataColumn(label: Text('Id')),
-                // DataColumn(label: Text('Phone'))
-              ],
-              source: _allUsers,
-            ),
-          );
+              List sorted = [];
 
-        },
+              if(bar1.class_id==null){
+                sorted.addAll(bar.items);
+              }else  if(bar1.class_id==0){
+                sorted.addAll(bar.items);
+              }else{
+                for(int i = 0 ; i < bar.items.length ; i++){
+
+                  if(bar.items[i]["class_id"] == bar1.class_id){
+                    sorted.add(bar.items[i]);
+                  }
+
+                }
+              }
+
+              List passedClss = sorted;
+
+              if(bar1.subject_id==null){
+                sorted = passedClss;
+              }else  if(bar1.subject_id==0){
+                sorted = passedClss;
+                //sorted.addAll(bar.items);
+              }else{
+                List newSorted = [];
+                for(int i = 0 ; i < passedClss.length ; i++){
+
+                  if(passedClss[i]["subject_id"] == bar1.subject_id){
+                    newSorted.add(passedClss[i]);
+                  }
+
+                }
+                sorted = newSorted;
+
+              }
+
+              List passedSubject = sorted;
+
+
+              if(bar1.chapter_id==null){
+                sorted = passedSubject;
+              }else  if(bar1.chapter_id==0){
+                sorted = passedSubject;
+                //sorted.addAll(bar.items);
+              }else{
+                List newSorted = [];
+                for(int i = 0 ; i < passedSubject.length ; i++){
+
+                  if(passedSubject[i]["chapter_id"] == bar1.chapter_id){
+                    newSorted.add(passedSubject[i]);
+                  }
+
+                }
+                sorted = newSorted;
+
+              }
+
+
+
+              if(sorted.length == 0)return Center(child: Text("No data"),);
+
+
+
+
+              int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
+              final DataTableSource _allUsers = MyData(sorted,context);
+              return PaginatedDataTable(
+
+                header:true?null:Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClassSelectDropdown(onSelected: (String id){
+                          print("class selested "+id);
+                          Provider.of<QuestionSortsprovider>(context, listen: false).class_id =  int.parse(id);
+                          // selectedClassId = id;
+                        },),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SubjectSelectDropdown(onSelected: (String id){
+                          print("class selested "+id);
+
+                          // selectedClassId = id;
+                        },),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ChapterSelectDropdown(onSelected: (String id){
+                          print("class selested "+id);
+
+                          // selectedClassId = id;
+                        },),
+                      ),
+                    ),
+                  ],
+                ),
+                rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
+
+                columns: const [
+                  DataColumn(label: Text('Class')),
+                  DataColumn(label: Text('Subject')),
+                  DataColumn(label: Text('Chapter')),
+                  DataColumn(label: Text('Title')),
+                  DataColumn(label: Text('Question')),
+                  DataColumn(label: Text('Answer')),
+                  DataColumn(label: Text('Options')),
+
+                  // DataColumn(label: Text('Id')),
+                  // DataColumn(label: Text('Phone'))
+                ],
+                source: _allUsers,
+              );
+            });
+
+
+
+          },
+        ),
       ): FutureBuilder(
 
           future:Data().batches(),

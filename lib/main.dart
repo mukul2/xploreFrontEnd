@@ -97,6 +97,7 @@ class MyApp extends StatelessWidget {
     ChangeNotifierProvider<Questionsprovider>(create: (context) => Questionsprovider()),
     ChangeNotifierProvider<Subjectsprovider>(create: (context) => Subjectsprovider()),
     ChangeNotifierProvider<Chapterprovider>(create: (context) => Chapterprovider()),
+    ChangeNotifierProvider<QuestionSortsprovider>(create: (context) => QuestionSortsprovider()),
 
         ],
       child: MaterialApp.router(

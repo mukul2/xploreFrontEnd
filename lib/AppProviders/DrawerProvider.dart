@@ -214,3 +214,32 @@ class Subjectsprovider extends ChangeNotifier {
     notifyListeners();
   }
 }
+class QuestionSortsprovider extends ChangeNotifier {
+
+  int? _class_id;
+
+  int? get class_id => _class_id;
+
+  set class_id(int? value) {
+    _class_id = value;
+    notifyListeners();
+  }
+  int? _subject_id;
+
+  int? get subject_id => _subject_id;
+
+  set subject_id(int? value) {
+    _subject_id = value;
+    notifyListeners();
+
+  }
+  int? _chapter_id;
+
+  int? get chapter_id => _chapter_id;
+
+  set chapter_id(int? value) {
+    _chapter_id = value;
+    notifyListeners();
+
+  }
+}
