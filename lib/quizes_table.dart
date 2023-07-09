@@ -68,8 +68,10 @@ class MyData extends DataTableSource {
     }
 
     return DataRow(cells: [
-      DataCell(Text(_data[index]['batchName'].toString())),
-      DataCell(Text(_data[index]['quiztitle'])),
+      DataCell(Text(_data[index]['class']??"--")),
+      DataCell(Text(_data[index]['subject']??"--")),
+      DataCell(Text(_data[index]['chapter']??"--")),
+      DataCell(Text(_data[index]['title'])),
 
       DataCell(Text(_data[index]['section_details'])),
       DataCell(Text(_data[index]['total_point'].toString())),
@@ -159,7 +161,9 @@ class _StudentsState extends State<QuizesTable> {
               header: null,
               rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
               columns: const [
-                DataColumn(label: Text('Batch')),
+                DataColumn(label: Text('Class')),
+                DataColumn(label: Text('Subject')),
+                DataColumn(label: Text('Chapter')),
                 DataColumn(label: Text('Quiz title')),
                 DataColumn(label: Text('Details')),
                 DataColumn(label: Text('Total')),

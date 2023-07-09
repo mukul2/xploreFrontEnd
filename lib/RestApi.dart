@@ -15,9 +15,12 @@ class Data{
   }  Future<List>quizesHandelerid ({required String id}) async {
 
    try{
-     http.Response r =  await http.post(Uri.parse(base+"/quizesHandelerid"),headers: {'Content-Type': 'application/json',},body: jsonEncode({"uid":id}));
+     print("quizes");
+     http.Response r =  await http.post(Uri.parse(base+"/quizes"),headers: {'Content-Type': 'application/json',},body: jsonEncode({"uid":id}));
+     print(r.body);
      return jsonDecode(r.body);
    }catch(e){
+     print(e);
      return [];
 
    }

@@ -366,7 +366,7 @@ class _Edit_quiz_activitySQLState extends State<Edit_quiz_activitySQL> {
 
     return  FutureBuilder(
 
-        future:Data().quizAuestions(id: widget.ref["quizid"].toString()),
+        future:Data().quizAuestions(id: widget.ref["id"].toString()),
         builder: (context, AsyncSnapshot<List> snap) {
           if(snap.hasData && snap.data!.length>0){
          return   Wrap(children:  snap.data!.map((e) => Container(width: 300,margin: EdgeInsets.all(5), decoration: BoxDecoration(border: Border.all(color: Colors.grey),borderRadius: BorderRadius.circular(4)),
@@ -386,11 +386,14 @@ class _Edit_quiz_activitySQLState extends State<Edit_quiz_activitySQL> {
                     ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
                         itemCount:e["options"].length,
                         itemBuilder: (BuildContext context, int index2) {
-                          return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text((index2+1).toString()),
-                              Text(  e["options"][index2]["body"]),
-                            ],
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Icon(Icons.fiber_manual_record,color: Colors.grey,),
+                                Text(  e["options"][index2]["body"]),
+                              ],
+                            ),
                           );
                         }),
                   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
