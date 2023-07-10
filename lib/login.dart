@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'RestApi.dart';
+
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
 
@@ -65,7 +67,24 @@ class _LoginState extends State<Login> {
                     password: password.text
                 );
                 print("logged in");
-                context.go("/home");
+
+
+
+               try{
+                 var usreInfo = await Data().userInfo(id: credential.user!.uid);
+                 print(usreInfo);
+               if(usreInfo["isTeacher"]) context.go("/home");
+               if(usreInfo["isStudent"]) context.go("/shome");
+               }catch(e){
+                 print(e);
+
+               }
+                print("logged in");
+               // context.go("/home");
+                //check user type
+
+
+
                 setState(() {
                   busy = false;
                 });

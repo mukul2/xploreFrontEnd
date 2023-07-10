@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'AppProviders/DrawerProvider.dart';
 import 'Questions_new.dart';
 import 'Quizes.dart';
+import 'RestApi.dart';
 import 'all_questions.dart';
 import 'all_quizes.dart';
 import 'drawer.dart';
@@ -30,10 +31,30 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/',
       builder: (BuildContext context, GoRouterState state) {
-        return StreamBuilder<User?>(
-            stream: FirebaseAuth.instance.authStateChanges(), // a previously-obtained Future<String> or null
-            builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-              return FirebaseAuth.instance.currentUser==null?Login():   SidebarXExampleApp();
+        return FirebaseAuth.instance.currentUser==null?Login():   FutureBuilder<dynamic>(
+            future: Data().userInfo(id:FirebaseAuth.instance.currentUser!.uid), // a previously-obtained Future<String> or null
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              if(snapshot.hasData){
+                try{
+                  if(snapshot.data!["isTeacher"]) {
+
+                    return SidebarXExampleApp();
+
+                  }else
+                  if(snapshot.data!["isStudent"]) {
+                    return StudentApp();
+                  }else{
+                    return Text("Unknwon user");
+                  }
+
+                }catch(e){
+                  return Login();
+                }
+
+              }else{
+                return Login();
+              }
+
             });
 
       },
@@ -41,6 +62,31 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: 'home',
           builder: (BuildContext context, GoRouterState state) {
+            return FirebaseAuth.instance.currentUser==null?Login():  FutureBuilder<dynamic>(
+                future: Data().userInfo(id:FirebaseAuth.instance.currentUser!.uid), // a previously-obtained Future<String> or null
+                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                  if(snapshot.hasData){
+                    try{
+                      if(snapshot.data!["isTeacher"]) {
+
+                        return SidebarXExampleApp();
+
+                      }else if(snapshot.data!["isStudent"]) {
+
+                        return StudentApp();
+                      }else{
+                        return Text("Unknwon user");
+                      }
+
+                    }catch(e){
+                      return Login();
+                    }
+
+                  }else{
+                    return Login();
+                  }
+
+                });
             return StreamBuilder<User?>(
                 stream: FirebaseAuth.instance.authStateChanges(), // a previously-obtained Future<String> or null
                 builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
@@ -51,10 +97,30 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: 'shome',
           builder: (BuildContext context, GoRouterState state) {
-            return StreamBuilder<User?>(
-                stream: FirebaseAuth.instance.authStateChanges(), // a previously-obtained Future<String> or null
-                builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-                  return FirebaseAuth.instance.currentUser==null?Login():   StudentApp();
+            return FirebaseAuth.instance.currentUser==null?Login():  FutureBuilder<dynamic>(
+                future: Data().userInfo(id:FirebaseAuth.instance.currentUser!.uid), // a previously-obtained Future<String> or null
+                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                  if(snapshot.hasData){
+                    try{
+                      if(snapshot.data!["isTeacher"]) {
+                        GoRouter.of(context).go("/home");
+                        return Center(child: CircularProgressIndicator(),);
+
+                      }else
+                      if(snapshot.data!["isStudent"]) {
+                        return StudentApp();
+                      }else{
+                        return Text("Unknwon user");
+                      }
+
+                    }catch(e){
+                      return Login();
+                    }
+
+                  }else{
+                    return Login();
+                  }
+
                 });
           },
         ),

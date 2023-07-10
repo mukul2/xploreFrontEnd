@@ -146,7 +146,7 @@ class _Create_questionState extends State<Create_question> {
             Map re = {"subject_id":selectedSubjectID,"class_id":selectedClassId,"chapter_id":selectedchapterID,"created_by":FirebaseAuth.instance.currentUser!.uid,"explanation":c3.text,"score":1,"correctOption":correctOption,"ans":Options[correctOption],"options":Options,"title":c1.text,"q":c2.text,"type":"SC"};
             print(re);
 
-            Data().savequestion(data:re ).then((value) {
+         Data().savequestion(data:re ).then((value) {
 
               Data().questionsbyid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
                 Provider.of<Questionsprovider>(context, listen: false).items = value;

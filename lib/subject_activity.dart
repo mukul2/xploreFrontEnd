@@ -35,6 +35,7 @@ class MyData extends DataTableSource {
 
 
     return DataRow(cells: [
+      DataCell(Text(_data[index]["sid"].toString()??"--")),
       DataCell(Text(_data[index]['sName']??"--")),
       DataCell(Text(_data[index]['cname']??"--")),
       //DataCell(Text(_data[index]['created_at']??"--")),
@@ -121,6 +122,7 @@ class _StudentsState extends State<SubjectActivity> {
               rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
 
               columns: const [
+                DataColumn(label: Text('Id')),
                 DataColumn(label: Text('Name')),
                 DataColumn(label: Text('Class')),
                 //DataColumn(label: Text('Created at')),

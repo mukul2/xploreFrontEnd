@@ -358,49 +358,71 @@ class _CoursesStudentState extends State<CoursesStudent> {
     future: Data().batches(), // a previously-obtained Future<String> or null
     builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
       if(snapshot.hasData){
-          return Wrap(children: snapshot.data!.map((e) => Container(width: 300,margin: EdgeInsets.all(5),child: Card(elevation: 5,shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0.0),
-          ),child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(e["name"]??"--"),
-                Text(e["description"]??"--",style: TextStyle(color: Colors.black54),),
-                Text(e["price"].toString()??"--",style: TextStyle(color: Colors.blue),),
-                Row(mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 3),
-                      child: ElevatedButton(onPressed: (){}, child: Text("See details")),
-                    ),
-                    ElevatedButton(onPressed: (){
+          return SingleChildScrollView(
+            child: Wrap(children: snapshot.data!.map((e) => Container(width: 300,margin: EdgeInsets.all(5),child: Card(elevation: 5,shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(0.0),
+            ),child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(e["name"]??"--"),
+                      Text("Fee "+e["price"].toString()??"--",style: TextStyle(color: Colors.blue),),
+                    ],
+                  ),
+                  Text(e["description"]??"--",style: TextStyle(color: Colors.black54),),
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+                    Text("Instructor"),
+                    Text(e["teacher"]==null?"--":( e["teacher"]["LastName"]+" "+ e["teacher"]["FirstName"]))
+                  ],),
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Class"),
+                      Text(e["class_name"]??"--"),
+                    ],
+                  ),
+                  e["subject_name"]==null?Container(height: 0,width: 0,): Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Subject"),
+                      Text(e["subject_name"]??"--"),
+                    ],
+                  ),
+                  Row(mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 3),
+                        child: ElevatedButton(onPressed: (){}, child: Text("See details")),
+                      ),
+                      ElevatedButton(onPressed: (){
 
-                      showDialog(
-                          context: context,
-                          builder: (_) =>AlertDialog(actions: [
-                            ElevatedButton(onPressed: (){
-                              Navigator.pop(context);
-
-                            }, child: Text("Cancel")),
-                            ElevatedButton(onPressed: (){
-                              Map data = {"course_id":e["id"],"student_id":FirebaseAuth.instance.currentUser!.uid};
-                              Data().buycourse(data:data ).then((value) {
+                        showDialog(
+                            context: context,
+                            builder: (_) =>AlertDialog(actions: [
+                              ElevatedButton(onPressed: (){
                                 Navigator.pop(context);
 
-                              });
+                              }, child: Text("Cancel")),
+                              ElevatedButton(onPressed: (){
+                                Map data = {"course_id":e["id"],"student_id":FirebaseAuth.instance.currentUser!.uid};
+                                Data().buycourse(data:data ).then((value) {
+                                  Navigator.pop(context);
+
+                                });
 
 
 
 
-                            }, child: Text("Confirm")),
-                          ],content: Text("Pay "+e["price"].toString()??"--"+"?"),title: Text("Buy Course",style: TextStyle(fontSize: 15,color: Colors.black),),));
+                              }, child: Text("Confirm")),
+                            ],content: Text("Pay "+e["price"].toString()??"--"+"?"),title: Text("Buy Course",style: TextStyle(fontSize: 15,color: Colors.black),),));
 
-                    }, child: Text("Buy now")),
-                  ],
-                ),
-              ],
-            ),
-          )),)).toList(),);
+                      }, child: Text("Buy now")),
+                    ],
+                  ),
+                ],
+              ),
+            )),)).toList(),),
+          );
 
       }else{
           return Center(child: CircularProgressIndicator(),);

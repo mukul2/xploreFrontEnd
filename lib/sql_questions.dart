@@ -71,7 +71,10 @@ class MyData extends DataTableSource {
 
                     Map data = {"id":_data[index]['id'].toString(),"options":newOptions};
                     print(data);
-                    Data().saveoptions(data: data).then((value) {
+
+
+
+                 Data().saveoptions(data: data).then((value) {
                       Navigator.pop(context);
 
                     });

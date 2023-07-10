@@ -12,7 +12,19 @@ class Data{
      return [];
 
    }
-  }  Future<List>quizesHandelerid ({required String id}) async {
+  }
+  Future<dynamic >userInfo ({required String id}) async {
+
+   try{
+     http.Response r =  await http.get(Uri.parse(base+"/user/"+id));
+     return jsonDecode(r.body);
+   }catch(e){
+     return {};
+
+   }
+  }
+
+  Future<List>quizesHandelerid ({required String id}) async {
 
    try{
      print("quizes");
@@ -137,6 +149,26 @@ class Data{
 
     }
   }
+  Future<dynamic>myearning ({required String id}) async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/myearnings/"+id),);
+      return jsonDecode(r.body);
+    }catch(e){
+      return {};
+
+    }
+  }
+  Future<List>mystudents ({required String id}) async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/mystudents/"+id),);
+      return jsonDecode(r.body);
+    }catch(e){
+      return [];
+
+    }
+  }
   Future<List>studentsid ({required String id}) async {
 
     try{
@@ -146,7 +178,9 @@ class Data{
       return [];
 
     }
-  }  Future<List>getcourse ({required String id}) async {
+  }
+
+  Future<List>getcourse ({required String id}) async {
 
     try{
       http.Response r =  await http.post(Uri.parse(base+"/getcourse"),headers: {'Content-Type': 'application/json',},body: jsonEncode({"uid":id}));

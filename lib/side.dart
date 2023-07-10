@@ -210,9 +210,14 @@ class ExampleSidebarX extends StatelessWidget {
         const SidebarXItem(
           icon: Icons.supervised_user_circle_outlined,
           label: 'Subject',
-        ),        const SidebarXItem(
+        ),
+        const SidebarXItem(
           icon: Icons.supervised_user_circle_outlined,
           label: 'Chapters',
+        ),
+        const SidebarXItem(
+          icon: Icons.supervised_user_circle_outlined,
+          label: 'Wallet',
         ),
          SidebarXItem(
           icon: Icons.logout,
@@ -256,6 +261,8 @@ class _ScreensExample extends StatelessWidget {
           return  SubjectActivity();
           case 6:
             return  ChapterActivity();
+          case 7:
+            return  Wallet();
           default:
             return Text(
               pageTitle,
