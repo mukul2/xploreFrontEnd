@@ -103,7 +103,7 @@ final GoRouter _router = GoRouter(
                   if(snapshot.hasData){
                     try{
                       if(snapshot.data!["isTeacher"]) {
-                        GoRouter.of(context).go("/home");
+                        return SidebarXExampleApp();
                         return Center(child: CircularProgressIndicator(),);
 
                       }else

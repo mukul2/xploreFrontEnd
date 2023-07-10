@@ -213,6 +213,19 @@ class Data{
 
     }
   }
+  Future<List>myquizes ({required String id}) async {
+    print("get questions");
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/myquizes/"+id));
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return [];
+
+    }
+  }
   Future<List>options ({required String id}) async {
     print("get questions");
 

@@ -6,14 +6,17 @@ import 'package:admin/students_activity.dart';
 import 'package:admin/subject_activity.dart';
 import 'package:admin/tab_questions.dart';
 import 'package:admin/tab_quiz.dart';
+import 'package:admin/table_test.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'Quizes.dart';
 import 'chapter_activity.dart';
 import 'class_activity.dart';
 import 'course_table.dart';
+import 'data_sources.dart';
 import 'login.dart';
 import 'utils.dart';
 import 'Questions_new.dart';
@@ -76,7 +79,7 @@ class _SidebarXExampleAppState extends State<SidebarXExampleApp> {
 
   @override
   Widget build(BuildContext context) {
-    return loggedIn? Builder(
+    return true? Builder(
       builder: (context) {
         final isSmallScreen = MediaQuery.of(context).size.width < 600;
         return Scaffold(
@@ -175,7 +178,7 @@ class ExampleSidebarX extends StatelessWidget {
       ),
       footerDivider: divider,
       headerBuilder: (context, extended) {
-        return SizedBox(
+        return FirebaseAuth.instance.currentUser ==null?Container():SizedBox(
           height: 100,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -222,7 +225,10 @@ class ExampleSidebarX extends StatelessWidget {
          SidebarXItem(
           icon: Icons.logout,
           label: 'Logout',onTap: (){
-            FirebaseAuth.instance.signOut();
+            FirebaseAuth.instance.signOut().then((value) {
+              GoRouter.of(context).go("/");
+
+            });
          },
         ),
 
@@ -248,7 +254,7 @@ class _ScreensExample extends StatelessWidget {
         final pageTitle = _getTitleByIndex(controller.selectedIndex);
         switch (controller.selectedIndex) {
           case 0:
-            return true?QuestionsActivitySQL(): Questions_All(type: questionbank.type1,);
+            return true? QuestionsActivitySQL(): Questions_All(type: questionbank.type1,);
             case 1:
             return QuizFromFirebase();
           case 2:

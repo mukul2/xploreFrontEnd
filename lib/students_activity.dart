@@ -775,14 +775,14 @@ class _SubjectSelectDropdownState extends State<SubjectSelectDropdown> {
                 onChanged: (String? s){
 
     if(s == "All"){
-      Provider.of<QuestionSortsprovider>(context, listen: false).subject_id = 0;
+     // Provider.of<QuestionSortsprovider>(context, listen: false).subject_id = 0;
       widget.onSelected("0");
     }else{
       setState(() {
         for(int j = 0 ; j < snap.data!.length ;j++){
           if(snap.data![j]["sName"] == s!){
             widget.onSelected(snap.data![j]["sid"].toString());
-            Provider.of<QuestionSortsprovider>(context, listen: false).subject_id = snap.data![j]["sid"];
+           // Provider.of<QuestionSortsprovider>(context, listen: false).subject_id = snap.data![j]["sid"];
             break;
           }
         }
@@ -868,13 +868,13 @@ class _ChapterSelectDropdownState extends State<ChapterSelectDropdown> {
                 onChanged: (String? s){
     if(s == "All"){
     widget.onSelected("0");
-    Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id = 0;
+  //  Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id = 0;
     }else{
       setState(() {
         for(int j = 0 ; j < snap.data!.length ;j++){
           if(snap.data![j]["cname"] == s!){
             widget.onSelected(snap.data![j]["cId"].toString());
-            Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id = snap.data![j]["cId"];
+           // Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id = snap.data![j]["cId"];
             break;
           }
         }

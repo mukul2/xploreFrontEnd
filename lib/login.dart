@@ -73,8 +73,8 @@ class _LoginState extends State<Login> {
                try{
                  var usreInfo = await Data().userInfo(id: credential.user!.uid);
                  print(usreInfo);
-               if(usreInfo["isTeacher"]) context.go("/home");
-               if(usreInfo["isStudent"]) context.go("/shome");
+              if(usreInfo["isTeacher"]==true) context.go("/home");
+              if(usreInfo["isStudent"]==true) context.go("/shome");
                }catch(e){
                  print(e);
 

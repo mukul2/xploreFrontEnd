@@ -246,6 +246,13 @@ class QuestionSortsprovider extends ChangeNotifier {
 
 class Questionprovider extends ChangeNotifier {
 
+  List _data = [];
+
+  List get data => _data;
+
+  set data(List value) {
+    _data = value;
+  }
   List _items = [];
 
   List get items => _items;
@@ -254,12 +261,14 @@ class Questionprovider extends ChangeNotifier {
     _items = value;
     notifyListeners();
   }
-  addData(int i){
+  addData(int i,dynamic data){
     _items.add(i);
+    _data.add(data);
     notifyListeners();
   }
-  removeData(int i){
+  removeData(int i,dynamic data){
     _items.remove(i);
+    _data.remove(data);
     notifyListeners();
   }
 }

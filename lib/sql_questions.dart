@@ -1,11 +1,16 @@
+import 'dart:convert';
+import 'dart:html';
+
 import 'package:admin/students_activity.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutterfire_ui/firestore.dart';
+import 'package:pdf/pdf.dart';
 import 'package:provider/provider.dart';
-
+import 'package:pdf/widgets.dart' as pw;
 import 'AppProviders/DrawerProvider.dart';
 import 'RestApi.dart';
 import 'create_question_activity.dart';
@@ -42,17 +47,22 @@ class MyData extends DataTableSource {
     builder: (_, bar, __) =>Checkbox(value: bar.items.contains(_data[index]['id']), onChanged: (bool? b){
 
       if(bar.items.contains(_data[index]['id'])){
-        bar.removeData(_data[index]['id']);
+        bar.removeData(_data[index]['id'],_data[index]);
       }else{
-        bar.addData(_data[index]['id']);
+        bar.addData(_data[index]['id'],_data[index]);
       }
 
     }))),
-      DataCell(Text(_data[index]['class'].toString())),
-      DataCell(Text(_data[index]['subject'].toString())),
-      DataCell(Text(_data[index]['chapter'].toString())),
-      DataCell(Text(_data[index]['title']??"--")),
-      DataCell(Text(_data[index]['q']??"--")),
+      DataCell(ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['class'].toString()))),
+      DataCell(ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['subject'].toString()))),
+      DataCell(ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['chapter'].toString()))),
+      DataCell(ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['title']??"--"))),
+      DataCell(ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['q'].toString()??"--"))),
       DataCell(Text(_data[index]['ans']??"--")),
       DataCell(ElevatedButton(onPressed: (){
 //saveoptions
@@ -264,6 +274,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
 
   @override
   Widget build(BuildContext context) {
+
     Widget actions = Row(children: [
       TextButton(onPressed: (){}, child: Text("Create Batch"))
     ],);
@@ -311,7 +322,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: SubjectSelectDropdown(onSelected: (String id){
                             print("sub selested "+id);
-                       //     Provider.of<QuestionSortsprovider>(context, listen: false).subject_id =  int.parse(id);
+                            Provider.of<QuestionSortsprovider>(context, listen: false).subject_id =  int.parse(id);
 
                             // selectedClassId = id;
                           },),
@@ -322,7 +333,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: ChapterSelectDropdown(onSelected: (String id){
                             print("class selested "+id);
-
+                            Provider.of<QuestionSortsprovider>(context, listen: false).class_id =  int.parse(id);
                             // selectedClassId = id;
                           },),
                         ),
@@ -333,7 +344,253 @@ class _StudentsState extends State<QuestionsActivitySQL> {
            ),
          ),
       ),),
-      body: true?Padding(
+      body: true? true?Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+        child: Consumer<Questionsprovider>(
+          builder: (_, bar, __) {
+
+            if(bar.items.isEmpty)return Center(child: Text("No data"),);
+
+
+            return  Consumer<QuestionSortsprovider>(
+                builder: (_, bar1, __) {
+
+
+                  List sorted = [];
+
+                  if(bar1.class_id==null){
+                    sorted.addAll(bar.items);
+                  }else  if(bar1.class_id==0){
+                    sorted.addAll(bar.items);
+                  }else{
+                    for(int i = 0 ; i < bar.items.length ; i++){
+
+                      if(bar.items[i]["class_id"] == bar1.class_id){
+                        sorted.add(bar.items[i]);
+                      }
+
+                    }
+                  }
+
+                  List passedClss = sorted;
+
+                  if(bar1.subject_id==null){
+                    sorted = passedClss;
+                  }else  if(bar1.subject_id==0){
+                    sorted = passedClss;
+                    //sorted.addAll(bar.items);
+                  }else{
+                    List newSorted = [];
+                    for(int i = 0 ; i < passedClss.length ; i++){
+
+                      if(passedClss[i]["subject_id"] == bar1.subject_id){
+                        newSorted.add(passedClss[i]);
+                      }
+
+                    }
+                    sorted = newSorted;
+
+                  }
+
+                  List passedSubject = sorted;
+
+
+                  if(bar1.chapter_id==null){
+                    sorted = passedSubject;
+                  }else  if(bar1.chapter_id==0){
+                    sorted = passedSubject;
+                    //sorted.addAll(bar.items);
+                  }else{
+                    List newSorted = [];
+                    for(int i = 0 ; i < passedSubject.length ; i++){
+
+                      if(passedSubject[i]["chapter_id"] == bar1.chapter_id){
+                        newSorted.add(passedSubject[i]);
+                      }
+
+                    }
+                    sorted = newSorted;
+
+                  }
+
+
+
+                  if(sorted.length == 0)return Center(child: Text("No data"),);
+
+
+
+
+                  int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
+                  final DataTableSource _allUsers = MyData(sorted,context);
+                  return PaginatedDataTable(columnSpacing: 10,horizontalMargin: 10,showCheckboxColumn: true,showFirstLastButtons: true,
+
+                    header:true?Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+                      Text("Questions"),
+                      Row(children: [
+                        Consumer<Questionprovider>(
+                            builder: (_, bar, __) =>bar.items.isEmpty?Container(height: 0,width: 0,):ElevatedButton(onPressed: () async {
+                              final pdf = pw.Document();
+                              List<pw.Widget> allwidgets = [];
+                              List<pw.Widget> allAnswers = [];
+                              List<pw.Widget> qustions = [];
+
+                              for(int i = 0 ; i <bar.data.length ; i++ ){
+                                qustions.add( pw.Text(bar.data[i]["q"]));
+                                qustions.add( pw.Text(bar.data[i]["title"]));
+
+                                List<pw.Widget> r = [];
+
+                               List options = await Data().options(id:bar.data[i]['id'].toString());
+                               List<pw.Widget> allOptions= [];
+                               for(int j = 0 ; j < options.length;j++){
+                                 allOptions.add(pw.Expanded(child: pw.Text(options[j]["body"])));
+                               }
+                                qustions.add(pw.Row(children:allOptions ));
+
+                                // for(int j = 0 ; j <bar.selectedQuestionsBody[i].get("choice").length ; j++ ){
+                                //   r.add(pw.Row(mainAxisAlignment: pw.MainAxisAlignment.start,children: [pw.Container(margin: pw.EdgeInsets.only(left: 5,right: 5),height: 10,width: 10,decoration: pw.BoxDecoration(border: pw.Border.all())),pw.Text(bar.selectedQuestionsBody[i].get("choice")[j])]));
+                                //   // r.add(pw.Row(children: [pw.Container(margin: pw.EdgeInsets.only(left: 5,right: 5),height: 10,width: 10,decoration: pw.BoxDecoration(border: pw.Border.all())),pw.Text(bar.selectedQuestionsBody[i].get("choice")[j])]));
+                                // }
+                                // allwidgets.add(
+                                //     pw.Column(mainAxisAlignment: pw.MainAxisAlignment.start,crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                //         children: [
+                                //           pw.Padding(padding: pw.EdgeInsets.only(top: 5,bottom: 2),child: pw.Text(bar.selectedQuestionsBody[i].get("title")),),
+                                //           pw.Padding(padding: pw.EdgeInsets.only(top: 2,bottom: 5),child: pw.Text(bar.selectedQuestionsBody[i].get("q")),),
+                                //
+                                //           pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start,children: r)
+                                //         ]
+                                //     )
+                                // );
+                              }
+
+                              List<List<pw.Widget>> colums = [];
+                              int currentPara = 0 ;
+                              List<pw.Widget> sss = [];
+                              sss.add(pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.center,
+                                  children: [
+                                    pw.Text("Text 1 "),
+                                    pw.Text("Text 2 "),
+                                    pw.Text("Text 3 "),
+                                    pw.Container(height: 5,width: 600,color: PdfColors.grey),
+                                  ]
+                              ));
+                              for(int i = 0 ; i < allwidgets.length ; i += 2){
+                                List<pw.Widget> lll = [];
+                                lll.add(pw.Expanded(child: allwidgets[i]));
+                                lll.add(pw.Expanded(child: allwidgets[i+1]));
+                                sss.add(pw.Row(mainAxisAlignment: pw.MainAxisAlignment.start,crossAxisAlignment: pw.CrossAxisAlignment.start,children: lll));
+
+                                // if(colums[currentPara].length<2){
+                                //   colums[currentPara].add(allwidgets[i]);
+                                //
+                                // }else{
+                                //   currentPara++;
+                                //   colums[currentPara].add(allwidgets[i]);
+                                // }
+
+
+                              }
+
+                              // for(int i = 0 ; i < colums.length ; i++){
+                              //   sss.add(pw.Row(children:colums[i] ));
+                              // }
+
+
+
+
+
+
+
+                              pdf.addPage(
+                                pw.MultiPage(margin: pw.EdgeInsets.all(10),
+                                  pageFormat: PdfPageFormat.a4,
+                                  build: (context) => qustions,//here goes the widgets list
+                                ),
+                              );
+                              pdf.addPage(
+                                pw.MultiPage(margin: pw.EdgeInsets.all(20),
+                                  pageFormat: PdfPageFormat.a4,
+                                  build: (context) => allAnswers,//here goes the widgets list
+                                ),
+                              );
+                              //allAnswers
+                              // P
+                              Uint8List uint8list2 =await pdf.save();
+                              print("PDf gen compleate");
+                              String content = base64Encode(uint8list2);
+                              final anchor = AnchorElement(
+                                  href:
+                                  "data:application/octet-stream;charset=utf-16le;base64,$content")
+                                ..setAttribute(
+                                    "download",
+                                    "file.pdf")
+                                ..click();//
+
+
+
+                            }, child: Text("Download PDF("+bar.items.length.toString()+")"))),
+                      ],),
+
+                    ],):Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ClassSelectDropdown(onSelected: (String id){
+                              print("class selested "+id);
+                              Provider.of<QuestionSortsprovider>(context, listen: false).class_id =  int.parse(id);
+                              // selectedClassId = id;
+                            },),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SubjectSelectDropdown(onSelected: (String id){
+                              print("class selested "+id);
+
+                              // selectedClassId = id;
+                            },),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ChapterSelectDropdown(onSelected: (String id){
+                              print("class selested "+id);
+
+                              // selectedClassId = id;
+                            },),
+                          ),
+                        ),
+                      ],
+                    ),
+                    rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
+
+                    columns:  [
+                      DataColumn(label:Checkbox(value: false, onChanged: (bool? b){
+
+                      })),
+                      DataColumn(label: Text('Class')),
+                      DataColumn(label: Text('Subject')),
+                      DataColumn(label: Text('Chapter')),
+                      DataColumn(label: Text('Title')),
+                      DataColumn(label: Text('Question')),
+                      DataColumn(label: Text('Answer')),
+                      DataColumn(label: Text('Options')),
+
+                      // DataColumn(label: Text('Id')),
+                      // DataColumn(label: Text('Phone'))
+                    ],
+                    source: _allUsers,
+                  );
+                });
+
+
+
+          },
+        ),
+      ):Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
         child: Consumer<Questionsprovider>(
           builder: (_, bar, __) {

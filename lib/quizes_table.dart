@@ -81,6 +81,7 @@ class MyData extends DataTableSource {
 
 
     },cells: [
+      DataCell(Text(_data[index]['course']??"--")),
       DataCell(Text(_data[index]['class']??"--")),
       DataCell(Text(_data[index]['subject']??"--")),
       DataCell(Text(_data[index]['chapter']??"--")),
@@ -169,11 +170,12 @@ class _StudentsState extends State<QuizesTable> {
           int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
           final DataTableSource _allUsers = MyData(bar.items,widget.scaffoldKey);
           return SingleChildScrollView(
-            child: PaginatedDataTable(showCheckboxColumn: true,
+            child: PaginatedDataTable(columnSpacing: 4,showCheckboxColumn: true,
 
               header: null,
               rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
               columns: const [
+                DataColumn(label: Text('Course')),
                 DataColumn(label: Text('Class')),
                 DataColumn(label: Text('Subject')),
                 DataColumn(label: Text('Chapter')),

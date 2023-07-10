@@ -10,6 +10,7 @@ import 'package:admin/tab_quiz.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'Quizes.dart';
 import 'RestApi.dart';
@@ -17,6 +18,7 @@ import 'chapter_activity.dart';
 import 'class_activity.dart';
 import 'course_table.dart';
 import 'login.dart';
+import 'my_quizes.dart';
 import 'utils.dart';
 import 'Questions_new.dart';
 import 'all_questions.dart';
@@ -78,7 +80,7 @@ class _SidebarXExampleAppState extends State<StudentApp> {
 
   @override
   Widget build(BuildContext context) {
-    return loggedIn? Builder(
+    return true? Builder(
       builder: (context) {
         final isSmallScreen = MediaQuery.of(context).size.width < 600;
         return Scaffold(
@@ -196,11 +198,14 @@ class ExampleSidebarX extends StatelessWidget {
           label: 'Courses',
         ),
 
-         SidebarXItem(
+        SidebarXItem(
           icon: Icons.logout,
           label: 'Logout',onTap: (){
-            FirebaseAuth.instance.signOut();
-         },
+          FirebaseAuth.instance.signOut().then((value) {
+            GoRouter.of(context).go("/");
+
+          });
+        },
         ),
 
       ],
@@ -225,7 +230,7 @@ class _ScreensExample extends StatelessWidget {
         final pageTitle = _getTitleByIndex(controller.selectedIndex);
         switch (controller.selectedIndex) {
           case 0:
-            return true?QuizesStudent(): Questions_All(type: questionbank.type1,);
+            return true?MyQuizes(): Questions_All(type: questionbank.type1,);
             case 1:
             return CoursesStudent();
           case 2:
@@ -359,69 +364,71 @@ class _CoursesStudentState extends State<CoursesStudent> {
     builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
       if(snapshot.hasData){
           return SingleChildScrollView(
-            child: Wrap(children: snapshot.data!.map((e) => Container(width: 300,margin: EdgeInsets.all(5),child: Card(elevation: 5,shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(0.0),
-            ),child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(e["name"]??"--"),
-                      Text("Fee "+e["price"].toString()??"--",style: TextStyle(color: Colors.blue),),
-                    ],
-                  ),
-                  Text(e["description"]??"--",style: TextStyle(color: Colors.black54),),
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
-                    Text("Instructor"),
-                    Text(e["teacher"]==null?"--":( e["teacher"]["LastName"]+" "+ e["teacher"]["FirstName"]))
-                  ],),
-                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Class"),
-                      Text(e["class_name"]??"--"),
-                    ],
-                  ),
-                  e["subject_name"]==null?Container(height: 0,width: 0,): Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Subject"),
-                      Text(e["subject_name"]??"--"),
-                    ],
-                  ),
-                  Row(mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 3),
-                        child: ElevatedButton(onPressed: (){}, child: Text("See details")),
-                      ),
-                      ElevatedButton(onPressed: (){
+            child: Center(
+              child: Wrap(children: snapshot.data!.map((e) => Container(width: 300,margin: EdgeInsets.all(5),child: Card(elevation: 5,shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(0.0),
+              ),child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(e["name"]??"--"),
+                        Text("Fee "+e["price"].toString()??"--",style: TextStyle(color: Colors.blue),),
+                      ],
+                    ),
+                    Text(e["description"]??"--",style: TextStyle(color: Colors.black54),),
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+                      Text("Instructor"),
+                      Text(e["teacher"]==null?"--":( e["teacher"]["LastName"]+" "+ e["teacher"]["FirstName"]))
+                    ],),
+                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Class"),
+                        Text(e["class_name"]??"--"),
+                      ],
+                    ),
+                    e["subject_name"]==null?Container(height: 0,width: 0,): Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Subject"),
+                        Text(e["subject_name"]??"--"),
+                      ],
+                    ),
+                    Row(mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 3),
+                          child: ElevatedButton(onPressed: (){}, child: Text("See details")),
+                        ),
+                        ElevatedButton(onPressed: (){
 
-                        showDialog(
-                            context: context,
-                            builder: (_) =>AlertDialog(actions: [
-                              ElevatedButton(onPressed: (){
-                                Navigator.pop(context);
-
-                              }, child: Text("Cancel")),
-                              ElevatedButton(onPressed: (){
-                                Map data = {"course_id":e["id"],"student_id":FirebaseAuth.instance.currentUser!.uid};
-                                Data().buycourse(data:data ).then((value) {
+                          showDialog(
+                              context: context,
+                              builder: (_) =>AlertDialog(actions: [
+                                ElevatedButton(onPressed: (){
                                   Navigator.pop(context);
 
-                                });
+                                }, child: Text("Cancel")),
+                                ElevatedButton(onPressed: (){
+                                  Map data = {"course_id":e["id"],"student_id":FirebaseAuth.instance.currentUser!.uid};
+                                  Data().buycourse(data:data ).then((value) {
+                                    Navigator.pop(context);
+
+                                  });
 
 
 
 
-                              }, child: Text("Confirm")),
-                            ],content: Text("Pay "+e["price"].toString()??"--"+"?"),title: Text("Buy Course",style: TextStyle(fontSize: 15,color: Colors.black),),));
+                                }, child: Text("Confirm")),
+                              ],content: Text("Pay "+e["price"].toString()??"--"+"?"),title: Text("Buy Course",style: TextStyle(fontSize: 15,color: Colors.black),),));
 
-                      }, child: Text("Buy now")),
-                    ],
-                  ),
-                ],
-              ),
-            )),)).toList(),),
+                        }, child: Text("Buy now")),
+                      ],
+                    ),
+                  ],
+                ),
+              )),)).toList(),),
+            ),
           );
 
       }else{
@@ -437,6 +444,7 @@ class _CoursesStudentState extends State<CoursesStudent> {
 
   }
 }
+
 class MyDataPurchasedCourses extends DataTableSource {
   MyDataPurchasedCourses(this._data);
   final List<dynamic> _data;
