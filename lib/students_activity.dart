@@ -38,7 +38,7 @@ class MyData extends DataTableSource {
     return DataRow(cells: [
       DataCell(Text(_data[index]['course']??"--")),
       DataCell(Text(_data[index]['student']??"--")),
-      DataCell(Text(_data[index]['paid'].toString()??"--")),
+     // DataCell(Text(_data[index]['paid'].toString()??"--")),
 
 
 
@@ -48,7 +48,34 @@ class MyData extends DataTableSource {
   }
 }
 
+class MyDataWallet2 extends DataTableSource {
+  MyDataWallet2(this._data);
+  // GlobalKey<ScaffoldState> key;
+  final List<dynamic> _data;
 
+
+  @override
+  bool get isRowCountApproximate => false;
+  @override
+  int get rowCount => _data.length;
+  @override
+  int get selectedRowCount => 0;
+  @override
+  DataRow getRow(int index) {
+
+
+    return DataRow(cells: [
+      DataCell(Text(_data[index]['course']??"--")),
+      DataCell(Text(_data[index]['student']??"--")),
+      DataCell(Text(_data[index]['paid'].toString()??"--")),
+
+
+
+
+      // DataCell(Text(_data[index].data()["phone"])),
+    ]);
+  }
+}
 class _StudentsState extends State<StudentActivitySql> {
   @override
   void initState() {
@@ -197,6 +224,7 @@ class _StudentsState extends State<StudentActivitySql> {
               columns: const [
                 DataColumn(label: Text('Course')),
                 DataColumn(label: Text('Student')),
+              //  DataColumn(label: Text('Paid')),
 
 
                 // DataColumn(label: Text('Id')),
@@ -455,17 +483,20 @@ class _WalletState extends State<Wallet> {
         builder: (_, barX, __) {
 
           if(paidStudents.length==0)return Center(child: Text("No data"),);
+
           //  return Text(bar.items.toString());
 
           int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
-          final DataTableSource _allUsers = MyData(paidStudents);
+          final DataTableSource _allUsers = MyDataWallet(paidStudents);
+
           return SingleChildScrollView(
             child: PaginatedDataTable(
 
               header:Text("Total Earning "+earning.toString()),
-              rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
+             rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
+             // rowsPerPage: 10,
 
-              columns: const [
+              columns:  [
                 DataColumn(label: Text('Course')),
                 DataColumn(label: Text('Student')),
                 DataColumn(label: Text('Paid')),

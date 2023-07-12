@@ -1,4 +1,5 @@
 import 'package:admin/students_activity.dart';
+import 'package:admin/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +28,7 @@ class _Create_questionState extends State<Create_question> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(width: 800,height: MediaQuery.of(context).size.height,child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(color: Colors.grey.shade50,width: 900,height: MediaQuery.of(context).size.height,child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(onTap: (){
           Navigator.pop(context);
@@ -42,7 +43,7 @@ class _Create_questionState extends State<Create_question> {
         ),),
         Row(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(width: 400,
+            Container(margin: EdgeInsets.all(3),decoration: boxShadow,width: 400,
               child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
 
@@ -88,7 +89,7 @@ class _Create_questionState extends State<Create_question> {
                 ],
               ),
             ),
-            Container(width: 400,child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,children: [
+            Container(margin: EdgeInsets.all(3),decoration: boxShadow,width: 400,child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
