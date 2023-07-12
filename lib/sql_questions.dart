@@ -67,8 +67,7 @@ class MyData extends DataTableSource {
       DataCell(Text(_data[index]['ans']??"--")),
       DataCell(ElevatedButton(onPressed: (){
 //saveoptions
-      List newOptions = [];
-      List allOptions = [];
+
         //options
         showDialog(
             context: context,
@@ -80,15 +79,7 @@ class MyData extends DataTableSource {
                   }, child: Text("Close")),
                   TextButton(onPressed: (){
 
-                    Map data = {"id":_data[index]['id'].toString(),"options":newOptions};
-                    print(data);
 
-
-
-                 Data().saveoptions(data: data).then((value) {
-                      Navigator.pop(context);
-
-                    });
 
                   }, child: Text("Update",style: TextStyle(color: Colors.redAccent),)),
                 ],title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
@@ -170,97 +161,8 @@ class MyData extends DataTableSource {
                           ],
                         ),),
                         Expanded(
-                          child: Container(decoration: boxShadow,margin: EdgeInsets.all(2),child:Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text("Options"),
-                                    ElevatedButton(onPressed: (){
-
-                                      setS(() {
-                                        newOptions.add("");
-                                      });
-                                    }, child: Text("Add option"))
-                                  ],
-                                ),
-                              ),
-                              Column(
-                                children: [
-                                  FutureBuilder(
-
-                                      future:Data().options(id: _data[index]['id'].toString()),
-                                      builder: (context, AsyncSnapshot<List> snap) {
-                                        if(snap.hasData && snap.data!.length>0){
-                                          allOptions = snap.data!;
-                                          //    return Text(snap.data!.toString());
-                                          return ListView.builder(shrinkWrap: true,
-                                              itemCount: allOptions.length,
-                                              itemBuilder: (BuildContext context, int index) {
-                                            try{
-                                              return Container(margin: EdgeInsets.all(5),decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
-                                                  border: Border.all(color: Colors.blue,width: 0.3)),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-                                                  child: Row(children: [
-                                                    Text( allOptions[index]["body"],style: TextStyle(color: Colors.blue),),
-                                                  ],),
-                                                ),
-                                              );
-                                            }catch(e){
-                                              return Container(height: 0,width: 0,);
-                                            }
-
-                                              });
-                                          return Wrap(children: allOptions.map((e) => Container(margin: EdgeInsets.all(5),decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
-                                              border: Border.all(color: Colors.blue,width: 0.3)),
-                                            child: Padding(
-                                              padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-                                              child: Row(children: [
-                                                Text( e["body"],style: TextStyle(color: Colors.blue),),
-                                              ],),
-                                            ),
-                                          )).toList(),);
-                                          return ListView.builder(shrinkWrap: true,
-                                              itemCount: snap.data!.length,
-
-                                              // display each item of the product list
-                                              itemBuilder: (context, index) {
-                                                return Text(snap.data![index]["body"].toString());
-                                              });
-                                        }else{
-                                          return Container(height: 100,child: Center(child: CupertinoActivityIndicator(),));
-                                        }
-
-                                      }),
-                                  ListView.builder(shrinkWrap: true,
-                                      itemCount: newOptions.length,
-                                      itemBuilder: (BuildContext context, int index) {
-                                        return Container(margin: EdgeInsets.all(0),
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),
-                                            child:true?TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 8,)),initialValue:newOptions[index] ,onChanged: (String s){
-                                              newOptions[index] = s ;
-                                            },): Row(children: [
-                                              Text( newOptions[index]["body"],style: TextStyle(color: Colors.blue),),
-                                            ],),
-                                          ),
-                                        );
-                                      }),
-                                  // Wrap(children: newOptions.map((e) => Container(margin: EdgeInsets.all(5),decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
-                                  //     border: Border.all(color: Colors.blue,width: 0.3)),
-                                  //   child: Padding(
-                                  //     padding: const EdgeInsets.symmetric(vertical: 6,horizontal: 10),
-                                  //     child: Row(children: [
-                                  //       Text( e["body"],style: TextStyle(color: Colors.blue),),
-                                  //     ],),
-                                  //   ),
-                                  // )).toList(),),
-                                ],
-                              ),
-                            ],
-                          ) ,),
+                          child: Container(decoration: boxShadow,margin: EdgeInsets.all(2),child:QuesionOptionsTab(mapData:_data[index] ,)
+                          ,),
                         ),
 
                       ],
@@ -839,5 +741,110 @@ class _StudentsState extends State<QuestionsActivitySQL> {
 
 
 
+  }
+}
+class QuesionOptionsTab extends StatefulWidget {
+  Map<String,dynamic>mapData ;
+  QuesionOptionsTab({required this.mapData});
+
+  @override
+  State<QuesionOptionsTab> createState() => _QuesionOptionsTabState();
+}
+
+class _QuesionOptionsTabState extends State<QuesionOptionsTab> {
+  List newOptions = [];
+List allOptions = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("Options"),
+              ElevatedButton(onPressed: (){
+
+                setState(() {
+                  newOptions.add("");
+                });
+              }, child: Text("Add option"))
+            ],
+          ),
+        ),
+        Column(
+          children: [
+            FutureBuilder(
+
+                future:Data().options(id: widget.mapData['id'].toString()),
+                builder: (context, AsyncSnapshot<List> snap) {
+                  if(snap.hasData && snap.data!.length>0){
+                    allOptions = snap.data!;
+                    //    return Text(snap.data!.toString());
+                    return ListView.builder(shrinkWrap: true,
+                        itemCount: allOptions.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          try{
+                            return Container(margin: EdgeInsets.all(5),decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
+                                border: Border.all(color: Colors.blue,width: 0.3)),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                                child: Row(children: [
+                                  Text( allOptions[index]["body"],style: TextStyle(color: Colors.blue),),
+                                ],),
+                              ),
+                            );
+                          }catch(e){
+                            return Container(height: 0,width: 0,);
+                          }
+
+                        });
+
+                  }else{
+                    return Container(height: 100,child: Center(child: CupertinoActivityIndicator(),));
+                  }
+
+                }),
+            ListView.builder(shrinkWrap: true,
+                itemCount: newOptions.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(margin: EdgeInsets.all(0),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 5),
+                      child:true?TextFormField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 8,)),initialValue:newOptions[index] ,onChanged: (String s){
+                        newOptions[index] = s ;
+                      },): Row(children: [
+                        Text( newOptions[index]["body"],style: TextStyle(color: Colors.blue),),
+                      ],),
+                    ),
+                  );
+                }),
+            // Wrap(children: newOptions.map((e) => Container(margin: EdgeInsets.all(5),decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),
+            //     border: Border.all(color: Colors.blue,width: 0.3)),
+            //   child: Padding(
+            //     padding: const EdgeInsets.symmetric(vertical: 6,horizontal: 10),
+            //     child: Row(children: [
+            //       Text( e["body"],style: TextStyle(color: Colors.blue),),
+            //     ],),
+            //   ),
+            // )).toList(),),
+          ],
+        ),
+        ElevatedButton(onPressed: (){
+
+          Map data = {"id":widget.mapData['id'].toString(),"options":newOptions};
+          print(data);
+
+
+
+          Data().saveoptions(data: data).then((value) {
+            Navigator.pop(context);
+
+          });
+
+        }, child: Text("Update"))
+      ],
+    );
   }
 }

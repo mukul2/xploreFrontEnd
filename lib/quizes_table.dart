@@ -1,3 +1,4 @@
+import 'package:admin/questions_table_of_quize_table.dart';
 import 'package:admin/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -137,7 +138,8 @@ class MyData extends DataTableSource {
               ),
 
              // Container(height: 25,),
-              Edit_quiz_activitySQL(ref:_data[index]),
+              QuestionsofQuize(quizeId:_data[index]["id"].toString() ,),
+            //  Edit_quiz_activitySQL(ref:_data[index]),
 
             ],
           ),
