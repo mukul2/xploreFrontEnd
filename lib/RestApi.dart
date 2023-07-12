@@ -138,12 +138,14 @@ class Data{
   }
 
   Future saveQuiz ({required dynamic data}) async {
-
+    print("Save quiz api start");
     try{
       http.Response r =  await http.post(Uri.parse(base+"/savequiz",),headers: {'Content-Type': 'application/json',},body: jsonEncode( data));
       print(r.body);
+      print("Save quiz response");
       return jsonDecode(r.body);
     }catch(e){
+      print("Save quiz response catches");
       print(e);
       return{};
 

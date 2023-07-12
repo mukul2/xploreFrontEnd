@@ -998,7 +998,7 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
 
                       Center(
                         child: InkWell( onTap: (){
-
+                          print("Save quiz clicked");
                           try{
                             List q = [];
                             print("total AddedProvider ");
@@ -1027,11 +1027,11 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
                               min = min+int.parse(allTimes[k]);
                             }
                             Map dataToSave = {
-                              "class_id":selectedClass,
-                              "subject_id":selectedsubject,
-                              "chapter_id":selectedChapter,
+                              "class_id":selectedClass??0,
+                              "subject_id":selectedsubject??0,
+                              "chapter_id":selectedChapter??0,
                               "created_by":FirebaseAuth.instance.currentUser!.uid,
-                              "course_id":controller3.text,
+                              "course_id":controller3.text==""?0:controller3.text,
                               "exam_end":exm_end/1000,
                               "exam_start":exm_start/1000,
                               "exam_time_minute":min,
