@@ -8,6 +8,7 @@ import 'package:admin/sync_data_table.dart';
 import 'package:admin/tab_questions.dart';
 import 'package:admin/tab_quiz.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expandable/expandable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -334,7 +335,7 @@ class _CoursesStudentState extends State<CoursesStudent> {
                   future: Data().getcourse(id: FirebaseAuth.instance.currentUser!.uid), // a previously-obtained Future<String> or null
                   builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
                     if(snapshot.hasData && snapshot.data!.length>0){
-                    Text(snapshot.data!.toString());
+
                       int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
                       final DataTableSource _allUsers = MyDataPurchasedCourses(snapshot.data!);
                    return   PaginatedDataTable(columnSpacing: 10,horizontalMargin: 5,
@@ -368,8 +369,8 @@ class _CoursesStudentState extends State<CoursesStudent> {
               child: Wrap(children: snapshot.data!.map((e) => Container(width: 300,margin: EdgeInsets.all(5),child: Card(elevation: 5,shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(0.0),
               ),child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                padding:  const EdgeInsets.all(8.0),
+                child: false?Text(e.toString()):Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -394,6 +395,21 @@ class _CoursesStudentState extends State<CoursesStudent> {
                         Text(e["subject_name"]??"--"),
                       ],
                     ),
+                    Text("Lectures",style: TextStyle(color: Colors.grey),),
+                    ListView.builder(shrinkWrap: true,
+                        itemCount: e["lecture"].length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Text(e["lecture"][index]["name"]);
+                        }),
+                    // Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text("No of lectures"),
+                    //     Text(e["lecture"].length.toString()),
+                    //   ],
+                    // ),
+
+
+
                     Row(mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Padding(

@@ -1,3 +1,4 @@
+import 'package:admin/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -18,7 +19,7 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: true?Center(
-      child: Container(width: 500,decoration: BoxDecoration(border: Border.all(width: 0.2,color: Colors.blue),borderRadius: BorderRadius.circular(5)),
+      child: Container(width: 500,decoration: boxShadow,
         child: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Wrap(children: [

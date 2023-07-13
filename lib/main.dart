@@ -185,8 +185,8 @@ class MyApp extends StatelessWidget {
         ],
       child: MaterialApp.router(
       title: 'Flutter Demo',
-      theme: ThemeData( dialogBackgroundColor: Colors.grey.shade50,dialogTheme: DialogTheme(backgroundColor: Colors.grey.shade50),appBarTheme: AppBarTheme(elevation: 1,
-        iconTheme: IconThemeData(color: Colors.black),
+      theme: ThemeData( scaffoldBackgroundColor: Colors.grey.shade50,dialogBackgroundColor: Colors.grey.shade50,dialogTheme: DialogTheme(backgroundColor: Colors.grey.shade50),appBarTheme: AppBarTheme(elevation: 1,
+        iconTheme: IconThemeData(color: Colors.black),titleTextStyle: TextStyle(color: Colors.black54),
         color: Colors.white, //<-- SEE HERE
       ),fontFamily: 'Nexa',inputDecorationTheme: InputDecorationTheme(fillColor: Colors.grey.shade50,filled: true,contentPadding: EdgeInsets.symmetric(horizontal: 8,vertical: 8), labelStyle: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),border:  OutlineInputBorder(
       // width: 0.0 produces a thin "hairline" border

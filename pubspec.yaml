@@ -50,6 +50,7 @@ dependencies:
   go_router: ^9.0.3
   syncfusion_flutter_datagrid: ^22.1.37
   data_table_2: ^2.5.3
+  expandable: ^5.0.1
 
 
 
