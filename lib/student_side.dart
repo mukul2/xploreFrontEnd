@@ -395,12 +395,24 @@ class _CoursesStudentState extends State<CoursesStudent> {
                         Text(e["subject_name"]??"--"),
                       ],
                     ),
-                    Text("Lectures",style: TextStyle(color: Colors.grey),),
-                    ListView.builder(shrinkWrap: true,
-                        itemCount: e["lecture"].length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Text(e["lecture"][index]["name"]);
-                        }),
+                    Text("Lectures",style: TextStyle(color: Colors.blue),),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: ListView.builder(shrinkWrap: true,
+                          itemCount: e["lecture"].length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(e["lecture"][index]["name"]),
+                                Row(
+                                  children: [
+                                    Text("Content: "+e["lecture"][index]["content_count"].toString()+" Quize: "+e["lecture"][index]["quize_count"].toString(),style: TextStyle(color: Colors.grey),),
+                                  ],
+                                ),
+                              ],
+                            );
+                          }),
+                    ),
                     // Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     //   children: [
                     //     Text("No of lectures"),
@@ -460,7 +472,32 @@ class _CoursesStudentState extends State<CoursesStudent> {
 
   }
 }
+class MyDataPurchasedQuizes extends DataTableSource {
+  MyDataPurchasedQuizes(this._data);
+  final List<dynamic> _data;
 
+  List selected_quiz = [];
+  @override
+  bool get isRowCountApproximate => false;
+  @override
+  int get rowCount => _data.length;
+  @override
+  int get selectedRowCount => 0;
+
+  @override
+  DataRow getRow(int index) {
+
+
+    return DataRow(cells: [
+      DataCell(Text(_data[index]['quize']??"-")),
+
+      DataCell(ElevatedButton(onPressed: (){},child: Text("Start Exam"),)),
+
+
+      // DataCell(Text(_data[index].data()["phone"])),
+    ]);
+  }
+}
 class MyDataPurchasedCourses extends DataTableSource {
   MyDataPurchasedCourses(this._data);
   final List<dynamic> _data;

@@ -46,6 +46,7 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
   TextEditingController controller8 = TextEditingController();
   TextEditingController controller9 = TextEditingController();
   TextEditingController controller10 = TextEditingController();
+  TextEditingController controller11 = TextEditingController();
   int exm_start = 0;
   int exm_end = 0;
 
@@ -364,9 +365,16 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
                             ),
                           ),
                           Expanded(
-                            child: Padding(
+                            child:Padding(
                               padding: const EdgeInsets.all(8.0),
-                              // child: TextField(decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Pass Mark")),),
+                              child: Wrap(
+                                children: [
+                                  Text("Price"),
+                                  TextField(controller: controller11,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                    //000000000000000000000000000000000000000  label: Text("Price")
+                                  ),),
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -374,7 +382,7 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
 
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: TextField(controller: controller10,minLines: 7,maxLines: 10,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 10,horizontal: 10),label: Text("Quiz Content")),),
+                        child: TextField(controller: controller10,minLines: 7,maxLines: 10,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 20,horizontal: 15),label: Text("Quiz Content")),),
                       ),
                       Consumer<AddedProvider>(
                         builder: (_, bar, __) =>ListView.builder(shrinkWrap: true,
@@ -1045,6 +1053,7 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
                               "status":controller9.text,
                               "title":controller1.text,
                               "total_point":controller5.text,
+                              "price":controller11.text,
 
 
 
