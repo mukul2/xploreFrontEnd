@@ -65,138 +65,143 @@ class MyData extends DataTableSource {
       DataCell(ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['q'].toString()??"--"))),
       DataCell(Text(_data[index]['ans']??"--")),
-      DataCell(ElevatedButton(onPressed: (){
+      DataCell(Row(
+        children: [
+
+          ElevatedButton(onPressed: (){
 //saveoptions
 
-        //options
-        showDialog(
-            context: context,
-            builder: (_) => StatefulBuilder(
-              builder: (context,setS) {
-                return AlertDialog(backgroundColor:Colors.grey.shade50,actions: [
-                  TextButton(onPressed: (){
-                    Navigator.pop(context);
-                  }, child: Text("Close")),
-                  TextButton(onPressed: (){
+            //options
+            showDialog(
+                context: context,
+                builder: (_) => StatefulBuilder(
+                  builder: (context,setS) {
+                    return AlertDialog(backgroundColor:Colors.grey.shade50,actions: [
+                      TextButton(onPressed: (){
+                        Navigator.pop(context);
+                      }, child: Text("Close")),
+                      TextButton(onPressed: (){
 
 
 
-                  }, child: Text("Update",style: TextStyle(color: Colors.redAccent),)),
-                ],title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
-                  Text("Question"),
-                  IconButton(onPressed: (){
-                    Navigator.pop(context);
+                      }, child: Text("Update",style: TextStyle(color: Colors.redAccent),)),
+                    ],title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+                      Text("Question"),
+                      IconButton(onPressed: (){
+                        Navigator.pop(context);
 
-                  },  icon: Icon(Icons.close))
-                ],),
-                  content:Container(color:Colors.grey.shade50,width:  MediaQuery.of(context).size.width,height: MediaQuery.of(context).size.height,
-                    child:true?Row(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(width: 600,child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                      },  icon: Icon(Icons.close))
+                    ],),
+                      content:Container(color:Colors.grey.shade50,width:  MediaQuery.of(context).size.width,height: MediaQuery.of(context).size.height,
+                        child:true?Row(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(margin: EdgeInsets.all(2),decoration:boxShadow,
-                              child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("Question Title (Optional)"),
+                            Container(width: 600,child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(margin: EdgeInsets.all(2),decoration:boxShadow,
+                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text("Question Title (Optional)"),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextFormField( keyboardType: TextInputType.multiline,
+                                          maxLines: null,initialValue:_data[index]['title']??"--" ,enabled: false,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                          //  label: Text("Title")
+                                        ),),
+                                      ),
+                                    ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextFormField( keyboardType: TextInputType.multiline,
-                                      maxLines: null,initialValue:_data[index]['title']??"--" ,enabled: false,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                      //  label: Text("Title")
-                                    ),),
+                                ),
+                                Container(margin: EdgeInsets.all(2),decoration:boxShadow,
+                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text("Question (Mandatory)"),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextFormField( keyboardType: TextInputType.multiline,
+                                          maxLines: null,initialValue:_data[index]['q']??"--" ,enabled: false,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                             // label: Text("Question")
+                                          ),),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                                // Row(
+                                //   children: [
+                                //     Text(_data[index]['title']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
+                                //   ],
+                                // ),
+
+                                // Row(
+                                //   children: [
+                                //     Text(_data[index]['q']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
+                                //   ],
+                                // ),
+                                Container(margin: EdgeInsets.all(2),decoration:boxShadow,
+                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text("Right answer"),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextFormField( keyboardType: TextInputType.multiline,
+                                          maxLines: null,initialValue:_data[index]['ans']??"--" ,enabled: false,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                          // label: Text("Question")
+                                        ),),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+
+                              ],
+                            ),),
+                            Expanded(
+                              child: Container(decoration: boxShadow,margin: EdgeInsets.all(2),child:QuesionOptionsTab(mapData:_data[index] ,)
+                              ,),
                             ),
-                            Container(margin: EdgeInsets.all(2),decoration:boxShadow,
-                              child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("Question (Mandatory)"),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextFormField( keyboardType: TextInputType.multiline,
-                                      maxLines: null,initialValue:_data[index]['q']??"--" ,enabled: false,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                         // label: Text("Question")
-                                      ),),
-                                  ),
-                                ],
-                              ),
+
+                          ],
+                        ):
+                        Wrap(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: TextFormField(initialValue:_data[index]['title']??"--" ,enabled: false,decoration: InputDecoration(label: Text("Title")),),
                             ),
                             // Row(
                             //   children: [
                             //     Text(_data[index]['title']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
                             //   ],
                             // ),
-
-                            // Row(
-                            //   children: [
-                            //     Text(_data[index]['q']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
-                            //   ],
-                            // ),
-                            Container(margin: EdgeInsets.all(2),decoration:boxShadow,
-                              child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("Right answer"),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextFormField( keyboardType: TextInputType.multiline,
-                                      maxLines: null,initialValue:_data[index]['ans']??"--" ,enabled: false,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                      // label: Text("Question")
-                                    ),),
-                                  ),
-                                ],
-                              ),
+                            Row(
+                              children: [
+                                Text(_data[index]['q']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
+                              ],
                             ),
-
-
-                          ],
-                        ),),
-                        Expanded(
-                          child: Container(decoration: boxShadow,margin: EdgeInsets.all(2),child:QuesionOptionsTab(mapData:_data[index] ,)
-                          ,),
-                        ),
-
-                      ],
-                    ):
-                    Wrap(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: TextFormField(initialValue:_data[index]['title']??"--" ,enabled: false,decoration: InputDecoration(label: Text("Title")),),
-                        ),
-                        // Row(
-                        //   children: [
-                        //     Text(_data[index]['title']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
-                        //   ],
-                        // ),
-                        Row(
-                          children: [
-                            Text(_data[index]['q']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
+                            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Right ans : ",style: TextStyle(color: Colors.grey,fontSize:13 ),),
+                                Text(_data[index]['ans']??"--",style: TextStyle(color: Colors.black54,fontSize:13 ),)
+                              ],
+                            ),
+                            Text("Options are",style: TextStyle(color: Colors.grey,fontSize:13 ),),
                           ],
                         ),
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Right ans : ",style: TextStyle(color: Colors.grey,fontSize:13 ),),
-                            Text(_data[index]['ans']??"--",style: TextStyle(color: Colors.black54,fontSize:13 ),)
-                          ],
-                        ),
-                        Text("Options are",style: TextStyle(color: Colors.grey,fontSize:13 ),),
-                      ],
-                    ),
-                  ),
-                );
-              }
-            ));
-      },child: Text("View options"),)),
+                      ),
+                    );
+                  }
+                ));
+          },child: Text("View options"),),
+        ],
+      )),
 
 
 
@@ -227,7 +232,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
     ],);
 //Batchprovider
     return Scaffold(backgroundColor: Colors.grey.shade50,
-      appBar: false?null: PreferredSize(preferredSize: Size(0,120),child: Card(margin: EdgeInsets.zero,shape: RoundedRectangleBorder(
+      appBar: false?null: PreferredSize(preferredSize: Size(0,120),child: Card(elevation: 1,margin: EdgeInsets.zero,shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0.0),
       ),
          child: Padding(
@@ -371,114 +376,139 @@ class _StudentsState extends State<QuestionsActivitySQL> {
                   final DataTableSource _allUsers = MyData(sorted,context);
                   return PaginatedDataTable(columnSpacing: 10,horizontalMargin: 10,showCheckboxColumn: true,showFirstLastButtons: true,
 
-                    header:true?Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
-                      Text("Questions"),
-                      Row(children: [
-                        Consumer<Questionprovider>(
-                            builder: (_, bar, __) =>bar.items.isEmpty?Container(height: 0,width: 0,):ElevatedButton(onPressed: () async {
-                              final pdf = pw.Document();
-                              List<pw.Widget> allwidgets = [];
-                              List<pw.Widget> allAnswers = [];
-                              List<pw.Widget> qustions = [];
+                    header:true?  Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+                        Container(height: 45,width: 300,child: TextFormField(decoration: InputDecoration(
+                            hintText: "Search"
+                        ),)),
+                        Row(children: [
+                          Consumer<Questionprovider>(
+                              builder: (_, bar, __) =>bar.items.isEmpty?Container(height: 0,width: 0,):Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                                    child: ElevatedButton(onPressed: (){
+                                      for(int i = 0 ; i < bar.data.length ; i++ ){
+                                         Data().deletequestion(id: bar.data[i]["id"].toString()).then((value) {
+                                          bar.removeData(bar.data[i]["id"], bar.data[i]);
+                                           Data().questionsbyid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
+                                             Provider.of<Questionsprovider>(context, listen: false).items = value;
+                                           });
 
-                              for(int i = 0 ; i <bar.data.length ; i++ ){
-                                qustions.add( pw.Text(bar.data[i]["q"]));
-                                qustions.add( pw.Text(bar.data[i]["title"]));
-
-                                List<pw.Widget> r = [];
-
-                               List options = await Data().options(id:bar.data[i]['id'].toString());
-                               List<pw.Widget> allOptions= [];
-                               for(int j = 0 ; j < options.length;j++){
-                                 allOptions.add(pw.Expanded(child: pw.Text(options[j]["body"])));
-                               }
-                                qustions.add(pw.Row(children:allOptions ));
-
-                                // for(int j = 0 ; j <bar.selectedQuestionsBody[i].get("choice").length ; j++ ){
-                                //   r.add(pw.Row(mainAxisAlignment: pw.MainAxisAlignment.start,children: [pw.Container(margin: pw.EdgeInsets.only(left: 5,right: 5),height: 10,width: 10,decoration: pw.BoxDecoration(border: pw.Border.all())),pw.Text(bar.selectedQuestionsBody[i].get("choice")[j])]));
-                                //   // r.add(pw.Row(children: [pw.Container(margin: pw.EdgeInsets.only(left: 5,right: 5),height: 10,width: 10,decoration: pw.BoxDecoration(border: pw.Border.all())),pw.Text(bar.selectedQuestionsBody[i].get("choice")[j])]));
-                                // }
-                                // allwidgets.add(
-                                //     pw.Column(mainAxisAlignment: pw.MainAxisAlignment.start,crossAxisAlignment: pw.CrossAxisAlignment.start,
-                                //         children: [
-                                //           pw.Padding(padding: pw.EdgeInsets.only(top: 5,bottom: 2),child: pw.Text(bar.selectedQuestionsBody[i].get("title")),),
-                                //           pw.Padding(padding: pw.EdgeInsets.only(top: 2,bottom: 5),child: pw.Text(bar.selectedQuestionsBody[i].get("q")),),
-                                //
-                                //           pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start,children: r)
-                                //         ]
-                                //     )
-                                // );
-                              }
-
-                              List<List<pw.Widget>> colums = [];
-                              int currentPara = 0 ;
-                              List<pw.Widget> sss = [];
-                              sss.add(pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.center,
-                                  children: [
-                                    pw.Text("Text 1 "),
-                                    pw.Text("Text 2 "),
-                                    pw.Text("Text 3 "),
-                                    pw.Container(height: 5,width: 600,color: PdfColors.grey),
-                                  ]
-                              ));
-                              for(int i = 0 ; i < allwidgets.length ; i += 2){
-                                List<pw.Widget> lll = [];
-                                lll.add(pw.Expanded(child: allwidgets[i]));
-                                lll.add(pw.Expanded(child: allwidgets[i+1]));
-                                sss.add(pw.Row(mainAxisAlignment: pw.MainAxisAlignment.start,crossAxisAlignment: pw.CrossAxisAlignment.start,children: lll));
-
-                                // if(colums[currentPara].length<2){
-                                //   colums[currentPara].add(allwidgets[i]);
-                                //
-                                // }else{
-                                //   currentPara++;
-                                //   colums[currentPara].add(allwidgets[i]);
-                                // }
+                                         });
+                                      }
 
 
-                              }
+                                    }, child: Text("Delete ("+bar.items.length.toString()+")")),
+                                  ),
+                                  ElevatedButton(onPressed: () async {
+                                    final pdf = pw.Document();
+                                    List<pw.Widget> allwidgets = [];
+                                    List<pw.Widget> allAnswers = [];
+                                    List<pw.Widget> qustions = [];
 
-                              // for(int i = 0 ; i < colums.length ; i++){
-                              //   sss.add(pw.Row(children:colums[i] ));
-                              // }
+                                    for(int i = 0 ; i <bar.data.length ; i++ ){
+                                      qustions.add( pw.Text(bar.data[i]["q"]));
+                                      qustions.add( pw.Text(bar.data[i]["title"]));
+
+                                      List<pw.Widget> r = [];
+
+                                     List options = await Data().options(id:bar.data[i]['id'].toString());
+                                     List<pw.Widget> allOptions= [];
+                                     for(int j = 0 ; j < options.length;j++){
+                                       allOptions.add(pw.Expanded(child: pw.Text(options[j]["body"])));
+                                     }
+                                      qustions.add(pw.Row(children:allOptions ));
+
+                                      // for(int j = 0 ; j <bar.selectedQuestionsBody[i].get("choice").length ; j++ ){
+                                      //   r.add(pw.Row(mainAxisAlignment: pw.MainAxisAlignment.start,children: [pw.Container(margin: pw.EdgeInsets.only(left: 5,right: 5),height: 10,width: 10,decoration: pw.BoxDecoration(border: pw.Border.all())),pw.Text(bar.selectedQuestionsBody[i].get("choice")[j])]));
+                                      //   // r.add(pw.Row(children: [pw.Container(margin: pw.EdgeInsets.only(left: 5,right: 5),height: 10,width: 10,decoration: pw.BoxDecoration(border: pw.Border.all())),pw.Text(bar.selectedQuestionsBody[i].get("choice")[j])]));
+                                      // }
+                                      // allwidgets.add(
+                                      //     pw.Column(mainAxisAlignment: pw.MainAxisAlignment.start,crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                      //         children: [
+                                      //           pw.Padding(padding: pw.EdgeInsets.only(top: 5,bottom: 2),child: pw.Text(bar.selectedQuestionsBody[i].get("title")),),
+                                      //           pw.Padding(padding: pw.EdgeInsets.only(top: 2,bottom: 5),child: pw.Text(bar.selectedQuestionsBody[i].get("q")),),
+                                      //
+                                      //           pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start,children: r)
+                                      //         ]
+                                      //     )
+                                      // );
+                                    }
+
+                                    List<List<pw.Widget>> colums = [];
+                                    int currentPara = 0 ;
+                                    List<pw.Widget> sss = [];
+                                    sss.add(pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.center,
+                                        children: [
+                                          pw.Text("Text 1 "),
+                                          pw.Text("Text 2 "),
+                                          pw.Text("Text 3 "),
+                                          pw.Container(height: 5,width: 600,color: PdfColors.grey),
+                                        ]
+                                    ));
+                                    for(int i = 0 ; i < allwidgets.length ; i += 2){
+                                      List<pw.Widget> lll = [];
+                                      lll.add(pw.Expanded(child: allwidgets[i]));
+                                      lll.add(pw.Expanded(child: allwidgets[i+1]));
+                                      sss.add(pw.Row(mainAxisAlignment: pw.MainAxisAlignment.start,crossAxisAlignment: pw.CrossAxisAlignment.start,children: lll));
+
+                                      // if(colums[currentPara].length<2){
+                                      //   colums[currentPara].add(allwidgets[i]);
+                                      //
+                                      // }else{
+                                      //   currentPara++;
+                                      //   colums[currentPara].add(allwidgets[i]);
+                                      // }
 
 
+                                    }
 
-
-
-
-
-                              pdf.addPage(
-                                pw.MultiPage(margin: pw.EdgeInsets.all(10),
-                                  pageFormat: PdfPageFormat.a4,
-                                  build: (context) => qustions,//here goes the widgets list
-                                ),
-                              );
-                              pdf.addPage(
-                                pw.MultiPage(margin: pw.EdgeInsets.all(20),
-                                  pageFormat: PdfPageFormat.a4,
-                                  build: (context) => allAnswers,//here goes the widgets list
-                                ),
-                              );
-                              //allAnswers
-                              // P
-                              Uint8List uint8list2 =await pdf.save();
-                              print("PDf gen compleate");
-                              String content = base64Encode(uint8list2);
-                              final anchor = AnchorElement(
-                                  href:
-                                  "data:application/octet-stream;charset=utf-16le;base64,$content")
-                                ..setAttribute(
-                                    "download",
-                                    "file.pdf")
-                                ..click();//
+                                    // for(int i = 0 ; i < colums.length ; i++){
+                                    //   sss.add(pw.Row(children:colums[i] ));
+                                    // }
 
 
 
-                            }, child: Text("Download PDF("+bar.items.length.toString()+")"))),
+
+
+
+
+                                    pdf.addPage(
+                                      pw.MultiPage(margin: pw.EdgeInsets.all(10),
+                                        pageFormat: PdfPageFormat.a4,
+                                        build: (context) => qustions,//here goes the widgets list
+                                      ),
+                                    );
+                                    pdf.addPage(
+                                      pw.MultiPage(margin: pw.EdgeInsets.all(20),
+                                        pageFormat: PdfPageFormat.a4,
+                                        build: (context) => allAnswers,//here goes the widgets list
+                                      ),
+                                    );
+                                    //allAnswers
+                                    // P
+                                    Uint8List uint8list2 =await pdf.save();
+                                    print("PDf gen compleate");
+                                    String content = base64Encode(uint8list2);
+                                    final anchor = AnchorElement(
+                                        href:
+                                        "data:application/octet-stream;charset=utf-16le;base64,$content")
+                                      ..setAttribute(
+                                          "download",
+                                          "file.pdf")
+                                      ..click();//
+
+
+
+                                  }, child: Text("Download PDF("+bar.items.length.toString()+")")),
+                                ],
+                              )),
+                        ],),
+
                       ],),
-
-                    ],):Row(
+                    ):Row(
                       children: [
                         Expanded(
                           child: Padding(

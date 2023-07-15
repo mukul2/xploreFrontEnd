@@ -673,6 +673,7 @@ class _BatchSelectDropdownState extends State<BatchSelectDropdown> {
 
 class ClassSelectDropdown extends StatefulWidget {
   Function(String)onSelected;
+  String? uid;
   ClassSelectDropdown({required this.onSelected});
 
   @override
@@ -687,11 +688,11 @@ class _ClassSelectDropdownState extends State<ClassSelectDropdown> {
       padding: const EdgeInsets.only(top: 8),
       child: FutureBuilder<List>(
 
-          future:Data().classesid(id: FirebaseAuth.instance.currentUser!.uid),
+          future:widget.uid==null?Data().classes(): Data().classes(),
           builder: (context, AsyncSnapshot<List> snap) {
             if(snap.hasData){
                Text(snap.data!.toString());
-              List<String> dropdownItems = ["All"];
+              List<String> dropdownItems = [];
 
               for(int i = 0 ; i < snap.data!.length ;i++){
                 dropdownItems.add(snap.data![i]["name"]);
@@ -782,12 +783,12 @@ class _SubjectSelectDropdownState extends State<SubjectSelectDropdown> {
       padding: const EdgeInsets.only(top: 8),
       child: FutureBuilder<List>(
 
-          future:Data().subjectsidx(id: FirebaseAuth.instance.currentUser!.uid),
+          future:Data().subjects(),
           builder: (context, AsyncSnapshot<List> snap) {
 
             if(snap.hasData){
              // return Text(snap.data!.toString());
-              List<String> dropdownItems = ["All"];
+              List<String> dropdownItems = [];
               for(int i = 0 ; i < snap.data!.length ;i++){
                 dropdownItems.add(snap.data![i]["sName"]);
               }
@@ -874,12 +875,12 @@ class _ChapterSelectDropdownState extends State<ChapterSelectDropdown> {
       padding: const EdgeInsets.only(top: 8),
       child: FutureBuilder<List>(
 
-          future:Data().chaptersidx(id: FirebaseAuth.instance.currentUser!.uid),
+          future:Data().chapters(),
           builder: (context, AsyncSnapshot<List> snap) {
 
             if(snap.hasData){
             //  return Text(snap.data!.toString());
-              List<String> dropdownItems = ["All"];
+              List<String> dropdownItems = [];
 
               for(int i = 0 ; i < snap.data!.length ;i++){
                 dropdownItems.add(snap.data![i]["cname"]);

@@ -20,7 +20,7 @@ class QuizesTable extends StatefulWidget {
 }
 // The "soruce" of the table
 class MyData extends DataTableSource {
-  MyData(this._data,this.key);
+  MyData(this._data,this.key,);
   GlobalKey<ScaffoldState> key;
   final List<dynamic> _data;
 
@@ -93,59 +93,76 @@ class MyData extends DataTableSource {
     //  wo(),
     //   DataCell(Text(_data[index].data()["course_id"])),
     //  wo2(),
-      safeDate(_data[index],"exam_start"),
-      safeDate(_data[index],"exam_end"),
+  //    safeDate(_data[index],"exam_start"),
+   //   safeDate(_data[index],"exam_end"),
    //   DataCell(Text(DateTime.fromMillisecondsSinceEpoch(_data[index].data()["exam_start"]).toIso8601String())),
     //  DataCell(Text(DateTime.fromMillisecondsSinceEpoch(_data[index].data()["exam_end"]).toIso8601String())),
-      DataCell(Text(_data[index]["exam_time_minute"].toString())),
-      DataCell(TextButton(onPressed: (){
+    //  DataCell(Text(_data[index]["exam_time_minute"].toString())),
+      DataCell(Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: ElevatedButton(onPressed: (){
+              Data().deletequize(id: _data[index]['id'].toString()).then((value) {
+                Data().quizesHandelerid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
+                  Provider.of<Quizessprovider>(key.currentState!.context, listen: false).items = value;
+                });
 
-        key.currentState!.showBottomSheet((context) => Container(height: MediaQuery.of(context).size.height,child: SingleChildScrollView(
-          child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Card(margin: EdgeInsets.zero,shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0.0),
-              ) ,
-                child: Padding(
-                  padding:  EdgeInsets.only(bottom: 10,top: 15),
-                  child: Column(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      InkWell( onTap: (){
 
-                        Provider.of<QuestionsSelectedProvider>(context, listen: false).totalMarks = 0;
-                        Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestionsBody =[];
-                        Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestions = [];
 
-                        Navigator.pop(context);
-                      },
-                        child: Row(
-                          children: [
-                            Icon(Icons.navigate_before,color: Colors.blue,),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: Text("Close",style: TextStyle(color: Colors.blue),),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 30),
-                        child: Text("Edit",style: TextStyle(fontSize: 25),),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-             // Container(height: 25,),
-              QuestionsofQuize(quizeId:_data[index]["id"].toString() ,),
-            //  Edit_quiz_activitySQL(ref:_data[index]),
-
-            ],
+              });
+            }, child: Text("Delete")),
           ),
-        ),));
+          TextButton(onPressed: (){
 
-      },child: Text("Edit"),)),
+            key.currentState!.showBottomSheet((context) => Container(height: MediaQuery.of(context).size.height,child: SingleChildScrollView(
+              child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Card(margin: EdgeInsets.zero,shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0.0),
+                  ) ,
+                    child: Padding(
+                      padding:  EdgeInsets.only(bottom: 10,top: 15),
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell( onTap: (){
+
+                            Provider.of<QuestionsSelectedProvider>(context, listen: false).totalMarks = 0;
+                            Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestionsBody =[];
+                            Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestions = [];
+
+                            Navigator.pop(context);
+                          },
+                            child: Row(
+                              children: [
+                                Icon(Icons.navigate_before,color: Colors.blue,),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Text("Close",style: TextStyle(color: Colors.blue),),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 30),
+                            child: Text("Edit",style: TextStyle(fontSize: 25),),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                 // Container(height: 25,),
+                  QuestionsofQuize(quizeId:_data[index]["id"].toString() ,),
+                //  Edit_quiz_activitySQL(ref:_data[index]),
+
+                ],
+              ),
+            ),));
+
+          },child: Text("Edit"),),
+        ],
+      )),
       // DataCell(Text(_data[index].data()["phone"])),
     ]);
   }
@@ -169,12 +186,19 @@ class _StudentsState extends State<QuizesTable> {
     return  Consumer<Quizessprovider>(
         builder: (_, bar, __) {
           if (bar.items.isEmpty) return Center(child: Text("No data"),);
+        //  return Text(bar.items.toString());
           int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
           final DataTableSource _allUsers = MyData(bar.items,widget.scaffoldKey);
-          return SingleChildScrollView(
-            child: PaginatedDataTable(columnSpacing: 4,showCheckboxColumn: true,
+          return Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: PaginatedDataTable(columnSpacing: 15,showCheckboxColumn: true,
 
-              header: null,
+              header: Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+                  Container(height: 40,width: 300,child: TextFormField(decoration: InputDecoration(hintText: "Search"),),),
+                ],),
+              ),
               rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
               columns: const [
                 DataColumn(label: Text('Course')),
@@ -184,9 +208,9 @@ class _StudentsState extends State<QuizesTable> {
                 DataColumn(label: Text('Quiz title')),
                 DataColumn(label: Text('Details')),
                 DataColumn(label: Text('Total')),
-                DataColumn(label: Text('Exam start')),
-                DataColumn(label: Text('Exam end')),
-                DataColumn(label: Text('Exam duration')),
+            //    DataColumn(label: Text('Exam start')),
+              //  DataColumn(label: Text('Exam end')),
+              //  DataColumn(label: Text('Exam duration')),
                 DataColumn(label: Text('Actions')),
                 // DataColumn(label: Text('Id')),
                 // DataColumn(label: Text('Phone'))

@@ -3,6 +3,7 @@ import 'package:admin/sql_questions.dart';
 import 'package:admin/student_activity.dart';
 import 'package:admin/students.dart';
 import 'package:admin/students_activity.dart';
+import 'package:admin/styles.dart';
 import 'package:admin/subject_activity.dart';
 import 'package:admin/sync_data_table.dart';
 import 'package:admin/tab_questions.dart';
@@ -366,96 +367,117 @@ class _CoursesStudentState extends State<CoursesStudent> {
       if(snapshot.hasData){
           return SingleChildScrollView(
             child: Center(
-              child: Wrap(children: snapshot.data!.map((e) => Container(width: 300,margin: EdgeInsets.all(5),child: Card(elevation: 5,shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(0.0),
-              ),child: Padding(
-                padding:  const EdgeInsets.all(8.0),
-                child: false?Text(e.toString()):Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(e["name"]??"--"),
-                        Text("Fee "+e["price"].toString()??"--",style: TextStyle(color: Colors.blue),),
-                      ],
-                    ),
-                    Text(e["description"]??"--",style: TextStyle(color: Colors.black54),),
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
-                      Text("Instructor"),
-                      Text(e["teacher"]==null?"--":( e["teacher"]["LastName"]+" "+ e["teacher"]["FirstName"]))
-                    ],),
-                    Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Class"),
-                        Text(e["class_name"]??"--"),
-                      ],
-                    ),
-                    e["subject_name"]==null?Container(height: 0,width: 0,): Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Subject"),
-                        Text(e["subject_name"]??"--"),
-                      ],
-                    ),
-                    Text("Lectures",style: TextStyle(color: Colors.blue),),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8),
-                      child: ListView.builder(shrinkWrap: true,
-                          itemCount: e["lecture"].length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(e["lecture"][index]["name"]),
-                                Row(
-                                  children: [
-                                    Text("Content: "+e["lecture"][index]["content_count"].toString()+" Quize: "+e["lecture"][index]["quize_count"].toString(),style: TextStyle(color: Colors.grey),),
-                                  ],
-                                ),
-                              ],
-                            );
-                          }),
-                    ),
-                    // Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Text("No of lectures"),
-                    //     Text(e["lecture"].length.toString()),
-                    //   ],
-                    // ),
+              child: Wrap(children: snapshot.data!.map((e) => InkWell( onTap: (){
+                context.push('/course-details/'+e["id"].toString());
+               // GoRouter.of(context).push('course-details/'+e["id"].toString());
+              },
+                child: Container(decoration: boxShadow2,width: 300,margin: EdgeInsets.all(5),child: Padding(
+                  padding:  const EdgeInsets.all(8.0),
+                  child: false?Text(e.toString()):Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(color: Colors.blue.shade50,height: 120,width: 300,child: Stack(
+                        children: [
+
+                        ],
+                      ),),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(e["name"]??"--",style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),textAlign: TextAlign.start,),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3,bottom: 3),
+                        child: Text(e["teacher"]==null?"--":( e["teacher"]["LastName"]+" "+ e["teacher"]["FirstName"]),style: TextStyle(fontSize: 12),),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 3,bottom: 3),
+                        child: Text("৳ "+e["price"].toString()??"--" ,style: TextStyle(color: Colors.blue),),
+                      ),
+
+                      // Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     Text(e["name"]??"--"),
+                      //     Text("Fee "+e["price"].toString()??"--",style: TextStyle(color: Colors.blue),),
+                      //   ],
+                      // ),
+                   if(false)   Text(e["description"]??"--",style: TextStyle(color: Colors.black54),),
+                      // Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+                      //   Text("Instructor"),
+                      //   Text(e["teacher"]==null?"--":( e["teacher"]["LastName"]+" "+ e["teacher"]["FirstName"]))
+                      // ],),
+                      if(false)   Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Class"),
+                          Text(e["class_name"]??"--"),
+                        ],
+                      ),
+                      if(false)   e["subject_name"]==null?Container(height: 0,width: 0,): Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Subject"),
+                          Text(e["subject_name"]??"--"),
+                        ],
+                      ),
+                      if(false)   Text("Lectures",style: TextStyle(color: Colors.blue),),
+                      if(false)   Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: ListView.builder(shrinkWrap: true,
+                            itemCount: e["lecture"].length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(e["lecture"][index]["name"]),
+                                  Row(
+                                    children: [
+                                      Text("Content: "+e["lecture"][index]["content_count"].toString()+" Quize: "+e["lecture"][index]["quize_count"].toString(),style: TextStyle(color: Colors.grey),),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            }),
+                      ),
+                      // Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //   children: [
+                      //     Text("No of lectures"),
+                      //     Text(e["lecture"].length.toString()),
+                      //   ],
+                      // ),
 
 
 
-                    Row(mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 3),
-                          child: ElevatedButton(onPressed: (){}, child: Text("See details")),
-                        ),
-                        ElevatedButton(onPressed: (){
+                      Row(mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          if(false)    Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 3),
+                            child: ElevatedButton(onPressed: (){}, child: Text("See details")),
+                          ),
+                          ElevatedButton(onPressed: (){
 
-                          showDialog(
-                              context: context,
-                              builder: (_) =>AlertDialog(actions: [
-                                ElevatedButton(onPressed: (){
-                                  Navigator.pop(context);
-
-                                }, child: Text("Cancel")),
-                                ElevatedButton(onPressed: (){
-                                  Map data = {"course_id":e["id"],"student_id":FirebaseAuth.instance.currentUser!.uid};
-                                  Data().buycourse(data:data ).then((value) {
+                            showDialog(
+                                context: context,
+                                builder: (_) =>AlertDialog(actions: [
+                                  ElevatedButton(onPressed: (){
                                     Navigator.pop(context);
 
-                                  });
+                                  }, child: Text("Cancel")),
+                                  ElevatedButton(onPressed: (){
+                                    Map data = {"course_id":e["id"],"student_id":FirebaseAuth.instance.currentUser!.uid};
+                                    Data().buycourse(data:data ).then((value) {
+                                      Navigator.pop(context);
+
+                                    });
 
 
 
 
-                                }, child: Text("Confirm")),
-                              ],content: Text("Pay "+e["price"].toString()??"--"+"?"),title: Text("Buy Course",style: TextStyle(fontSize: 15,color: Colors.black),),));
+                                  }, child: Text("Confirm")),
+                                ],content: Text("Pay "+e["price"].toString()??"--"+"?"),title: Text("Buy Course",style: TextStyle(fontSize: 15,color: Colors.black),),));
 
-                        }, child: Text("Buy now")),
-                      ],
-                    ),
-                  ],
-                ),
-              )),)).toList(),),
+                          }, child: Text("Buy now")),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),),
+              )).toList(),),
             ),
           );
 

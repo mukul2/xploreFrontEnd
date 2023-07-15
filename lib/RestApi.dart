@@ -37,7 +37,21 @@ class Data{
 
    }
   }
-  Future<List>chaptersidx ({required String id}) async {
+  Future<List>chapters () async {
+    print("subjectsidx");
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/chapters",));
+      print("res start");
+      print(r.body);
+      print("res end");
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return [];
+
+    }
+  }  Future<List>chaptersidx ({required String id}) async {
     print("subjectsidx");
 
     try{
@@ -163,6 +177,39 @@ class Data{
 
     }
   }
+  Future<List>teachers () async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/teachers"),);
+
+      return jsonDecode(r.body);
+    }catch(e){
+      return [];
+
+    }
+  }
+
+  Future<dynamic>coursedetails ({required String id}) async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/course-details/"+id),);
+
+      return jsonDecode(r.body);
+    }catch(e){
+      return {};
+
+    }
+  }
+  Future<dynamic>deletequize ({required String id}) async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/deletequize/"+id),);
+      return jsonDecode(r.body);
+    }catch(e){
+      return {};
+
+    }
+  }
   Future<dynamic>myearning ({required String id}) async {
 
     try{
@@ -213,10 +260,30 @@ class Data{
 
     }
   }
+  Future<List>classes () async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/classes"));
+      return jsonDecode(r.body);
+    }catch(e){
+      return [];
+
+    }
+  }
+  Future<List>subjects () async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/subjects"));
+      return jsonDecode(r.body);
+    }catch(e){
+      return [];
+
+    }
+  }
   Future<List>students () async {
 
     try{
-      http.Response r =  await http.get(Uri.parse(base+"/getstudents"));
+      http.Response r =  await http.get(Uri.parse(base+"/students"));
       return jsonDecode(r.body);
     }catch(e){
       return [];
@@ -336,7 +403,7 @@ class Data{
 
     }
   }
-  Future<List>classes () async {
+  Future<List>classesx () async {
 
     try{
       http.Response r =  await http.get(Uri.parse(base+"/getclasses"));
@@ -362,6 +429,55 @@ class Data{
 
     try{
       http.Response r =  await http.post(Uri.parse(base+"/savesubjects",),headers: {'Content-Type': 'application/json',},body: jsonEncode( data));
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return{};
+
+    }
+  }
+
+  Future deletequestion ({required String id}) async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/deletequestion/"+id,),);
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return{};
+
+    }
+  }
+  Future deletesubject ({required String id}) async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/deletesubject/"+id,),);
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return{};
+
+    }
+  }
+  Future deletechapter ({required String id}) async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/deletechapter/"+id,),);
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return{};
+
+    }
+  }
+  Future deleteClasses ({required String id}) async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/deleteclass/"+id,),);
       print(r.body);
       return jsonDecode(r.body);
     }catch(e){

@@ -69,6 +69,14 @@ class _LoginState extends State<Login> {
                 );
                 print("logged in");
 
+                List<String> allAdmins = ["PUeEEFHVkpWzECr5J42iv4F0u0D3"];
+                //allAdmins.contains(credential.user!.uid
+                if( allAdmins.contains(credential.user!.uid)){
+                  context.go("/admin");
+                  return;
+                }
+
+
 
 
                try{

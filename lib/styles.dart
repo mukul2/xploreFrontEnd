@@ -35,3 +35,9 @@ BoxDecoration boxShadow2 =  BoxDecoration(
     ),
   ],
 );
+BoxDecoration boxShadow3 =  BoxDecoration(
+  color:Colors.transparent,
+  border: Border.all(color: Colors.black54,width: 0.5),
+
+
+);

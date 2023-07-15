@@ -1,39 +1,28 @@
-import 'package:admin/courses.dart';
-import 'package:admin/sql_questions.dart';
-import 'package:admin/student_activity.dart';
 import 'package:admin/students.dart';
-import 'package:admin/students_activity.dart';
-import 'package:admin/subject_activity.dart';
-import 'package:admin/tab_questions.dart';
-import 'package:admin/tab_quiz.dart';
-import 'package:admin/table_test.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sidebarx/sidebarx.dart';
-import 'Quizes.dart';
-import 'chapter_activity.dart';
-import 'class_activity.dart';
-import 'course_table.dart';
-import 'data_sources.dart';
-import 'login.dart';
-import 'utils.dart';
-import 'Questions_new.dart';
-import 'all_questions.dart';
 
-void main() {
-  runApp(SidebarXExampleApp());
-}
+import '../login.dart';
+import '../side.dart';
+import 'Chapters/chapters.dart';
+import 'Classes/classes.dart';
+import 'Students/students.dart';
+import 'Subject/subjects.dart';
+import 'Teachers/teachers.dart';
+import 'admin_drawer.dart';
 
-class SidebarXExampleApp extends StatefulWidget {
-  SidebarXExampleApp({Key? key}) : super(key: key);
+
+class AdminApp extends StatefulWidget {
+  AdminApp({Key? key}) : super(key: key);
 
   @override
-  State<SidebarXExampleApp> createState() => _SidebarXExampleAppState();
+  State<AdminApp> createState() => _SidebarXExampleAppState();
 }
 
-class _SidebarXExampleAppState extends State<SidebarXExampleApp> {
+class _SidebarXExampleAppState extends State<AdminApp> {
   final _controller = SidebarXController(selectedIndex: 0, extended: true);
 
   final _key = GlobalKey<ScaffoldState>();
@@ -178,58 +167,43 @@ class ExampleSidebarX extends StatelessWidget {
       ),
       footerDivider: divider,
       headerBuilder: (context, extended) {
-        return FirebaseAuth.instance.currentUser ==null?Container():SizedBox(
+        return SizedBox(
           height: 100,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Text(FirebaseAuth.instance.currentUser!.email!,style: TextStyle(fontSize: 16,color: Colors.white),),
+            child: Text(false?"Admin":FirebaseAuth.instance.currentUser!.email!,style: TextStyle(fontSize: 16,color: Colors.white),),
           ),
         );
       },
       items: [
-        SidebarXItem(
-          icon: Icons.question_mark,
-          label: 'Questions',
-          onTap: () {
-            debugPrint('Home');
-          },
-        ),
-        const SidebarXItem(
+
+         SidebarXItem(
           icon: Icons.quiz,
-          label: 'Quiz',
-        ),
-        const SidebarXItem(
-          icon: Icons.book,
-          label: 'Courses',
-        ),
-        const SidebarXItem(
-          icon: Icons.supervised_user_circle_outlined,
-          label: 'Students',
-        ),
-        // const SidebarXItem(
-        //   icon: Icons.supervised_user_circle_outlined,
-        //   label: 'Class',
-        // ),
-        // const SidebarXItem(
-        //   icon: Icons.supervised_user_circle_outlined,
-        //   label: 'Subject',
-        // ),
-        // const SidebarXItem(
-        //   icon: Icons.supervised_user_circle_outlined,
-        //   label: 'Chapters',
-        // ),
-        const SidebarXItem(
-          icon: Icons.supervised_user_circle_outlined,
-          label: 'Wallet',
+          label: 'Teachers',
         ),
          SidebarXItem(
+          icon: Icons.book,
+          label: 'Students',
+        ),
+        SidebarXItem(
+          icon: Icons.book,
+          label: 'Class',
+        ),
+        SidebarXItem(
+          icon: Icons.book,
+          label: 'Subject',
+        ),    SidebarXItem(
+          icon: Icons.book,
+          label: 'Chapters',
+        ),
+        SidebarXItem(
           icon: Icons.logout,
           label: 'Logout',onTap: (){
-            FirebaseAuth.instance.signOut().then((value) {
-              GoRouter.of(context).go("/");
+          FirebaseAuth.instance.signOut().then((value) {
+            GoRouter.of(context).go("/");
 
-            });
-         },
+          });
+        },
         ),
 
       ],
@@ -254,21 +228,16 @@ class _ScreensExample extends StatelessWidget {
         final pageTitle = _getTitleByIndex(controller.selectedIndex);
         switch (controller.selectedIndex) {
           case 0:
-            return true? QuestionsActivitySQL(): Questions_All(type: questionbank.type1,);
-            case 1:
-            return QuizFromFirebase();
-          case 2:
-            return  CourseTable();
-          case 3:
-            return  StudentActivitySql();
-          // case 4:
-          //   return  ClassActivity();
-          //   case 5:
-          // return  SubjectActivity();
-          // case 6:
-          //   return  ChapterActivity();
-          case 4:
-            return  Wallet();
+            return Teachers();
+          case 1:
+            return AllStudents();
+            case 2:
+            return AllClasses();
+            case 3:
+            return AllSubjects();
+            case 4:
+            return AllChapters();
+
           default:
             return Text(
               pageTitle,
