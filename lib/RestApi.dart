@@ -189,11 +189,31 @@ class Data{
     }
   }
 
-  Future<dynamic>coursedetails ({required String id}) async {
+  Future<dynamic>subject ({required String id}) async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/subject/"+id),);
+
+      return jsonDecode(r.body);
+    }catch(e){
+      return {};
+
+    }
+  }  Future<dynamic>coursedetails ({required String id}) async {
 
     try{
       http.Response r =  await http.get(Uri.parse(base+"/course-details/"+id),);
 
+      return jsonDecode(r.body);
+    }catch(e){
+      return {};
+
+    }
+  }
+  Future<dynamic>deletecourse ({required String id}) async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/deletecourse/"+id),);
       return jsonDecode(r.body);
     }catch(e){
       return {};

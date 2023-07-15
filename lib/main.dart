@@ -10,10 +10,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'Admin/Students/students.dart';
 import 'Admin/Teachers/teachers.dart';
 import 'AppProviders/DrawerProvider.dart';
+import 'Create_Quize/create_quize.dart';
 import 'Questions_new.dart';
 import 'Quizes.dart';
 import 'RestApi.dart';
 import 'Admin/admin_page.dart';
+import 'Student/Courses/Market/market_place.dart';
 import 'all_questions.dart';
 import 'all_quizes.dart';
 import 'course_details.dart';
@@ -64,12 +66,28 @@ final GoRouter _router = GoRouter(
       },
       routes: <RouteBase>[
         GoRoute(
+          path: 'home/create-quize',
+          builder: (BuildContext context, GoRouterState state) {
+            return SidebarXExampleApp(tab: 1,);
+
+          },
+        ),
+        GoRoute(
+          path: 'create-quize',
+          builder: (BuildContext context, GoRouterState state) {
+            return CreateQuize();
+
+          },
+        ),
+        GoRoute(
           path: 'admin/students',
           builder: (BuildContext context, GoRouterState state) {
             return AllStudents();
 
           },
-        ),   GoRoute(
+        ),
+
+        GoRoute(
           path: 'admin/teachers',
           builder: (BuildContext context, GoRouterState state) {
             return Teachers();
@@ -159,6 +177,12 @@ final GoRouter _router = GoRouter(
           },
         ),
         GoRoute(
+          path: 'courses/:id',
+          builder: (BuildContext context, GoRouterState state) {
+            return CoursesMarketPlace( id:state.pathParameters['id']!,);
+          },
+        ),
+        GoRoute(
           path: 'course-details/:id',
           builder: (BuildContext context, GoRouterState state) {
             return CourseDetails( id:int.parse(state.pathParameters['id']!),);
@@ -217,6 +241,7 @@ class MyApp extends StatelessWidget {
     ChangeNotifierProvider<Chapterprovider>(create: (context) => Chapterprovider()),
     ChangeNotifierProvider<QuestionSortsprovider>(create: (context) => QuestionSortsprovider()),
     ChangeNotifierProvider<Questionprovider>(create: (context) => Questionprovider()),
+    ChangeNotifierProvider<AppRouter>(create: (context) => AppRouter()),
 
         ],
       child: MaterialApp.router(

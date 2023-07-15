@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:admin/courses.dart';
 import 'package:admin/sql_questions.dart';
 import 'package:admin/student_activity.dart';
@@ -11,7 +13,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:sidebarx/sidebarx.dart';
+import 'AppProviders/DrawerProvider.dart';
+import 'Create_Quize/create_quize.dart';
 import 'Quizes.dart';
 import 'chapter_activity.dart';
 import 'class_activity.dart';
@@ -27,14 +32,18 @@ void main() {
 }
 
 class SidebarXExampleApp extends StatefulWidget {
-  SidebarXExampleApp({Key? key}) : super(key: key);
+  int? tab;
+  SidebarXExampleApp({this.tab});
 
   @override
   State<SidebarXExampleApp> createState() => _SidebarXExampleAppState();
 }
 
 class _SidebarXExampleAppState extends State<SidebarXExampleApp> {
+
+
   final _controller = SidebarXController(selectedIndex: 0, extended: true);
+
 
   final _key = GlobalKey<ScaffoldState>();
 
@@ -42,6 +51,12 @@ class _SidebarXExampleAppState extends State<SidebarXExampleApp> {
   @override
   void initState() {
     // TODO: implement initState
+
+    if(widget.tab==null){
+
+    }else{
+      _controller.selectIndex(1);
+    }
     super.initState();
     FirebaseAuth.instance
         .authStateChanges()
@@ -129,6 +144,8 @@ class ExampleSidebarX extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+   // _controller.selectIndex(0);
     return SidebarX(
       controller: _controller,
       theme: SidebarXTheme(
@@ -248,6 +265,8 @@ class _ScreensExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    //AppRouter
+
     return AnimatedBuilder(
       animation: controller,
       builder: (context, child) {
@@ -256,7 +275,7 @@ class _ScreensExample extends StatelessWidget {
           case 0:
             return true? QuestionsActivitySQL(): Questions_All(type: questionbank.type1,);
             case 1:
-            return QuizFromFirebase();
+            return  (window.location.href).contains("create-quize")?CreateQuize():QuizFromFirebase();
           case 2:
             return  CourseTable();
           case 3:

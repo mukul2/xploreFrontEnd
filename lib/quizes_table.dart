@@ -1,10 +1,16 @@
 import 'package:admin/questions_table_of_quize_table.dart';
+import 'package:admin/students_activity.dart';
+import 'package:admin/styles.dart';
 import 'package:admin/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:datetime_picker_formfield_new/datetime_picker_formfield.dart';
+import 'package:dropdown_search/dropdown_search.dart';
+import 'package:duration_picker/duration_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -185,21 +191,31 @@ class _StudentsState extends State<QuizesTable> {
 
     return  Consumer<Quizessprovider>(
         builder: (_, bar, __) {
-          if (bar.items.isEmpty) return Center(child: Text("No data"),);
+         // if (bar.items.isEmpty) return Center(child: Text("No data"),);
         //  return Text(bar.items.toString());
           int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
           final DataTableSource _allUsers = MyData(bar.items,widget.scaffoldKey);
+        //  return Text(_allUsers.rowCount.toString());
+
           return Padding(
             padding: const EdgeInsets.all(20.0),
-            child: PaginatedDataTable(columnSpacing: 15,showCheckboxColumn: true,
+            child: PaginatedDataTable(
+             // columnSpacing: 15,
+              showCheckboxColumn: true,
 
               header: Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
                   Container(height: 40,width: 300,child: TextFormField(decoration: InputDecoration(hintText: "Search"),),),
+                  ElevatedButton(onPressed: (){
+                  context.go("/home/create-quize");
+
+
+                  }, child: Text("Create Course")),
                 ],),
               ),
-              rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
+           //   rowsPerPage:n>0?( _allUsers.rowCount>n?n:_allUsers.rowCount):1,
+             rowsPerPage: 1,
               columns: const [
                 DataColumn(label: Text('Course')),
                 DataColumn(label: Text('Class')),

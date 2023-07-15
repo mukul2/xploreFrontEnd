@@ -22,7 +22,8 @@ class CourseTable extends StatefulWidget {
 }
 // The "soruce" of the table
 class MyData extends DataTableSource {
-  MyData(this._data);
+  BuildContext context;
+  MyData(this._data,this.context);
  // GlobalKey<ScaffoldState> key;
   final List<dynamic> _data;
 
@@ -38,10 +39,23 @@ class MyData extends DataTableSource {
 
 
     return DataRow(cells: [
-      DataCell(Text(_data[index]['name']??"--")),
-      DataCell(Text(_data[index]['description']??"--")),
+      DataCell(ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['name']??"--"))),
+      DataCell(ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['description']??"--"))),
       DataCell(Text(_data[index]['price'].toString()??"--")),
       DataCell(Text(_data[index]['lectures'][0]["lnum"].toString()??"--")),
+      DataCell(ElevatedButton(onPressed: (){
+
+
+        Data().deletecourse(id:_data[index]['id'].toString() ).then((value) {
+
+          Data().batchesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
+            Provider.of<Batchprovider>(context, listen: false).items = value;
+          });
+
+        });
+      },child: Text("Delete"),)),
 
 
 
@@ -71,52 +85,52 @@ class _StudentsState extends State<CourseTable> {
     ],);
 //Batchprovider
     return Scaffold(
-      appBar: PreferredSize(preferredSize: Size(0,50),child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(children: [
-          ElevatedButton(onPressed: (){
+      body: true?Padding(
+        padding: const EdgeInsets.all(20),
+        child: Consumer<Batchprovider>(
+          builder: (_, bar, __) {
+
+          //  if(bar.items.isEmpty)return Center(child: Text("No data"),);
+            //return Text(bar.items.toString());
+
+            int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
+            final DataTableSource _allUsers = MyData(bar.items,context);
+            return PaginatedDataTable(
+
+              header:Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+                  Container(height: 40,width: 300,child: TextFormField(decoration: InputDecoration(hintText: "Search"),),),
+                  ElevatedButton(onPressed: (){
+                    showDialog(
+                        context: context,
+                        builder: (_) =>AlertDialog(backgroundColor: Colors.grey.shade50,
+                          // title: Text("Create Course"),
+                          content: Container(width: MediaQuery.of(context).size.width,height:  MediaQuery.of(context).size.height,
+                            child:CreateCourseActivity() ,
+                          ),));
 
 
-
-            showDialog(
-                context: context,
-                builder: (_) =>AlertDialog(backgroundColor: Colors.grey.shade50,
-                 // title: Text("Create Course"),
-                  content: Container(width: MediaQuery.of(context).size.width,height:  MediaQuery.of(context).size.height,
-                  child:CreateCourseActivity() ,
-                ),));
-
-          }, child: Text("Create Course"))
-        ],),
-      ),),
-      body: true?Consumer<Batchprovider>(
-        builder: (_, bar, __) {
-
-          if(bar.items.isEmpty)return Center(child: Text("No data"),);
-          //return Text(bar.items.toString());
-
-          int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
-          final DataTableSource _allUsers = MyData(bar.items);
-          return SingleChildScrollView(
-            child: PaginatedDataTable(
-
-              header:null,
-              rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
+                  }, child: Text("Create Course")),
+                ],),
+              ),
+              rowsPerPage:bar.items.length>0?( _allUsers.rowCount>n?n:_allUsers.rowCount):1,
 
               columns: const [
                 DataColumn(label: Text('Course Name',style: TextStyle(color: Colors.blue),)),
                 DataColumn(label: Text('Description',style: TextStyle(color: Colors.blue),)),
                 DataColumn(label: Text('Price',style: TextStyle(color: Colors.blue),)),
                 DataColumn(label: Text('Total Lectures',style: TextStyle(color: Colors.blue),)),
+                DataColumn(label: Text('Actions',style: TextStyle(color: Colors.blue),)),
 
                 // DataColumn(label: Text('Id')),
                 // DataColumn(label: Text('Phone'))
               ],
               source: _allUsers,
-            ),
-          );
+            );
 
-        },
+          },
+        ),
       ): FutureBuilder(
 
           future:Data().batches(),
@@ -124,7 +138,7 @@ class _StudentsState extends State<CourseTable> {
             if(snap.hasData && snap.data!.length>0){
 
               int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
-              final DataTableSource _allUsers = MyData(snap.data!);
+              final DataTableSource _allUsers = MyData(snap.data!,context);
               return SingleChildScrollView(
                 child: PaginatedDataTable(
 
@@ -156,7 +170,7 @@ class _StudentsState extends State<CourseTable> {
 
 
             if(snap.hasData){
-              final DataTableSource _allUsers = MyData(snap.data!.docs);
+              final DataTableSource _allUsers = MyData(snap.data!.docs,context);
               int n =( ( MediaQuery.of(context).size.height - 100 ) / 55 ).toInt() ;
               return SingleChildScrollView(
                 child: PaginatedDataTable(
@@ -533,9 +547,10 @@ class _CreateCourseActivityState extends State<CreateCourseActivity> {
 
               Data().batchesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
                 Provider.of<Batchprovider>(context, listen: false).items = value;
+                Navigator.pop(context);
               });
             });
-            Navigator.pop(context);
+
 
           }),
         ),

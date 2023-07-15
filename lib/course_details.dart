@@ -4,6 +4,7 @@ import 'package:admin/styles.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'RestApi.dart';
 
@@ -41,9 +42,13 @@ class _CourseDetailsState extends State<CourseDetails> {
                              padding: const EdgeInsets.all(4.0),
                              child: Icon(Icons.navigate_next,color: Colors.yellow),
                            ),
-                           Padding(
-                             padding: const EdgeInsets.all(4.0),
-                             child: Text(snapshot.data["subject_name"],style: TextStyle(color: Colors.yellow),),
+                           InkWell( onTap: (){
+                             context.push('/courses/'+snapshot.data["subject_id"].toString());
+                           },
+                             child: Padding(
+                               padding: const EdgeInsets.all(4.0),
+                               child: Text(snapshot.data["subject_name"],style: TextStyle(color: Colors.yellow),),
+                             ),
                            ),
                            // Padding(
                            //   padding: const EdgeInsets.all(8.0),

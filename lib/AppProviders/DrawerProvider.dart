@@ -99,7 +99,10 @@ class AddedProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
+  void remove(dynamic s){
+    _questions.remove(s);
+    notifyListeners();
+  }
 
 
 
@@ -271,4 +274,17 @@ class Questionprovider extends ChangeNotifier {
     _data.remove(data);
     notifyListeners();
   }
+}
+
+class AppRouter extends ChangeNotifier {
+
+  String _path="";
+
+  String get path => _path;
+
+  set path(String value) {
+    _path = value;
+    notifyListeners();
+  }
+
 }
