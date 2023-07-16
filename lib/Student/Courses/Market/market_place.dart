@@ -22,7 +22,7 @@ class _CourseDetailsState extends State<CoursesMarketPlace> {
   @override
   Widget build(BuildContext context) {
     double width = 700;
-
+    int columnsCount = 6;
 
     return FutureBuilder<dynamic>(
         future: Data().subject(id:widget.id.toString()), // a previously-obtained Future<String> or null
@@ -30,38 +30,160 @@ class _CourseDetailsState extends State<CoursesMarketPlace> {
           if(snapshot.hasData){
             List courses =  snapshot.data["courses"];
             List morecourses =  snapshot.data["courses_similar_class"];
+            List all_subjects =  snapshot.data["all_subjects"];
             return Scaffold(appBar: PreferredSize(preferredSize: Size(0,100),child: Card(margin: EdgeInsets.zero,),),body: SingleChildScrollView(child: Padding(
               padding:  EdgeInsets.symmetric(vertical: 25,horizontal: MediaQuery.of(context).size.width * 0.1),
               child: Column(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Row(children: [
+                      Text(snapshot.data["Name"],style: TextStyle(color: Colors.black,fontSize: 25),),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text("Courses",style: TextStyle(color: Colors.black,fontSize: 25),),
+                      ),
+
+                    ],),
+                  ),
+                  GridView.builder(shrinkWrap: true,
+                  // Set padding and spacing between cards.
+                  padding: const EdgeInsets.all(10),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  // Set the number of columns based on the device's screen size.
+                  crossAxisCount: columnsCount,
+                  // Set the aspect ratio of each card.
+                  childAspectRatio: 0.9,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  ),
+                  // Set the number of items in the grid view.
+                  itemCount: courses.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return InkWell(onTap: (){
+                      context.push('/course-details/'+courses[index]["id"].toString());
+                    },
+                      child: Container(decoration: boxShadow2,margin: EdgeInsets.all(5),child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(color: Colors.blue.shade50,height: 120,width: 300,child: Stack(
+                            children: [
+
+                            ],
+                          ),),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8,left: 8,right: 8),
+                            child: Text(courses[index]["name"]??"--",style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),textAlign: TextAlign.start,),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 3,bottom: 3,left: 8,right: 8),
+                            child: Text(courses[index]["description"],style: TextStyle(fontSize: 12),)),
+
+                          Padding(
+                            padding: const EdgeInsets.only(top: 3,bottom: 3,left: 8,right: 8),
+                            child: Text("৳ "+courses[index]["price"].toString()??"--" ,style: TextStyle(color: Colors.blue),),
+                          ),
+
+
+
+
+
+                        ],
+                      )),
+                    );
+                  }),
+                  // Wrap(children:courses.map((e) => InkWell( onTap: (){
+                  //   context.push('/course-details/'+e["id"].toString());
+                  //   // GoRouter.of(context).push('course-details/'+e["id"].toString());
+                  // },
+                  //   child: Container(decoration: boxShadow2,width: 300,margin: EdgeInsets.all(5),child: Text(e.toString()),),
+                  // )).toList(),),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: Row(children: [
+                      Text("More courses on ",style: TextStyle(color: Colors.black,fontSize: 25),),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        child: Text( snapshot.data["class"]["name"],style: TextStyle(color: Colors.black,fontSize: 25),),
+                      ),
+
+                    ],),
+                  ),
+                  GridView.builder(shrinkWrap: true,
+                      // Set padding and spacing between cards.
+                      padding: const EdgeInsets.all(10),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        // Set the number of columns based on the device's screen size.
+                        crossAxisCount: columnsCount,
+                        // Set the aspect ratio of each card.
+                        childAspectRatio: 0.9,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      // Set the number of items in the grid view.
+                      itemCount: morecourses.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return InkWell(onTap: (){
+                          context.push('/course-details/'+morecourses[index]["id"].toString());
+                        },
+                          child: Container(decoration: boxShadow2,margin: EdgeInsets.all(5),child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(color: Colors.blue.shade50,height: 120,width: 300,child: Stack(
+                                children: [
+
+                                ],
+                              ),),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8,left: 8,right: 8),
+                                child: Text(morecourses[index]["name"]??"--",style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),textAlign: TextAlign.start,),
+                              ),
+                              Padding(
+                                  padding: const EdgeInsets.only(top: 3,bottom: 3,left: 8,right: 8),
+                                  child: Text(morecourses[index]["description"],style: TextStyle(fontSize: 12),)),
+
+                              Padding(
+                                padding: const EdgeInsets.only(top: 3,bottom: 3,left: 8,right: 8),
+                                child: Text("৳ "+morecourses[index]["price"].toString()??"--" ,style: TextStyle(color: Colors.blue),),
+                              ),
+
+
+
+
+
+                            ],
+                          )),
+                        );
+                      }),
                   Row(children: [
-                    Text(snapshot.data["Name"],style: TextStyle(color: Colors.black,fontSize: 25),),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Text("Courses",style: TextStyle(color: Colors.black,fontSize: 25),),
+                      padding: const EdgeInsets.only(top: 15,left: 15),
+                      child: Text("Subjects you may be intested in",style: TextStyle(color: Colors.black,fontSize: 25),),
                     ),
 
                   ],),
-                  Wrap(children:courses.map((e) => InkWell( onTap: (){
-                    context.push('/course-details/'+e["id"].toString());
-                    // GoRouter.of(context).push('course-details/'+e["id"].toString());
-                  },
-                    child: Container(decoration: boxShadow2,width: 300,margin: EdgeInsets.all(5),child: Text(e.toString()),),
-                  )).toList(),),
-                  Row(children: [
-                    Text("More courses on ",style: TextStyle(color: Colors.black,fontSize: 25),),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Text( snapshot.data["class"]["name"],style: TextStyle(color: Colors.black,fontSize: 25),),
-                    ),
+                  GridView.builder(shrinkWrap: true,
+                      // Set padding and spacing between cards.
+                      padding: const EdgeInsets.all(10),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        // Set the number of columns based on the device's screen size.
+                        crossAxisCount: columnsCount,
+                        // Set the aspect ratio of each card.
+                        childAspectRatio: 2,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ),
+                      // Set the number of items in the grid view.
+                      itemCount: all_subjects.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return InkWell(onTap: (){
+                          context.push('/courses/'+all_subjects[index]["id"].toString());
+                        },
+                          child: Container(decoration: boxShadow2,margin: EdgeInsets.all(5),child: Padding(
+                            padding: const EdgeInsets.only(top: 8,left: 8,right: 8),
+                            child: Center(child: Text(all_subjects[index]["Name"]??"--",style: TextStyle(fontSize: 17,fontWeight: FontWeight.bold),textAlign: TextAlign.start,)),
+                          )),
+                        );
+                      }),
 
-                  ],),
-                  Wrap(children:morecourses.map((e) => InkWell( onTap: (){
-                    context.push('/course-details/'+e["id"].toString());
-                    // GoRouter.of(context).push('course-details/'+e["id"].toString());
-                  },
-                    child: Container(decoration: boxShadow2,width: 300,margin: EdgeInsets.all(5),child: Text(e.toString()),),
-                  )).toList(),),
 
                 ],
               ),

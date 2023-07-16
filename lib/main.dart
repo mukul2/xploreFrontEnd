@@ -16,6 +16,7 @@ import 'Quizes.dart';
 import 'RestApi.dart';
 import 'Admin/admin_page.dart';
 import 'Student/Courses/Market/market_place.dart';
+import 'Student/Lecture/lectures.dart';
 import 'all_questions.dart';
 import 'all_quizes.dart';
 import 'course_details.dart';
@@ -180,6 +181,12 @@ final GoRouter _router = GoRouter(
           path: 'courses/:id',
           builder: (BuildContext context, GoRouterState state) {
             return CoursesMarketPlace( id:state.pathParameters['id']!,);
+          },
+        ),
+        GoRoute(
+          path: 'lectures/:id',
+          builder: (BuildContext context, GoRouterState state) {
+            return Lectures( id:int.parse(state.pathParameters['id']!),);
           },
         ),
         GoRoute(

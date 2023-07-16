@@ -22,7 +22,7 @@ class _CoursesStudentState extends State<CoursesStudent> {
               tabs: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("Purchased",style: TextStyle(color: Colors.black),),
+                  child: Text("My Learnings",style: TextStyle(color: Colors.black),),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -40,7 +40,53 @@ class _CoursesStudentState extends State<CoursesStudent> {
                 FutureBuilder<List>(
                     future: Data().getcourse(id: FirebaseAuth.instance.currentUser!.uid), // a previously-obtained Future<String> or null
                     builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+
                       if(snapshot.hasData && snapshot.data!.length>0){
+                        int columnsCount = ( MediaQuery.of(context).size.shortestSide /200).toInt();
+                       return  GridView.builder(shrinkWrap: true,
+                            // Set padding and spacing between cards.
+                            padding: const EdgeInsets.all(10),
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              // Set the number of columns based on the device's screen size.
+                              crossAxisCount: columnsCount,
+                              // Set the aspect ratio of each card.
+                              childAspectRatio:MediaQuery.of(context).size.aspectRatio,
+                              crossAxisSpacing: 10,
+                              mainAxisSpacing: 10,
+                            ),
+                            // Set the number of items in the grid view.
+                            itemCount: snapshot.data!.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return InkWell(onTap: (){
+                               context.push('/lectures/'+snapshot.data![index]["course_id"].toString());
+                              },
+                                child: Container(decoration: boxShadow2,margin: EdgeInsets.all(5),child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(color: Colors.blue.shade50,height: MediaQuery.of(context).size.shortestSide * 0.08,child: Stack(
+                                      children: [
+
+                                      ],
+                                    ),),
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 8,left: 8,right: 8),
+                                      child: Text(snapshot.data![index]["course_name"]??"--",style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold),textAlign: TextAlign.start,),
+                                    ),
+                                    Padding(
+                                        padding: const EdgeInsets.only(top: 3,bottom: 0,left: 8,right: 8),
+                                        child: Text(snapshot.data![index]["description"]??"--",style: TextStyle(fontSize: 12),)),
+                                    snapshot.data![index]["teacher"]==null?Container(width: 0,height: 0,): Padding(
+                                        padding: const EdgeInsets.only(top: 0,bottom: 3,left: 8,right: 8),
+                                        child: Text(snapshot.data![index]["teacher"]["LastName"]+" "+snapshot.data![index]["teacher"]["LastName"],style: TextStyle(fontSize: 12,color: Colors.grey),)),
+
+
+
+
+
+
+                                  ],
+                                )),
+                              );
+                            });
 
                         int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
                         final DataTableSource _allUsers = MyDataPurchasedCourses(snapshot.data!);
@@ -78,7 +124,8 @@ class _CoursesStudentState extends State<CoursesStudent> {
                             },
                               child: Container(decoration: boxShadow2,width: 300,margin: EdgeInsets.all(5),child: Padding(
                                 padding:  const EdgeInsets.all(8.0),
-                                child: false?Text(e.toString()):Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                child: false?Text(e.toString()):
+                                Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(color: Colors.blue.shade50,height: 120,width: 300,child: Stack(
                                       children: [
@@ -148,7 +195,7 @@ class _CoursesStudentState extends State<CoursesStudent> {
 
 
 
-                                    Row(mainAxisAlignment: MainAxisAlignment.end,
+                                  if(false)  Row(mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         if(false)    Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 3),
