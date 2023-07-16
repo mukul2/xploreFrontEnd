@@ -249,6 +249,7 @@ class MyApp extends StatelessWidget {
     ChangeNotifierProvider<QuestionSortsprovider>(create: (context) => QuestionSortsprovider()),
     ChangeNotifierProvider<Questionprovider>(create: (context) => Questionprovider()),
     ChangeNotifierProvider<AppRouter>(create: (context) => AppRouter()),
+    ChangeNotifierProvider<CurrentLesson>(create: (context) => CurrentLesson()),
 
         ],
       child: MaterialApp.router(

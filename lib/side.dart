@@ -1,6 +1,7 @@
 import 'dart:html';
 
 import 'package:admin/courses.dart';
+import 'package:admin/quizes_table.dart';
 import 'package:admin/sql_questions.dart';
 import 'package:admin/student_activity.dart';
 import 'package:admin/students.dart';
@@ -275,7 +276,8 @@ class _ScreensExample extends StatelessWidget {
           case 0:
             return true? QuestionsActivitySQL(): Questions_All(type: questionbank.type1,);
             case 1:
-            return  (window.location.href).contains("create-quize")?CreateQuize():QuizFromFirebase();
+              GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+            return  (window.location.href).contains("create-quize")?CreateQuize():  true?QuizesTable(scaffoldKey: scaffoldKey,):QuizFromFirebase();
           case 2:
             return  CourseTable();
           case 3:

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutterfire_ui/firestore.dart';
 import 'package:pdf/pdf.dart';
+
 import 'package:provider/provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'AppProviders/DrawerProvider.dart';
@@ -54,17 +55,13 @@ class MyData extends DataTableSource {
       }
 
     }))),
+      DataCell(Text(_data[index]['class'].toString())),
+      DataCell(Text(_data[index]['subject'].toString())),
+      DataCell(Text(_data[index]['chapter'].toString())),
+      //DataCell(ConstrainedBox(constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['title']??"--"))),
       DataCell(ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['class'].toString()))),
-      DataCell(ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['subject'].toString()))),
-      DataCell(ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['chapter'].toString()))),
-      DataCell(ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['title']??"--"))),
-      DataCell(ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['q'].toString()??"--"))),
-      DataCell(Text(_data[index]['ans']??"--")),
+          constraints: BoxConstraints(maxWidth: 300,minWidth: 200), child: Text(_data[index]['q'].toString()??"--"))),
+      //DataCell(Text(_data[index]['ans']??"--")),
       DataCell(Row(
         children: [
 
@@ -200,6 +197,20 @@ class MyData extends DataTableSource {
                   }
                 ));
           },child: Text("View options"),),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6),
+            child: ElevatedButton(onPressed: (){
+//saveoptions
+
+              Data().deletequestion(id:_data[index]["id"].toString()).then((value) {
+
+                Data().questionsbyid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
+                  Provider.of<Questionsprovider>(context, listen: false).items = value;
+                });
+
+              });
+            },child: Text("Delete"),),
+          ),
         ],
       )),
 
@@ -232,7 +243,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
     ],);
 //Batchprovider
     return Scaffold(backgroundColor: Colors.grey.shade50,
-      appBar: false?null: PreferredSize(preferredSize: Size(0,120),child: Card(elevation: 1,margin: EdgeInsets.zero,shape: RoundedRectangleBorder(
+      appBar: true?null: PreferredSize(preferredSize: Size(0,120),child: Card(elevation: 1,margin: EdgeInsets.zero,shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(0.0),
       ),
          child: Padding(
@@ -374,7 +385,9 @@ class _StudentsState extends State<QuestionsActivitySQL> {
 
                   int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
                   final DataTableSource _allUsers = MyData(sorted,context);
-                  return PaginatedDataTable(columnSpacing: 10,horizontalMargin: 10,showCheckboxColumn: true,showFirstLastButtons: true,
+                  return PaginatedDataTable(
+                 //   columnSpacing: 10,
+                    horizontalMargin: 10,showCheckboxColumn: true,showFirstLastButtons: true,
 
                     header:true?  Padding(
                       padding: const EdgeInsets.only(top: 15),
@@ -404,22 +417,51 @@ class _StudentsState extends State<QuestionsActivitySQL> {
                                   ),
                                   ElevatedButton(onPressed: () async {
                                     final pdf = pw.Document();
+                                    double fontSi = 9;
+                                    var font = await rootBundle.load("assets/Inter-Regular.ttf");
+                                    final  ttf = pw.Font.ttf(font);
                                     List<pw.Widget> allwidgets = [];
                                     List<pw.Widget> allAnswers = [];
                                     List<pw.Widget> qustions = [];
 
+
+
+
                                     for(int i = 0 ; i <bar.data.length ; i++ ){
-                                      qustions.add( pw.Text(bar.data[i]["q"]));
-                                      qustions.add( pw.Text(bar.data[i]["title"]));
+
+                                      List<pw.Widget> localList = [];
+                                      localList.add(pw.Padding(padding: pw.EdgeInsets.only(top: 3,bottom: 3),child:  pw.Row(
+                                          children: [
+                                            pw.Container(width: 18,child:  pw.Text((i+1).toString(),style: pw.TextStyle(font: ttf,fontWeight: pw.FontWeight.bold,fontSize: fontSi),)),
+                                            pw.Text(bar.data[i]["q"],style: pw.TextStyle(font: ttf,fontSize: fontSi,fontWeight: pw.FontWeight.bold,))
+                                          ]
+                                      )));
+
+                                      allAnswers.add(pw.Row(children: [
+                                        pw.Container(width: 30,decoration: pw.BoxDecoration(border: pw.Border.all()),child:pw.Center(child: pw.Padding(padding: pw.EdgeInsets.only(left: 10,top: 2,bottom: 2,right: 3),child:  pw.Text((i+1).toString(),style: pw.TextStyle(font: ttf,fontSize: fontSi,fontWeight: pw.FontWeight.bold,))))),
+                                        pw.Expanded(child:pw.Container(decoration: pw.BoxDecoration(border: pw.Border.all()),child: pw.Padding(padding: pw.EdgeInsets.only(left: 10,top: 2,bottom: 2,right: 3),child: pw.Text(bar.data[i]["ans"],style: pw.TextStyle(font: ttf,fontSize: fontSi,fontWeight: pw.FontWeight.bold,)))) ),
+
+                                      ]));
+                                    //  qustions.add( pw.Text(bar.data[i]["title"],style: pw.TextStyle(font: ttf,fontSize: fontSi)));
 
                                       List<pw.Widget> r = [];
 
                                      List options = await Data().options(id:bar.data[i]['id'].toString());
                                      List<pw.Widget> allOptions= [];
                                      for(int j = 0 ; j < options.length;j++){
-                                       allOptions.add(pw.Expanded(child: pw.Text(options[j]["body"])));
+                                       allOptions.add(true?pw.Padding(padding: pw.EdgeInsets.only(top: 3,bottom: 3,left: 3,right: 3),child:  pw.Row(
+                                           children: [
+                                             pw.Container(margin: pw.EdgeInsets.only(right: 5,left: 15),decoration: pw.BoxDecoration(shape: pw.BoxShape.circle,border: pw.Border.all()),width: 12,height: 12,child: pw.Center(child: pw.Text((j+1).toString(),style: pw.TextStyle(font: ttf,fontSize: fontSi*0.9)))),
+                                             pw.SizedBox(width: 250,child:pw.Wrap(children: [
+                                               pw.Text(options[j]["body"],style: pw.TextStyle(font: ttf,fontSize: fontSi),maxLines: 4,
+                                                 overflow: pw.TextOverflow.clip,)
+                                             ]))
+                                           ]
+                                       )): pw.Text(options[j]["body"],style: pw.TextStyle(font: ttf,fontSize: fontSi)));
                                      }
-                                      qustions.add(pw.Row(children:allOptions ));
+                                      localList.add(pw.Column(
+                                          crossAxisAlignment: pw.CrossAxisAlignment.start,mainAxisAlignment: pw.MainAxisAlignment.start,
+                                          children:allOptions ));
 
                                       // for(int j = 0 ; j <bar.selectedQuestionsBody[i].get("choice").length ; j++ ){
                                       //   r.add(pw.Row(mainAxisAlignment: pw.MainAxisAlignment.start,children: [pw.Container(margin: pw.EdgeInsets.only(left: 5,right: 5),height: 10,width: 10,decoration: pw.BoxDecoration(border: pw.Border.all())),pw.Text(bar.selectedQuestionsBody[i].get("choice")[j])]));
@@ -435,6 +477,7 @@ class _StudentsState extends State<QuestionsActivitySQL> {
                                       //         ]
                                       //     )
                                       // );
+                                      qustions.add(pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.center,mainAxisAlignment: pw.MainAxisAlignment.start,children: localList));
                                     }
 
                                     List<List<pw.Widget>> colums = [];
@@ -475,10 +518,31 @@ class _StudentsState extends State<QuestionsActivitySQL> {
 
 
 
+                                   List<pw.Widget> wids = [];
+                                    for(int p = 0 ; p < qustions.length ;p += 2){
+                                      try{
+                                        wids.add(pw.Row(
+                                          children: [
+                                            pw.Expanded(child: qustions[p]),
+                                            pw.Expanded(child: qustions[p+1]),
+
+                                          ]
+                                        ));
+                                      }catch(e){
+                                        wids.add(pw.Row(
+                                            children: [
+                                              pw.Expanded(child: qustions[p]),
+
+
+                                            ]
+                                        ));
+                                      }
+
+                                    }
                                     pdf.addPage(
-                                      pw.MultiPage(margin: pw.EdgeInsets.all(10),
+                                      pw.MultiPage(margin: pw.EdgeInsets.all(40),
                                         pageFormat: PdfPageFormat.a4,
-                                        build: (context) => qustions,//here goes the widgets list
+                                        build: (context) => wids,//here goes the widgets list
                                       ),
                                     );
                                     pdf.addPage(
@@ -505,6 +569,67 @@ class _StudentsState extends State<QuestionsActivitySQL> {
                                   }, child: Text("Download PDF("+bar.items.length.toString()+")")),
                                 ],
                               )),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: ElevatedButton(onPressed: (){
+                              TextEditingController c = TextEditingController();
+
+
+                              showDialog(
+                                  context: context,
+                                  builder: (_) =>AlertDialog(backgroundColor:  Colors.grey.shade50,content: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Create_question(),
+                                  ),));
+
+                            }, child: Text("Create Question")),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: ElevatedButton(onPressed: (){
+
+                              showDialog(
+                                  context: context,
+                                  builder: (_) =>AlertDialog(content:Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                                    child:Row(
+                                      children: [
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                                            child: ClassSelectDropdown(onSelected: (String id){
+                                              print("class selested "+id);
+                                              Provider.of<QuestionSortsprovider>(context, listen: false).class_id =  int.parse(id);
+                                              // selectedClassId = id;
+                                            },),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                                            child: SubjectSelectDropdown(onSelected: (String id){
+                                              print("sub selested "+id);
+                                              Provider.of<QuestionSortsprovider>(context, listen: false).subject_id =  int.parse(id);
+
+                                              // selectedClassId = id;
+                                            },),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                                            child: ChapterSelectDropdown(onSelected: (String id){
+                                              print("class selested "+id);
+                                              Provider.of<QuestionSortsprovider>(context, listen: false).class_id =  int.parse(id);
+                                              // selectedClassId = id;
+                                            },),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ) ,));
+                            }, child: Text("Filter")),
+                          )
                         ],),
 
                       ],),
@@ -551,9 +676,9 @@ class _StudentsState extends State<QuestionsActivitySQL> {
                       DataColumn(label: Text('Class')),
                       DataColumn(label: Text('Subject')),
                       DataColumn(label: Text('Chapter')),
-                      DataColumn(label: Text('Title')),
+                    //  DataColumn(label: Text('Title')),
                       DataColumn(label: Text('Question')),
-                      DataColumn(label: Text('Answer')),
+                   //   DataColumn(label: Text('Answer')),
                       DataColumn(label: Text('Options')),
 
                       // DataColumn(label: Text('Id')),

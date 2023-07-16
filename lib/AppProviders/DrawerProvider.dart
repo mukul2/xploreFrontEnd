@@ -288,3 +288,14 @@ class AppRouter extends ChangeNotifier {
   }
 
 }
+class CurrentLesson extends ChangeNotifier {
+
+  Map<String,dynamic>? _lesson;
+
+  Map<String,dynamic>? get lesson => _lesson;
+
+  set lesson(Map<String,dynamic>? value) {
+    _lesson = value;
+  }
+
+}

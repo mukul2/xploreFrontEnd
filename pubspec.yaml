@@ -84,6 +84,10 @@ flutter:
     - family: Nexa
       fonts:
         - asset: assets/nb.ttf
+    - family: Inter
+      fonts:
+        - asset: assets/Inter-Regular.ttf
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

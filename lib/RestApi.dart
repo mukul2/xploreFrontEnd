@@ -37,6 +37,23 @@ class Data{
 
    }
   }
+
+  Future<List>chaptersonsubject (String subjectId) async {
+    print("subjectsidx");
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/chaptersonsubject/"+subjectId,));
+      print("res start");
+      print(r.body);
+      print("res end");
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return [];
+
+    }
+  }
+
   Future<List>chapters () async {
     print("subjectsidx");
 
@@ -290,7 +307,16 @@ class Data{
 
     }
   }
-  Future<List>subjects () async {
+  Future<List>subjectsinclass (String classId) async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/subjectsinclass/"+classId));
+      return jsonDecode(r.body);
+    }catch(e){
+      return [];
+
+    }
+  }  Future<List>subjects () async {
 
     try{
       http.Response r =  await http.get(Uri.parse(base+"/subjects"));
