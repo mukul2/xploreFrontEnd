@@ -19,6 +19,8 @@ import 'package:sidebarx/sidebarx.dart';
 import 'AppProviders/DrawerProvider.dart';
 import 'Create_Quize/create_quize.dart';
 import 'Quizes.dart';
+import 'Teacher/Questions/question.dart';
+import 'Teacher/Quize/teacher_quizes.dart';
 import 'chapter_activity.dart';
 import 'class_activity.dart';
 import 'course_table.dart';

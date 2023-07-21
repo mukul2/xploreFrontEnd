@@ -216,7 +216,7 @@ class _StudentsState extends State<StudentActivitySql> {
           int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
           final DataTableSource _allUsers = MyData(bar.items);
           return Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.only(left:10,right: 10,bottom: 20,top: 0),
             child: PaginatedDataTable(
 
               header:Padding(
@@ -693,88 +693,109 @@ class _ClassSelectDropdownState extends State<ClassSelectDropdown> {
   String selected = "";
   @override
   Widget build(BuildContext context) {
-    return  Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: FutureBuilder<List>(
+    return Consumer<QuestionSortsprovider>(
+        builder: (_, bar, __) {
+      if(bar.class_id==null){
+        selected = "";
+      }
+      return  Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: FutureBuilder<List>(
 
-          future:widget.uid==null?Data().classes(): Data().classes(),
-          builder: (context, AsyncSnapshot<List> snap) {
-            if(snap.hasData){
-               Text(snap.data!.toString());
-              List<String> dropdownItems = [];
+            future:widget.uid==null?Data().classes(): Data().classes(),
+            builder: (context, AsyncSnapshot<List> snap) {
+              if(snap.hasData){
+                Text(snap.data!.toString());
+                List<String> dropdownItems = [];
 
-              for(int i = 0 ; i < snap.data!.length ;i++){
-                dropdownItems.add(snap.data![i]["name"]);
-              }
-            return  DropdownSearch<String>(
-                popupProps: PopupProps.menu(
-                  showSelectedItems: true,
-                 // disabledItemFn: (String s) => s.startsWith('I'),
-                ),
-                items:dropdownItems,
-                dropdownDecoratorProps: DropDownDecoratorProps(
-                  dropdownSearchDecoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal:8),
-                    labelText: "Class",
-                    hintText: "Class",
+                for(int i = 0 ; i < snap.data!.length ;i++){
+                  dropdownItems.add(snap.data![i]["name"]);
+                }
+
+                if(Provider.of<QuestionSortsprovider>(context, listen: false).class_id==null){
+                }else{
+                  for(int j = 0 ; j < snap.data!.length ;j++){
+                    if(Provider.of<QuestionSortsprovider>(context, listen: false).class_id==snap.data![j]["id"]){
+                      selected = snap.data![j]["name"];
+                      break;
+                    }
+
+                  }
+                }
+
+                // selected = snap.data![3]["name"];
+
+                return  DropdownSearch<String>(
+                  popupProps: PopupProps.menu(
+                    showSelectedItems: true,
+                    // disabledItemFn: (String s) => s.startsWith('I'),
                   ),
-                ),
-                onChanged: (String? s){
+                  items:dropdownItems,
+                  dropdownDecoratorProps: DropDownDecoratorProps(
+                    dropdownSearchDecoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal:8),
+                      labelText: "Class",
+                      hintText: "Class",
+                    ),
+                  ),
+                  onChanged: (String? s){
 
 
-                 if(s == "All"){
-                   widget.onSelected("0");
-                 }else{
-                   setState(() {
-                     try{
-                       for(int j = 0 ; j < snap.data!.length ;j++){
-                         if(snap.data![j]["name"] == s!){
-                           widget.onSelected(snap.data![j]["id"].toString());
-                           Provider.of<QuestionSortsprovider>(context, listen: false).class_id = snap.data![j]["id"];
-                           break;
-                         }
-                       }
-                     }catch(e){
-                       print(e);
-                       widget.onSelected("0");
-                     }
-
-
-
-                     selected = s!;
-                   });
-                 }
-
-                },
-                selectedItem:selected,
-              );
-              return  Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(3),border: Border.all(color: Colors.grey)),
-                  child: DropdownButton<String>(
-                    //value: dropDownString,
-                    items:dropdownItems.map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Container(width: 352,child: Text(value)),
-                      );
-                    }).toList(),
-                    onChanged: (String? s) {
+                    if(s == "All"){
+                      widget.onSelected("0");
+                    }else{
                       setState(() {
+                        try{
+                          for(int j = 0 ; j < snap.data!.length ;j++){
+                            if(snap.data![j]["name"] == s!){
+                              widget.onSelected(snap.data![j]["id"].toString());
+                              Provider.of<QuestionSortsprovider>(context, listen: false).class_id = snap.data![j]["id"];
+                              break;
+                            }
+                          }
+                        }catch(e){
+                          print(e);
+                          widget.onSelected("0");
+                        }
 
+
+
+                        selected = s!;
                       });
-                    },
+                    }
+
+                  },
+                  selectedItem:selected,
+                );
+                return  Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(3),border: Border.all(color: Colors.grey)),
+                    child: DropdownButton<String>(
+                      //value: dropDownString,
+                      items:dropdownItems.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Container(width: 352,child: Text(value)),
+                        );
+                      }).toList(),
+                      onChanged: (String? s) {
+                        setState(() {
+
+                        });
+                      },
+                    ),
                   ),
-                ),
-              );
+                );
 
 
-            }else{
-              return Text("Geting Data");
-              return Container(height: 0,width: 0,);
-            }
+              }else{
+                return Text("Geting Data");
+                return Container(height: 0,width: 0,);
+              }
 
-          }),
-    );
+            }),
+      );
+        });
+
   }
 }
 
@@ -794,82 +815,97 @@ class _SubjectSelectDropdownState extends State<SubjectSelectDropdown> {
     //QuestionSortsprovider
 
   return  Consumer<QuestionSortsprovider>(
-        builder: (_, bar, __) => false? bar.class_id==null?Text("null"):Text(bar.class_id!.toString()):Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: FutureBuilder<List>(
+        builder: (_, bar, __) {
+          if(bar.subject_id==null){
+            selected = "";
+          }
+        return  Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: FutureBuilder<List>(
 
-              future: bar.class_id==null?Data().subjects(): Data().subjectsinclass(bar.class_id.toString()),
-              builder: (context, AsyncSnapshot<List> snap) {
+                future: bar.class_id==null?Data().subjects(): Data().subjectsinclass(bar.class_id.toString()),
+                builder: (context, AsyncSnapshot<List> snap) {
 
-                if(snap.hasData){
-                  // return Text(snap.data!.toString());
-                  List<String> dropdownItems = [];
-                  for(int i = 0 ; i < snap.data!.length ;i++){
-                    dropdownItems.add(snap.data![i]["sName"]);
-                  }
-                  return  DropdownSearch<String>(
-                    popupProps: PopupProps.menu(
-                      showSelectedItems: true,
-                      // disabledItemFn: (String s) => s.startsWith('I'),
-                    ),
-                    items:dropdownItems,
-                    dropdownDecoratorProps: DropDownDecoratorProps(
-                      dropdownSearchDecoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal:8),
-                        labelText: "Subjects",
-                        hintText: "Select subject",
-                      ),
-                    ),
-                    onChanged: (String? s){
+                  if(snap.hasData){
+                    // return Text(snap.data!.toString());
+                    List<String> dropdownItems = [];
+                    for(int i = 0 ; i < snap.data!.length ;i++){
+                      dropdownItems.add(snap.data![i]["sName"]);
+                    }
+                    if(Provider.of<QuestionSortsprovider>(context, listen: false).subject_id==null){
+                    }else{
+                      for(int j = 0 ; j < snap.data!.length ;j++){
+                        if(Provider.of<QuestionSortsprovider>(context, listen: false).subject_id==snap.data![j]["sid"]){
+                          selected = snap.data![j]["sName"];
+                          break;
+                        }
 
-                      if(s == "All"){
-                        // Provider.of<QuestionSortsprovider>(context, listen: false).subject_id = 0;
-                        widget.onSelected("0");
-                      }else{
-                        setState(() {
-                          for(int j = 0 ; j < snap.data!.length ;j++){
-                            if(snap.data![j]["sName"] == s!){
-                              widget.onSelected(snap.data![j]["sid"].toString());
-                               Provider.of<QuestionSortsprovider>(context, listen: false).subject_id = snap.data![j]["sid"];
-                              break;
-                            }
-                          }
-
-
-                          selected = s!;
-                        });
                       }
-
-
-                    },
-                    selectedItem:selected,
-                  );
-                  return  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(3),border: Border.all(color: Colors.grey)),
-                      child: DropdownButton<String>(
-                        //value: dropDownString,
-                        items:dropdownItems.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Container(width: 352,child: Text(value)),
-                          );
-                        }).toList(),
-                        onChanged: (String? s) {
-                          setState(() {
-
-                          });
-                        },
+                    }
+                    return  DropdownSearch<String>(
+                      popupProps: PopupProps.menu(
+                        showSelectedItems: true,
+                        // disabledItemFn: (String s) => s.startsWith('I'),
                       ),
-                    ),
-                  );
+                      items:dropdownItems,
+                      dropdownDecoratorProps: DropDownDecoratorProps(
+                        dropdownSearchDecoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal:8),
+                          labelText: "Subjects",
+                          hintText: "Select subject",
+                        ),
+                      ),
+                      onChanged: (String? s){
+
+                        if(s == "All"){
+                          // Provider.of<QuestionSortsprovider>(context, listen: false).subject_id = 0;
+                          widget.onSelected("0");
+                        }else{
+                          setState(() {
+                            for(int j = 0 ; j < snap.data!.length ;j++){
+                              if(snap.data![j]["sName"] == s!){
+                                widget.onSelected(snap.data![j]["sid"].toString());
+                                Provider.of<QuestionSortsprovider>(context, listen: false).subject_id = snap.data![j]["sid"];
+                                break;
+                              }
+                            }
 
 
-                }else{
-                  return Container(height: 0,width: 0,);
-                }
+                            selected = s!;
+                          });
+                        }
 
-              }),
-        ));
+
+                      },
+                      selectedItem:selected,
+                    );
+                    return  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(3),border: Border.all(color: Colors.grey)),
+                        child: DropdownButton<String>(
+                          //value: dropDownString,
+                          items:dropdownItems.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Container(width: 352,child: Text(value)),
+                            );
+                          }).toList(),
+                          onChanged: (String? s) {
+                            setState(() {
+
+                            });
+                          },
+                        ),
+                      ),
+                    );
+
+
+                  }else{
+                    return Container(height: 0,width: 0,);
+                  }
+
+                }),
+          );
+        });
         return  Padding(
       padding: const EdgeInsets.only(top: 8),
       child: FutureBuilder<List>(
@@ -963,81 +999,96 @@ class _ChapterSelectDropdownState extends State<ChapterSelectDropdown> {
   @override
   Widget build(BuildContext context) {
     return  Consumer<QuestionSortsprovider>(
-        builder: (_, bar, __) =>Padding(
-          padding: const EdgeInsets.only(top: 8),
-          child: FutureBuilder<List>(
+        builder: (_, bar, __) {
+          if(bar.chapter_id==null){
+            selected = "";
+          }
+         return Padding(
+           padding: const EdgeInsets.only(top: 8),
+           child: FutureBuilder<List>(
 
-              future: bar.subject_id==null?Data().chapters():Data().chaptersonsubject(bar.subject_id.toString()),
-              builder: (context, AsyncSnapshot<List> snap) {
+               future: bar.subject_id==null?Data().chapters():Data().chaptersonsubject(bar.subject_id.toString()),
+               builder: (context, AsyncSnapshot<List> snap) {
 
-                if(snap.hasData){
-                  //  return Text(snap.data!.toString());
-                  List<String> dropdownItems = [];
+                 if(snap.hasData){
+                   //  return Text(snap.data!.toString());
+                   List<String> dropdownItems = [];
 
-                  for(int i = 0 ; i < snap.data!.length ;i++){
-                    dropdownItems.add(snap.data![i]["cname"]);
-                  }
-                  return  DropdownSearch<String>(
-                    popupProps: PopupProps.menu(
-                      showSelectedItems: true,
-                      // disabledItemFn: (String s) => s.startsWith('I'),
-                    ),
-                    items:dropdownItems,
-                    dropdownDecoratorProps: DropDownDecoratorProps(
-                      dropdownSearchDecoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal:8),
-                        labelText: "Chapter",
-                        hintText: "Select chapter",
-                      ),
-                    ),
-                    onChanged: (String? s){
-                      if(s == "All"){
-                        widget.onSelected("0");
-                        //  Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id = 0;
-                      }else{
-                        setState(() {
-                          for(int j = 0 ; j < snap.data!.length ;j++){
-                            if(snap.data![j]["cname"] == s!){
-                              widget.onSelected(snap.data![j]["cId"].toString());
-                              // Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id = snap.data![j]["cId"];
-                              break;
-                            }
-                          }
+                   for(int i = 0 ; i < snap.data!.length ;i++){
+                     dropdownItems.add(snap.data![i]["cname"]);
+                   }
+                   if(Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id==null){
+                   }else{
+                     for(int j = 0 ; j < snap.data!.length ;j++){
+                       if(Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id==snap.data![j]["cId"]){
+                         selected = snap.data![j]["cname"];
+                         break;
+                       }
 
-
-                          selected = s!;
-                        });
-                      }
-
-                    },
-                    selectedItem:selected,
-                  );
-                  return  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(3),border: Border.all(color: Colors.grey)),
-                      child: DropdownButton<String>(
-                        //value: dropDownString,
-                        items:dropdownItems.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Container(width: 352,child: Text(value)),
-                          );
-                        }).toList(),
-                        onChanged: (String? s) {
-                          setState(() {
-
-                          });
-                        },
-                      ),
-                    ),
-                  );
+                     }
+                   }
+                   return  DropdownSearch<String>(
+                     popupProps: PopupProps.menu(
+                       showSelectedItems: true,
+                       // disabledItemFn: (String s) => s.startsWith('I'),
+                     ),
+                     items:dropdownItems,
+                     dropdownDecoratorProps: DropDownDecoratorProps(
+                       dropdownSearchDecoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal:8),
+                         labelText: "Chapter",
+                         hintText: "Select chapter",
+                       ),
+                     ),
+                     onChanged: (String? s){
+                       if(s == "All"){
+                         widget.onSelected("0");
+                         //  Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id = 0;
+                       }else{
+                         setState(() {
+                           for(int j = 0 ; j < snap.data!.length ;j++){
+                             if(snap.data![j]["cname"] == s!){
+                               widget.onSelected(snap.data![j]["cId"].toString());
+                               // Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id = snap.data![j]["cId"];
+                               break;
+                             }
+                           }
 
 
-                }else{
-                  return Container(height: 0,width: 0,);
-                }
+                           selected = s!;
+                         });
+                       }
 
-              }),
-        ));
+                     },
+                     selectedItem:selected,
+                   );
+                   return  Padding(
+                     padding: const EdgeInsets.all(8.0),
+                     child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(3),border: Border.all(color: Colors.grey)),
+                       child: DropdownButton<String>(
+                         //value: dropDownString,
+                         items:dropdownItems.map((String value) {
+                           return DropdownMenuItem<String>(
+                             value: value,
+                             child: Container(width: 352,child: Text(value)),
+                           );
+                         }).toList(),
+                         onChanged: (String? s) {
+                           setState(() {
+
+                           });
+                         },
+                       ),
+                     ),
+                   );
+
+
+                 }else{
+                   return Container(height: 0,width: 0,);
+                 }
+
+               }),
+         );
+        });
       Padding(
       padding: const EdgeInsets.only(top: 8),
       child: FutureBuilder<List>(

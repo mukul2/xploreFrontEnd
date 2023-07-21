@@ -20,6 +20,7 @@ import 'package:pdf/pdf.dart';
 import 'package:provider/provider.dart';
 import 'AppProviders/DrawerProvider.dart';
 import 'RestApi.dart';
+import 'Teacher/Quize/teacher_quizes.dart';
 import 'all_questions.dart';
 import 'all_quiz_con.dart';
 import 'edit_question_activity.dart';
@@ -473,7 +474,7 @@ class _Quizes_tabs_contextState extends State<Quizes_tabs_context> {
                                 context: context,
                                 builder: (_) =>StatefulBuilder(
                                     builder: (BuildContext context, StateSetter setStateC) {
-                                      return Dialog(backgroundColor: Colors.grey.shade50,child: Container(width: 1200,height: 900,
+                                      return Dialog(backgroundColor: Colors.grey.shade50,child: Container(width: MediaQuery.of(context).size.width,height: 900,
                                         child: SingleChildScrollView(
                                           child: Padding(
                                             padding: const EdgeInsets.all(20.0),

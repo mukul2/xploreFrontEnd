@@ -16,7 +16,9 @@ import 'Quizes.dart';
 import 'RestApi.dart';
 import 'Admin/admin_page.dart';
 import 'Student/Courses/Market/market_place.dart';
+import 'Student/Drawer/Drawer.dart';
 import 'Student/Lecture/lectures.dart';
+import 'Teacher/Drawer/drawer.dart';
 import 'all_questions.dart';
 import 'all_quizes.dart';
 import 'course_details.dart';
@@ -45,7 +47,7 @@ final GoRouter _router = GoRouter(
                 try{
                   if(snapshot.data!["isTeacher"]) {
 
-                    return SidebarXExampleApp();
+                    return true?TeacherDrawer():SidebarXExampleApp();
 
                   }else
                   if(snapshot.data!["isStudent"]) {
@@ -116,10 +118,11 @@ final GoRouter _router = GoRouter(
                     try{
                       if(snapshot.data!["isTeacher"]) {
 
-                        return SidebarXExampleApp();
+                        return true?TeacherDrawer(): SidebarXExampleApp();
 
                       }else if(snapshot.data!["isStudent"]) {
 
+                        return StudentDrawer();
                         return StudentApp();
                       }else{
                         return Text("Unknwon user");
@@ -155,6 +158,7 @@ final GoRouter _router = GoRouter(
 
                       }else
                       if(snapshot.data!["isStudent"]) {
+                        return StudentDrawer();
                         return StudentApp();
                       }else{
                         return Text("Unknwon user");
@@ -207,6 +211,12 @@ final GoRouter _router = GoRouter(
             return Login();
           },
         ),
+        GoRoute(
+          path: 'drawer',
+          builder: (BuildContext context, GoRouterState state) {
+            return TeacherDrawer();
+          },
+        ),
       ],
     ),
   ],
@@ -250,6 +260,8 @@ class MyApp extends StatelessWidget {
     ChangeNotifierProvider<Questionprovider>(create: (context) => Questionprovider()),
     ChangeNotifierProvider<AppRouter>(create: (context) => AppRouter()),
     ChangeNotifierProvider<CurrentLesson>(create: (context) => CurrentLesson()),
+    ChangeNotifierProvider<DrawerSelection>(create: (context) => DrawerSelection()),
+    ChangeNotifierProvider<DrawerSelectionSub>(create: (context) => DrawerSelectionSub()),
 
         ],
       child: MaterialApp.router(
@@ -262,7 +274,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
          // textTheme:  GoogleFonts.poppinsTextTheme(baseTheme.textTheme),
-          scaffoldBackgroundColor: Colors.grey.shade50,dialogBackgroundColor: Colors.grey.shade50,dialogTheme: DialogTheme(backgroundColor: Colors.grey.shade50),appBarTheme: AppBarTheme(elevation: 1,
+          scaffoldBackgroundColor: Colors.grey.shade300,dialogBackgroundColor: Colors.grey.shade300,dialogTheme: DialogTheme(backgroundColor: Colors.grey.shade300),appBarTheme: AppBarTheme(elevation: 1,
         iconTheme: IconThemeData(color: Colors.black),titleTextStyle: TextStyle(color: Colors.black54),
         color: Colors.white, //<-- SEE HERE
       ),

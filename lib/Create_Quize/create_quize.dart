@@ -40,7 +40,7 @@ class _CreateQuizeState extends State<CreateQuize> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(appBar: PreferredSize(preferredSize: Size(0,60),child:Card(margin: EdgeInsets.zero,
+    return Scaffold(appBar: true?null: PreferredSize(preferredSize: Size(0,60),child:Card(margin: EdgeInsets.zero,
       child: Padding(
         padding:  EdgeInsets.symmetric(vertical: 8,horizontal: 20),
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,

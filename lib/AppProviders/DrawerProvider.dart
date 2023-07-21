@@ -1,3 +1,5 @@
+import 'dart:js_util';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -296,6 +298,35 @@ class CurrentLesson extends ChangeNotifier {
 
   set lesson(Map<String,dynamic>? value) {
     _lesson = value;
+  }
+
+}
+class DrawerSelection extends ChangeNotifier {
+
+  int _selection = 0;
+
+  int get selection => _selection;
+
+  set selection(int value) {
+    _selection = value;
+    notifyListeners();
+  }
+
+}
+class DrawerSelectionSub extends ChangeNotifier {
+  int _selection = 0;
+  int _selectionsub = 0;
+
+  int get selectionsub => _selectionsub;
+
+  set selectionsub(int value) {
+    _selectionsub = value;
+    notifyListeners();
+  }
+  int get selection => _selection;
+  set selection(int value) {
+    _selection = value;
+    notifyListeners();
   }
 
 }

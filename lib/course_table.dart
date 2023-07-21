@@ -84,7 +84,7 @@ class _StudentsState extends State<CourseTable> {
       TextButton(onPressed: (){}, child: Text("Create Batch"))
     ],);
 //Batchprovider
-    return Scaffold(
+    return Scaffold(backgroundColor: Colors.white,
       body: true?Padding(
         padding: const EdgeInsets.all(20),
         child: Consumer<Batchprovider>(
@@ -215,347 +215,352 @@ class _CreateCourseActivityState extends State<CreateCourseActivity> {
   List Quizes = [];
   @override
   Widget build(BuildContext context) {
-    return    Wrap(
-      children: [
-        Container(margin: EdgeInsets.symmetric(horizontal: 8,vertical: 6),decoration: boxShadow,child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Text("Course information"),
-            ],
-          ),
-        )),
-        Row(
+    return    Container(margin: EdgeInsets.all(20), decoration: boxShadow,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Wrap(
           children: [
-            Expanded(flex: 4 ,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(controller:c ,decoration: InputDecoration(hintText: "Course name"),),
-              ),
-            ),
-            Expanded(flex: 1,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(controller:c_price ,decoration: InputDecoration(hintText: "Price"),),
-              ),
-            ),
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextFormField(controller:c_description ,decoration: InputDecoration(hintText: "Description"),),
-        ),
-
-        Row(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-                child: ClassSelectDropdown(onSelected: (String id){
-                  class_id = id;
-                  // selectedClassId = id;
-                },),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: SubjectSelectDropdown(onSelected: (String id){
-                  subject_id = id;
-
-                  // selectedClassId = id;
-                },),
-              ),
-            )
-          ],
-        ),
-
-        Container(margin: EdgeInsets.symmetric(horizontal: 8,vertical: 6),decoration: boxShadow,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
-              Text("Lectures"),
-              ElevatedButton(onPressed: (){
-                TextEditingController lecturename = TextEditingController();
-
-                showDialog(
-                    context: context,
-                    builder: (_) =>StatefulBuilder(
-                        builder: (context,setS) {
-                          return AlertDialog(content: Container(width: 500,
-                            child: Wrap(children: [
-                              Container(margin: EdgeInsets.only(top: 10,bottom: 10,left: 5,right: 5),decoration: boxShadow,
-                                child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text("Lecture name"),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: TextFormField(controller:lecturename ,decoration: InputDecoration(),),
-                                    ),
-
-
-
-
-                                  ],
-                                ),
-                              ),
-                              // Padding(
-                              //   padding: const EdgeInsets.all(8.0),
-                              //   child: Text("Lecture contents"),
-                              // ),
-                              // Padding(
-                              //   padding: const EdgeInsets.all(8.0),
-                              //   child: lectureContents.length==0?Center(child: Text("No contents added",style: TextStyle(color: Colors.grey),),): ListView.builder(shrinkWrap: true,
-                              //     itemCount: lectureContents.length,
-                              //
-                              //     itemBuilder: (context, index) {
-                              //       return Row(
-                              //         children: [
-                              //
-                              //           Container(decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300)),width: 60,child: Center(child: Text((index+1).toString(),style: TextStyle(color: Colors.grey),))),
-                              //           Expanded(
-                              //             child: Container(decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300)),
-                              //               child: Padding(
-                              //                 padding: const EdgeInsets.symmetric(horizontal: 5),
-                              //                 child: Text(lectureContents[index]),
-                              //               ),
-                              //             ),
-                              //           ),
-                              //         ],
-                              //       );
-                              //     },
-                              //   ),
-                              // ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                  if(false) ElevatedButton(onPressed: (){
-
-
-                                    }, child: Text("Add lecture content")),
-                                    ElevatedButton(onPressed: (){
-                                      setState(() {
-                                        lectures.add({"name":lecturename.text,"contents":[],"quizes":[]});
-                                        Navigator.pop(context);
-                                      });
-                                    }, child: Text("Finish")),
-                                  ],
-                                ),
-                              ),
-
-                            ],),
-                          ),title: Text("Add Lecture"),);
-                        }
-                    ));
-              }, child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Container(margin: EdgeInsets.symmetric(horizontal: 8,vertical: 6),decoration: boxShadow,child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
                 children: [
-                  Text("Add lecture"),
-
+                  Text("Course information"),
                 ],
-              )),
-            ],),
-          ),
-        ),
-        lectures.length==0?Center(child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("No lectures added",style:  TextStyle(color: Colors.grey),),
-        ),): ListView.builder(shrinkWrap: true,padding: EdgeInsets.symmetric(horizontal: 8,vertical: 8),
-          itemCount: lectures.length,
+              ),
+            )),
+            Row(
+              children: [
+                Expanded(flex: 4 ,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(controller:c ,decoration: InputDecoration(hintText: "Course name"),),
+                  ),
+                ),
+                Expanded(flex: 1,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(controller:c_price ,decoration: InputDecoration(hintText: "Price"),),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(controller:c_description ,decoration: InputDecoration(hintText: "Description"),),
+            ),
 
-          itemBuilder: (context, index) {
-            return Container(decoration: boxShadow,margin:EdgeInsets.symmetric(horizontal: 0,vertical: 2) ,
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
+                    child: ClassSelectDropdown(onSelected: (String id){
+                      class_id = id;
+                      // selectedClassId = id;
+                    },),
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: SubjectSelectDropdown(onSelected: (String id){
+                      subject_id = id;
+
+                      // selectedClassId = id;
+                    },),
+                  ),
+                )
+              ],
+            ),
+
+            Container(margin: EdgeInsets.symmetric(horizontal: 8,vertical: 6),decoration: boxShadow,
               child: Padding(
-                padding: const EdgeInsets.only(top: 4,bottom: 4),
-                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
+                padding: const EdgeInsets.all(8.0),
+                child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
+                  Text("Lectures"),
+                  ElevatedButton(onPressed: (){
+                    TextEditingController lecturename = TextEditingController();
 
-                    Row(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                    showDialog(
+                        context: context,
+                        builder: (_) =>StatefulBuilder(
+                            builder: (context,setS) {
+                              return AlertDialog(content: Container(width: 500,
+                                child: Wrap(children: [
+                                  Container(margin: EdgeInsets.only(top: 10,bottom: 10,left: 5,right: 5),decoration: boxShadow,
+                                    child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text("Lecture name"),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: TextFormField(controller:lecturename ,decoration: InputDecoration(),),
+                                        ),
+
+
+
+
+                                      ],
+                                    ),
+                                  ),
+                                  // Padding(
+                                  //   padding: const EdgeInsets.all(8.0),
+                                  //   child: Text("Lecture contents"),
+                                  // ),
+                                  // Padding(
+                                  //   padding: const EdgeInsets.all(8.0),
+                                  //   child: lectureContents.length==0?Center(child: Text("No contents added",style: TextStyle(color: Colors.grey),),): ListView.builder(shrinkWrap: true,
+                                  //     itemCount: lectureContents.length,
+                                  //
+                                  //     itemBuilder: (context, index) {
+                                  //       return Row(
+                                  //         children: [
+                                  //
+                                  //           Container(decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300)),width: 60,child: Center(child: Text((index+1).toString(),style: TextStyle(color: Colors.grey),))),
+                                  //           Expanded(
+                                  //             child: Container(decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300)),
+                                  //               child: Padding(
+                                  //                 padding: const EdgeInsets.symmetric(horizontal: 5),
+                                  //                 child: Text(lectureContents[index]),
+                                  //               ),
+                                  //             ),
+                                  //           ),
+                                  //         ],
+                                  //       );
+                                  //     },
+                                  //   ),
+                                  // ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                      if(false) ElevatedButton(onPressed: (){
+
+
+                                        }, child: Text("Add lecture content")),
+                                        ElevatedButton(onPressed: (){
+                                          setState(() {
+                                            lectures.add({"name":lecturename.text,"contents":[],"quizes":[]});
+                                            Navigator.pop(context);
+                                          });
+                                        }, child: Text("Finish")),
+                                      ],
+                                    ),
+                                  ),
+
+                                ],),
+                              ),title: Text("Add Lecture"),);
+                            }
+                        ));
+                  }, child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Add lecture"),
+
+                    ],
+                  )),
+                ],),
+              ),
+            ),
+            lectures.length==0?Center(child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text("No lectures added",style:  TextStyle(color: Colors.grey),),
+            ),): ListView.builder(shrinkWrap: true,padding: EdgeInsets.symmetric(horizontal: 8,vertical: 8),
+              itemCount: lectures.length,
+
+              itemBuilder: (context, index) {
+                return Container(decoration: boxShadow,margin:EdgeInsets.symmetric(horizontal: 0,vertical: 2) ,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 4,bottom: 4),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text("# "+(1+index).toString(),style: TextStyle(color: Colors.grey),),
+
+                        Row(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text("# "+(1+index).toString(),style: TextStyle(color: Colors.grey),),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(lectures[index]["name"]),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(lectures[index]["contents"].length.toString()+" contents "+lectures[index]["quizes"].length.toString()+" quizes",style: TextStyle(color: Colors.grey),),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(lectures[index]["name"]),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(lectures[index]["contents"].length.toString()+" contents "+lectures[index]["quizes"].length.toString()+" quizes",style: TextStyle(color: Colors.grey),),
-                        ),
-                      ],
-                    ),
 
-                    Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: ElevatedButton(onPressed: (){
-                            showDialog(
-                                context: context,
-                                builder: (_) =>StatefulBuilder(
-                                  builder: (context,setS) {
-                                    return AlertDialog(content: true?Container(height: 500,width: 600,
-                                      child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          FutureBuilder<List>(
-                                          future: Data().quizesHandelerid(id: FirebaseAuth.instance.currentUser!.uid), // a previously-obtained Future<String> or null
-                                          builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-                                            if(snapshot.hasData){
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              child: ElevatedButton(onPressed: (){
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>StatefulBuilder(
+                                      builder: (context,setS) {
+                                        return AlertDialog(content: true?Container(height: 500,width: 600,
+                                          child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              FutureBuilder<List>(
+                                              future: Data().quizesHandelerid(id: FirebaseAuth.instance.currentUser!.uid), // a previously-obtained Future<String> or null
+                                              builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                                                if(snapshot.hasData){
 
-                                            return  ListView.builder(shrinkWrap: true,
-                                                itemCount: snapshot.data!.length,
+                                                return  ListView.builder(shrinkWrap: true,
+                                                    itemCount: snapshot.data!.length,
 
-                                                itemBuilder: (context, index2) {
+                                                    itemBuilder: (context, index2) {
 
-                                                  return Opacity( opacity:lectures[index]["quizes"]==null?1: lectures[index]["quizes"].length>0?( lectures[index]["quizes"].contains(snapshot.data![index2]["id"])?0.5:1):1,
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.all(8.0),
-                                                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Text(snapshot.data![index2]["title"]),
-                                                          ElevatedButton(onPressed: (){
+                                                      return Opacity( opacity:lectures[index]["quizes"]==null?1: lectures[index]["quizes"].length>0?( lectures[index]["quizes"].contains(snapshot.data![index2]["id"])?0.5:1):1,
+                                                        child: Padding(
+                                                          padding: const EdgeInsets.all(8.0),
+                                                          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Text(snapshot.data![index2]["title"]),
+                                                              ElevatedButton(onPressed: (){
 
-                                                            if(lectures[index]["quizes"].contains(snapshot.data![index2]["id"])){
-                                                              try{
-                                                                lectures[index]["quizes"].remove(snapshot.data![index2]["id"]);
-                                                              }catch(e){
-                                                                print(e);
-                                                              }
-                                                              setState(() {
+                                                                if(lectures[index]["quizes"].contains(snapshot.data![index2]["id"])){
+                                                                  try{
+                                                                    lectures[index]["quizes"].remove(snapshot.data![index2]["id"]);
+                                                                  }catch(e){
+                                                                    print(e);
+                                                                  }
+                                                                  setState(() {
 
-                                                              });
-                                                              setS(() {
+                                                                  });
+                                                                  setS(() {
 
-                                                              });
-                                                            }else{
-                                                              print("add");
-                                                              try{
-                                                                lectures[index]["quizes"].add(snapshot.data![index2]["id"]);
-                                                              }catch(e){
-                                                                print(e);
-                                                              }
-                                                              setState(() {
+                                                                  });
+                                                                }else{
+                                                                  print("add");
+                                                                  try{
+                                                                    lectures[index]["quizes"].add(snapshot.data![index2]["id"]);
+                                                                  }catch(e){
+                                                                    print(e);
+                                                                  }
+                                                                  setState(() {
 
-                                                              });
-                                                              setS(() {
+                                                                  });
+                                                                  setS(() {
 
-                                                              });
-                                                            }
+                                                                  });
+                                                                }
 
-                                                            Navigator.of(context);
-                                                          }, child: Text(lectures[index]["quizes"].contains(snapshot.data![index2]["id"])?"Remove": "Select"))
-                                                        ],
-                                                      ),
-                                                    ),
+                                                                Navigator.of(context);
+                                                              }, child: Text(lectures[index]["quizes"].contains(snapshot.data![index2]["id"])?"Remove": "Select"))
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
                                                   );
-                                                },
-                                              );
-                                            }else{
-                                              return Center(child: CircularProgressIndicator(),);
-                                            }
-                                          }),
-                                          Center(
-                                            child: ElevatedButton(onPressed: (){
-                                              Navigator.pop(context);
-                                            }, child: Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
-                                              child: Text("Close"),
-                                            )),
-                                          )
-                                        ],
-                                      ),
-                                    ): Wrap(children: [
+                                                }else{
+                                                  return Center(child: CircularProgressIndicator(),);
+                                                }
+                                              }),
+                                              Center(
+                                                child: ElevatedButton(onPressed: (){
+                                                  Navigator.pop(context);
+                                                }, child: Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
+                                                  child: Text("Close"),
+                                                )),
+                                              )
+                                            ],
+                                          ),
+                                        ): Wrap(children: [
 
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: ElevatedButton(onPressed: (){
+                                              lectures[index]["quizes"].add("1");
+                                              setState(() {
+
+                                              });
+                                              Navigator.pop(context);
+
+                                            }, child: Text("Add")),
+                                          ),
+                                        ],),);
+                                      }
+                                    ));
+                              }, child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Add Quize"),
+
+
+                                ],
+                              )),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              child: ElevatedButton(onPressed: (){
+                                TextEditingController lecturecontent = TextEditingController();
+                                //List lectureContents = [];
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>AlertDialog(content: Wrap(children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text("Content Link"),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextFormField(controller:lecturecontent ,decoration: InputDecoration(),),
+                                      ),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: ElevatedButton(onPressed: (){
-                                          lectures[index]["quizes"].add("1");
-                                          setState(() {
+                                          lectures[index]["contents"].add(lecturecontent.text);
+                                         setState(() {
 
-                                          });
+                                         });
                                           Navigator.pop(context);
 
                                         }, child: Text("Add")),
                                       ),
-                                    ],),);
-                                  }
-                                ));
-                          }, child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Add Quize"),
+                                    ],),));
 
 
-                            ],
-                          )),
+                              }, child: Text("Add Course content"),),
+                            ),
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: ElevatedButton(onPressed: (){
-                            TextEditingController lecturecontent = TextEditingController();
-                            //List lectureContents = [];
-                            showDialog(
-                                context: context,
-                                builder: (_) =>AlertDialog(content: Wrap(children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("Content Link"),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextFormField(controller:lecturecontent ,decoration: InputDecoration(),),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: ElevatedButton(onPressed: (){
-                                      lectures[index]["contents"].add(lecturecontent.text);
-                                     setState(() {
 
-                                     });
-                                      Navigator.pop(context);
-
-                                    }, child: Text("Add")),
-                                  ),
-                                ],),));
-
-
-                          }, child: Text("Add Course content"),),
-                        ),
                       ],
                     ),
+                  ),
+                );
+              },
+              //   separatorBuilder: (BuildContext context, int index) { return Divider();},
+            ),
 
-                  ],
-                ),
-              ),
-            );
-          },
-          //   separatorBuilder: (BuildContext context, int index) { return Divider();},
+            Center(
+              child: ElevatedButton(child: Padding(
+                padding:  EdgeInsets.symmetric(horizontal: 15,vertical: 6),
+                child: Text("Finish"),
+              ),onPressed: (){
+
+                Data().saveBatches(data: {"lectures":lectures,"price":c_price.text,"class_id":class_id,"subject_id":subject_id,"description":c_description.text,"name":c.text,
+                  "created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
+
+                  Data().batchesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
+                    Provider.of<Batchprovider>(context, listen: false).items = value;
+                    Navigator.pop(context);
+                  });
+                });
+
+
+              }),
+            ),
+
+          ],
         ),
-
-        Center(
-          child: ElevatedButton(child: Padding(
-            padding:  EdgeInsets.symmetric(horizontal: 15,vertical: 6),
-            child: Text("Finish"),
-          ),onPressed: (){
-
-            Data().saveBatches(data: {"lectures":lectures,"price":c_price.text,"class_id":class_id,"subject_id":subject_id,"description":c_description.text,"name":c.text,
-              "created_by":FirebaseAuth.instance.currentUser!.uid}).then((value) {
-
-              Data().batchesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
-                Provider.of<Batchprovider>(context, listen: false).items = value;
-                Navigator.pop(context);
-              });
-            });
-
-
-          }),
-        ),
-
-      ],
+      ),
     );
     return Column(
       children: [
