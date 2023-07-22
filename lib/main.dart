@@ -281,11 +281,11 @@ class MyApp extends StatelessWidget {
         //  fontFamily: 'Nexa',
           inputDecorationTheme: InputDecorationTheme(fillColor: Colors.grey.shade50,filled: true,contentPadding: EdgeInsets.symmetric(horizontal: 8,vertical: 8), labelStyle: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),border:  OutlineInputBorder(
       // width: 0.0 produces a thin "hairline" border
-      borderSide:  BorderSide(color:Colors.black.withOpacity(0.8), width: 0.5,),borderRadius: BorderRadius.circular(3),
+      borderSide:  BorderSide(color:Colors.black.withOpacity(0.4), width: 0.5,),borderRadius: BorderRadius.circular(3),
       ),
         enabledBorder:  OutlineInputBorder(
           // width: 0.0 produces a thin "hairline" border
-          borderSide:  BorderSide(color: Colors.black.withOpacity(0.8), width: 0.5),borderRadius: BorderRadius.circular(3),
+          borderSide:  BorderSide(color: Colors.black.withOpacity(0.4), width: 0.5),borderRadius: BorderRadius.circular(3),
         ),
         disabledBorder:   OutlineInputBorder(
           // width: 0.0 produces a thin "hairline" border

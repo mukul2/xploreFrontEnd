@@ -87,6 +87,12 @@ flutter:
     - family: Inter
       fonts:
         - asset: assets/Inter-Regular.ttf
+    - family: Sans
+      fonts:
+        - asset: assets/open-sans.ttf
+    - family: Bangla
+      fonts:
+        - asset: assets/bangla1.ttf
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

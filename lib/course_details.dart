@@ -25,6 +25,7 @@ class _CourseDetailsState extends State<CourseDetails> {
         future: Data().coursedetails(id:widget.id.toString()), // a previously-obtained Future<String> or null
     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if(snapshot.hasData){
+            return Text(snapshot.data!.toString());
            return Scaffold(body: SingleChildScrollView(
              child: Column(
                mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.center,

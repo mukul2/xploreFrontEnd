@@ -48,13 +48,35 @@ class MyData extends DataTableSource {
       DataCell(ElevatedButton(onPressed: (){
 
 
-        Data().deletecourse(id:_data[index]['id'].toString() ).then((value) {
+        showDialog(
+            context: context,
+            builder: (_) =>AlertDialog(
+              //title: Text("Delete Question"),
+              content: Container(width: 400,
+                child: Wrap(
+                  children: [
+                    Center(child: Icon(Icons.warning,size: 50,)),
+                    Container(width: 400,child: Center(child: Text("Are you sure to delete this course?"))),
+                  ],
+                ),
+              ),actions: [
+              ElevatedButton(onPressed: (){
+                Data().deletecourse(id:_data[index]['id'].toString() ).then((value) {
 
-          Data().batchesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
-            Provider.of<Batchprovider>(context, listen: false).items = value;
-          });
+                  Data().batchesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
+                    Provider.of<Batchprovider>(context, listen: false).items = value;
+                  });
 
-        });
+                });
+              }, child: Text("Yes")),
+              ElevatedButton(onPressed: (){
+                Navigator.pop(context);
+              }, child: Text("No")),
+            ],));
+
+
+
+
       },child: Text("Delete"),)),
 
 
@@ -101,7 +123,7 @@ class _StudentsState extends State<CourseTable> {
                 padding: const EdgeInsets.only(top: 20),
                 child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,children: [
                   Container(height: 40,width: 300,child: TextFormField(decoration: InputDecoration(hintText: "Search"),),),
-                  ElevatedButton(onPressed: (){
+                if(false)  ElevatedButton(onPressed: (){
                     showDialog(
                         context: context,
                         builder: (_) =>AlertDialog(backgroundColor: Colors.grey.shade50,
@@ -500,10 +522,19 @@ class _CreateCourseActivityState extends State<CreateCourseActivity> {
                               padding: const EdgeInsets.symmetric(horizontal: 4),
                               child: ElevatedButton(onPressed: (){
                                 TextEditingController lecturecontent = TextEditingController();
+                                TextEditingController lecturecontenttitle = TextEditingController();
                                 //List lectureContents = [];
                                 showDialog(
                                     context: context,
                                     builder: (_) =>AlertDialog(content: Wrap(children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text("Title"),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: TextFormField(controller:lecturecontenttitle ,decoration: InputDecoration(),),
+                                      ),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text("Content Link"),
@@ -515,7 +546,7 @@ class _CreateCourseActivityState extends State<CreateCourseActivity> {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: ElevatedButton(onPressed: (){
-                                          lectures[index]["contents"].add(lecturecontent.text);
+                                          lectures[index]["contents"].add({"title":lecturecontenttitle.text,"body":lecturecontent.text});
                                          setState(() {
 
                                          });
@@ -550,7 +581,8 @@ class _CreateCourseActivityState extends State<CreateCourseActivity> {
 
                   Data().batchesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
                     Provider.of<Batchprovider>(context, listen: false).items = value;
-                    Navigator.pop(context);
+                    Provider.of<DrawerSelectionSub>(context, listen: false).selection = 2;
+                    Provider.of<DrawerSelectionSub>(context, listen: false).selectionsub = 1;
                   });
                 });
 

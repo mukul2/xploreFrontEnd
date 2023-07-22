@@ -77,7 +77,7 @@ class MyQuizesTable extends DataTableSource {
             builder: (_) =>AlertDialog(content:Container(width: 600,child: QuesionOptionsTab(mapData:_data[index] ,)) ,));
 
         //
-      },child: Text("View options"),)),
+      },child: Text("Edit"),)),
 
 
 

@@ -68,6 +68,8 @@ class MyData extends DataTableSource {
         children: [
 
           ElevatedButton(onPressed: (){
+
+            bool needUpdate = false;
 //saveoptions
 
             //options
@@ -92,73 +94,100 @@ class MyData extends DataTableSource {
                         },  icon: Icon(Icons.close))
                       ],),
                         content:Container(color:Colors.grey.shade50,width: MediaQuery.of(context).size.width>1200?1200: MediaQuery.of(context).size.width,height: MediaQuery.of(context).size.height,
-                          child:true? true?Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("Question Title (Optional)"),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextFormField( keyboardType: TextInputType.multiline,
-                                      maxLines: null,initialValue:_data[index]['title']??"--" ,
-                                      // enabled: false,
-                                      decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                        //  label: Text("Title")
-                                      ),),
-                                  ),
-                                ],
-                              ),
-                              Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("Question (Mandatory)"),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextFormField( keyboardType: TextInputType.multiline,
-                                      maxLines: null,initialValue:_data[index]['q']??"--" ,
-                                      //  enabled: false,
-                                      decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                        // label: Text("Question")
-                                      ),),
-                                  ),
-                                ],
-                              ),
-                              // Row(
-                              //   children: [
-                              //     Text(_data[index]['title']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
-                              //   ],
-                              // ),
+                          child:true? true?SingleChildScrollView(
+                            child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("Question Title (Optional)"),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextFormField(onChanged: (String s){
+                                        needUpdate = true;
+                                        _data[index]['title'] = s;
+                                      }, keyboardType: TextInputType.multiline,
+                                        maxLines: null,initialValue:_data[index]['title']??"--" ,
+                                        // enabled: false,
+                                        decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                          //  label: Text("Title")
+                                        ),),
+                                    ),
+                                  ],
+                                ),
+                                Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("Question (Mandatory)"),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextFormField(onChanged: (String s){
+                                        needUpdate = true;
+                                        _data[index]['q'] = s;
+                                      }, keyboardType: TextInputType.multiline,
+                                        maxLines: null,initialValue:_data[index]['q']??"--" ,
+                                        //  enabled: false,
+                                        decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                          // label: Text("Question")
+                                        ),),
+                                    ),
+                                  ],
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Explanation"),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: TextFormField(onChanged: (String s){
+                                    needUpdate = true;
+                                    _data[index]['explanation'] = s;
+                                  }, keyboardType: TextInputType.multiline,
+                                    maxLines: null,initialValue:_data[index]['explanation']??"--" ,
+                                    // enabled: false,
+                                    decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                      //  label: Text("Title")
+                                    ),),
+                                ),
+                                // Row(
+                                //   children: [
+                                //     Text(_data[index]['title']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
+                                //   ],
+                                // ),
 
-                              // Row(
-                              //   children: [
-                              //     Text(_data[index]['q']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
-                              //   ],
-                              // ),
-                              Column(crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text("Right answer"),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextFormField( keyboardType: TextInputType.multiline,
-                                      maxLines: null,initialValue:_data[index]['ans']??"--" ,
-                                      // enabled: false,
-                                      decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                        // label: Text("Question")
-                                      ),),
-                                  ),
-                                ],
-                              ),
-                              QuesionOptionsTab(mapData:_data[index] ,)
+                                // Row(
+                                //   children: [
+                                //     Text(_data[index]['q']??"--",style: TextStyle(color: Colors.black54,fontSize:15 ),),
+                                //   ],
+                                // ),
+                                Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text("Right answer"),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: TextFormField(enabled: false,onChanged: (String s){
+                                        needUpdate = true;
+                                        _data[index]['ans'] = s;
+                                      }, keyboardType: TextInputType.multiline,
+                                        maxLines: null,initialValue:_data[index]['ans']??"--" ,
+                                        // enabled: false,
+                                        decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                          // label: Text("Question")
+                                        ),),
+                                    ),
+                                  ],
+                                ),
+                                QuesionOptionsTab(mapData:_data[index] ,)
 
-                            ],
+                              ],
+                            ),
                           ):Row(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(width: 600,child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,20 +293,55 @@ class MyData extends DataTableSource {
                         ),
                       );
                     }
-                ));
-          },child: Text("View options"),),
+                )).whenComplete(() {
+
+                  if(needUpdate){
+                    Data().updatequestion(data: _data[index]).then((value) {
+
+                      Data().questionsbyid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
+                        Provider.of<Questionsprovider>(context, listen: false).items = value;
+                        Navigator.pop(context);
+                      });
+
+                    });
+                  }
+
+            });
+          },child: Text("Edit"),),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6),
             child: ElevatedButton(onPressed: (){
+
+
+              showDialog(
+                  context: context,
+                  builder: (_) =>AlertDialog(
+                    //title: Text("Delete Question"),
+                    content: Container(width: 400,
+                      child: Wrap(
+                      children: [
+                        Center(child: Icon(Icons.warning,size: 50,)),
+                        Container(width: 400,child: Center(child: Text("Are you sure to delete this question?"))),
+                      ],
+                  ),
+                    ),actions: [
+                    ElevatedButton(onPressed: (){
+                      Data().deletequestion(id:_data[index]["id"].toString()).then((value) {
+
+                        Data().questionsbyid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
+                          Provider.of<Questionsprovider>(context, listen: false).items = value;
+                          Navigator.pop(context);
+                        });
+
+                      });
+                    }, child: Text("Yes")),
+                    ElevatedButton(onPressed: (){
+                      Navigator.pop(context);
+                    }, child: Text("No")),
+                  ],));
 //saveoptions
 
-              Data().deletequestion(id:_data[index]["id"].toString()).then((value) {
 
-                Data().questionsbyid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
-                  Provider.of<Questionsprovider>(context, listen: false).items = value;
-                });
-
-              });
             },child: Text("Delete"),),
           ),
         ],
@@ -296,12 +360,32 @@ class _StudentsState extends State<QuestionsActivitySQL> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Provider.of<QuestionSortsprovider>(context, listen: false).class_id = null;
-    Provider.of<QuestionSortsprovider>(context, listen: false).subject_id = null;
-    Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id = null;
-    Data().questionsbyid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
-      Provider.of<Questionsprovider>(context, listen: false).items = value;
-    });
+    try{
+      Provider.of<QuestionSortsprovider>(context, listen: false).class_id = null;
+
+    }catch(e){
+
+    }
+    try{
+      Provider.of<QuestionSortsprovider>(context, listen: false).subject_id = null;
+
+    }catch(e){
+
+    }
+    try{
+      Provider.of<QuestionSortsprovider>(context, listen: false).chapter_id = null;
+
+    }catch(e){
+
+    }
+    try{
+      Data().questionsbyid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
+        Provider.of<Questionsprovider>(context, listen: false).items = value;
+      });
+    }catch(e){
+
+    }
+
   }
 
   @override

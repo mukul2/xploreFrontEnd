@@ -40,7 +40,7 @@ class _CreateQuizeState extends State<CreateQuize> {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(appBar: true?null: PreferredSize(preferredSize: Size(0,60),child:Card(margin: EdgeInsets.zero,
+    return Scaffold(appBar: false?null: PreferredSize(preferredSize: Size(0,60),child:Card(elevation: 1,margin: EdgeInsets.zero,
       child: Padding(
         padding:  EdgeInsets.symmetric(vertical: 8,horizontal: 20),
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -169,7 +169,7 @@ class _CreateQuizeState extends State<CreateQuize> {
         ),
       ),
     ) ,),body: Container(width: MediaQuery.of(context).size.width,
-        color: Colors.white,
+        color: Colors.grey.shade50,
         height: MediaQuery.of(context).size.height,child: SingleChildScrollView(
           child: Padding(
             padding:  EdgeInsets.symmetric(vertical: 15,horizontal:  MediaQuery.of(context).size.width * 0.07),
@@ -283,12 +283,24 @@ class _CreateQuizeState extends State<CreateQuize> {
                       },controller: controller4,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Eaxm Duration Time(H:M:S)")),),
                     ),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(controller: controller5,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Total Exam Marks")),),
-                    ),
-                  ),
+                  Consumer<AddedProvider>(
+                      builder: (_, bar, __){
+                        double total = 0;
+                        if(bar.questions.length==0)total = 0;
+                        if(bar.questions.length>0){
+                          for(int i = 0 ; i <bar.questions.length ; i++){
+                            total = total+bar.questions[i]["score"];
+                          }
+                        }
+                        controller5.text = total.toString();
+                       return Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(controller: controller5,enabled: false,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(horizontal: 10),label: Text("Total Exam Marks")),),
+                          ),
+                        );
+                      }),
+
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -418,6 +430,9 @@ class _CreateQuizeState extends State<CreateQuize> {
                     TextEditingController c3 = TextEditingController();
 
 
+                    double score = 1.0;
+
+
 
 
 
@@ -444,28 +459,102 @@ class _CreateQuizeState extends State<CreateQuize> {
                                         ),),
                                         Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Container(margin: EdgeInsets.symmetric(horizontal: 4),width: 600,decoration: boxShadow,
-                                              child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding:  EdgeInsets.symmetric(vertical: 25,horizontal: 15),
-                                                    child: TextField(controller: c1,decoration: InputDecoration(label:Text("Question title"),contentPadding: EdgeInsets.symmetric(horizontal: 8),),),
-                                                  ),
+                                            Container(margin: EdgeInsets.symmetric(horizontal: 4,),width: 600,decoration: boxShadow,
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 10),
+                                                child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Padding(
+                                                      padding:  EdgeInsets.symmetric(vertical: 10,horizontal: 15),
+                                                      child: TextField(controller: c1,decoration: InputDecoration(label:Text("Question title"),contentPadding: EdgeInsets.symmetric(horizontal: 8),),),
+                                                    ),
 
-                                                  Padding(
-                                                    padding:  EdgeInsets.symmetric(vertical: 25,horizontal: 15),
-                                                    child: TextField(controller: c2,decoration: InputDecoration(label: Text("Question body"),contentPadding: EdgeInsets.symmetric(horizontal: 8)),),
-                                                  ),
-
-
-                                                  Padding(
-                                                    padding:  EdgeInsets.symmetric(vertical: 25,horizontal: 15),
-                                                    child: TextField(controller: c3,decoration: InputDecoration(label: Text("Explanation"),contentPadding: EdgeInsets.symmetric(horizontal: 8),),),
-                                                  ),
+                                                    Padding(
+                                                      padding:  EdgeInsets.symmetric(vertical: 10,horizontal: 15),
+                                                      child: TextField(controller: c2,maxLines: 5,minLines: 2,decoration: InputDecoration(label: Text("Question body"),contentPadding: EdgeInsets.symmetric(vertical: 15,horizontal: 8)),),
+                                                    ),
 
 
+                                                    Padding(
+                                                      padding:  EdgeInsets.symmetric(vertical: 10,horizontal: 15),
+                                                      child: TextField(controller: c3,decoration: InputDecoration(label: Text("Explanation"),contentPadding: EdgeInsets.symmetric(horizontal: 8),),),
+                                                    ),
 
-                                                ],
+                                                    Container(margin: EdgeInsets.symmetric(horizontal: 15),decoration: boxShadow,
+                                                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Padding(
+                                                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                                                            child: Text("Score"),
+                                                          ),
+
+                                                          Row(children: [
+                                                            InkWell( onTap: (){
+                                                              setStateC(() {
+                                                                score = 0.5;
+                                                              });
+
+                                                            },
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.all(8.0),
+                                                                child: Card(color: score==0.5?Colors.blue:Colors.white,child: Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: Text("0.5",style: TextStyle(color:  score==0.5?Colors.white:Colors.blue),),
+                                                                ),),
+                                                              ),
+                                                            ),
+                                                            InkWell( onTap: (){
+                                                              setStateC(() {
+                                                                score = 1.0;
+                                                              });
+
+                                                            },
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.all(8.0),
+                                                                child: Card(color: score==1?Colors.blue:Colors.white,child: Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: Text("1.0",style: TextStyle(color:  score==1.0?Colors.white:Colors.blue),),
+                                                                ),),
+                                                              ),
+                                                            ),
+                                                            InkWell( onTap: (){
+                                                              setStateC(() {
+                                                                score = 1.5;
+                                                              });
+
+                                                            },
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.all(8.0),
+                                                                child: Card(color: score==1.5?Colors.blue:Colors.white,child: Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: Text("1.5",style: TextStyle(color:  score==1.5?Colors.white:Colors.blue),),
+                                                                ),),
+                                                              ),
+                                                            ),
+                                                            InkWell( onTap: (){
+                                                              setStateC(() {
+                                                                score = 2.0;
+                                                              });
+
+                                                            },
+                                                              child: Padding(
+                                                                padding: const EdgeInsets.all(8.0),
+                                                                child: Card(color: score==2.0?Colors.blue:Colors.white,child: Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: Text("2.0",style: TextStyle(color:  score==2.0?Colors.white:Colors.blue),),
+                                                                ),),
+                                                              ),
+                                                            ),
+                                                          ],),
+                                                        ],
+                                                      ),
+                                                    ),
+
+
+
+
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                             Expanded(
@@ -532,8 +621,8 @@ class _CreateQuizeState extends State<CreateQuize> {
 
 
 
-                                              Provider.of<AddedProvider>(context, listen: false).add({"explanation":c3.text,"score":1,"correctOption":correctOption,"ans":Options[correctOption],"options":Options,"title":c1.text,"q":c2.text,"type":"SC"});
-                                              Provider.of<AddedProviderOnlyNew>(context, listen: false).add({"explanation":c3.text,"score":1,"correctOption":correctOption,"ans":Options[correctOption],"options":Options,"title":c1.text,"q":c2.text,"type":"SC"});
+                                              Provider.of<AddedProvider>(context, listen: false).add({"explanation":c3.text,"score":score,"correctOption":correctOption,"ans":Options[correctOption],"options":Options,"title":c1.text,"q":c2.text,"type":"SC"});
+                                              Provider.of<AddedProviderOnlyNew>(context, listen: false).add({"explanation":c3.text,"score":score,"correctOption":correctOption,"ans":Options[correctOption],"options":Options,"title":c1.text,"q":c2.text,"type":"SC"});
                                               setState(() {
                                               });
                                               Navigator.pop(context);

@@ -28,8 +28,12 @@ class _TeacherDrawerState extends State<TeacherDrawer> {
         Container(width: 250,height: MediaQuery.of(context).size.height,decoration: BoxDecoration(color: Colors.white),child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 25),
+              padding: const EdgeInsets.only(top: 25),
               child: Text("Project name",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 30),
+              child: Text(FirebaseAuth.instance.currentUser!.email!,style: TextStyle(),),
             ),
             ListView.builder(
               itemCount: drawerDataTeacher.length,shrinkWrap: true,
@@ -58,7 +62,7 @@ class _TeacherDrawerState extends State<TeacherDrawer> {
               if(bar.selection == 1 && bar.selectionsub == 1) return QuizesTable(scaffoldKey: GlobalKey<ScaffoldState>());
               if(bar.selection == 0 && bar.selectionsub == 0) return QuestionsActivitySQL();
               if(bar.selection == 0 && bar.selectionsub == 1) return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 30),
+                padding: const EdgeInsets.symmetric(horizontal: 0,vertical: 0),
                 child: Create_question(),
               );
               return Text(drawerDataTeacher[bar.selection]["sub"][bar.selectionsub]);
@@ -113,12 +117,12 @@ class _SingleMenuState extends State<SingleMenu> {
               children: [
                 Row(
                   children: [
-                    Icon(widget.data["icon"]  ,color:  bar.selection == widget.position?Colors.blue:( Colors.black54)),
+                    Icon(widget.data["icon"]  ,color:  bar.selection == widget.position?Colors.blue:( Colors.black)),
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: Column(
                         children: [
-                          Text(widget.data["name"],style: TextStyle(color:  bar.selection == widget.position?Colors.blue:( Colors.black54)),),
+                          Text(widget.data["name"],style: TextStyle(color:  bar.selection == widget.position?Colors.blue:( Colors.black)),),
                         ],
                       ),
                     ),

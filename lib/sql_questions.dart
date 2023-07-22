@@ -263,7 +263,7 @@ class MyData extends DataTableSource {
                     );
                   }
                 ));
-          },child: Text("View options"),),
+          },child: Text("Edit"),),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 6),
             child: ElevatedButton(onPressed: (){
@@ -485,7 +485,7 @@ class _StudentsState extends State<QuestionsActivitySQLX> {
                                   ElevatedButton(onPressed: () async {
                                     final pdf = pw.Document();
                                     double fontSi = 9;
-                                    var font = await rootBundle.load("assets/Inter-Regular.ttf");
+                                    var font = await rootBundle.load("assets/nb.ttf");
                                     final  ttf = pw.Font.ttf(font);
                                     List<pw.Widget> allwidgets = [];
                                     List<pw.Widget> allAnswers = [];
@@ -495,7 +495,8 @@ class _StudentsState extends State<QuestionsActivitySQLX> {
 
 
                                     for(int i = 0 ; i <bar.data.length ; i++ ){
-
+                                    //  var encoded = utf8.encode(bar.data[i]["q"]);
+                                     // var decoded = utf8.decode(encoded);
                                       List<pw.Widget> localList = [];
                                       localList.add(pw.Padding(padding: pw.EdgeInsets.only(top: 3,bottom: 3),child:  pw.Row(
                                           children: [
@@ -980,6 +981,7 @@ class QuesionOptionsTab extends StatefulWidget {
 class _QuesionOptionsTabState extends State<QuesionOptionsTab> {
   List newOptions = [];
 List allOptions = [];
+bool needUpdate = false;
 
   @override
   Widget build(BuildContext context) {
@@ -995,6 +997,7 @@ List allOptions = [];
 
                   setState(() {
                     newOptions.add("");
+                    needUpdate = true;
                   });
                 }, child: Text("Add option"))
               ],
@@ -1060,7 +1063,7 @@ List allOptions = [];
             // )).toList(),),
           ],
         ),
-        ElevatedButton(onPressed: (){
+      if(needUpdate)  ElevatedButton(onPressed: (){
 
           Map data = {"id":widget.mapData['id'].toString(),"options":newOptions};
           print(data);
