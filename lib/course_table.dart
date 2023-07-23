@@ -272,9 +272,9 @@ class _CreateCourseActivityState extends State<CreateCourseActivity> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(controller:c_description ,decoration: InputDecoration(hintText: "Description"),),
             ),
-            PickPhotoBox(onPhotoPicked: (dynamic data){
-
-            },),
+            // PickPhotoBox(onPhotoPicked: (dynamic data){
+            //
+            // },),
 
             Row(
               children: [
@@ -846,10 +846,10 @@ class _PickPhotoBoxState extends State<PickPhotoBox> {
       onTap: () async {
         final ImagePicker picker = ImagePicker();
         // Pick an image.
-          image = await picker.pickImage(source: source);
-          setState(() {
-             image!.readAsBytes().then((value) => imgData = value);
-          });
+        //   image = await picker.pickImage(source: source);
+        //   setState(() {
+        //      image!.readAsBytes().then((value) => imgData = value);
+        //   });
       },
     ),);
   }
