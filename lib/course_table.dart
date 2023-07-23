@@ -1,4 +1,5 @@
 import 'dart:html';
+import 'dart:typed_data';
 
 import 'package:admin/students_activity.dart';
 import 'package:admin/styles.dart';
@@ -7,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/firestore.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import 'AppProviders/DrawerProvider.dart';
@@ -270,6 +272,9 @@ class _CreateCourseActivityState extends State<CreateCourseActivity> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(controller:c_description ,decoration: InputDecoration(hintText: "Description"),),
             ),
+            PickPhotoBox(onPhotoPicked: (dynamic data){
+
+            },),
 
             Row(
               children: [
@@ -822,5 +827,30 @@ class _CreateCourseActivityState extends State<CreateCourseActivity> {
     })
       ],
     );
+  }
+}
+class PickPhotoBox extends StatefulWidget {
+  Function(dynamic) onPhotoPicked;
+  PickPhotoBox({required this.onPhotoPicked});
+
+  @override
+  State<PickPhotoBox> createState() => _PickPhotoBoxState();
+}
+
+class _PickPhotoBoxState extends State<PickPhotoBox> {
+  XFile? image;
+  Uint8List? imgData ;
+  @override
+  Widget build(BuildContext context) {
+    return Container(width: 300,height: 200,child: InkWell(child: imgData==null?Center(child: Text("Click to choose photo"),):Image.memory(imgData!),
+      onTap: () async {
+        final ImagePicker picker = ImagePicker();
+        // Pick an image.
+          image = await picker.pickImage(source: source);
+          setState(() {
+             image!.readAsBytes().then((value) => imgData = value);
+          });
+      },
+    ),);
   }
 }

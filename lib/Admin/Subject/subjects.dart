@@ -120,7 +120,7 @@ class _AllStudentsState extends State<AllSubjects> {
                   Container(height: 45,width: 300,child: TextFormField(decoration: InputDecoration(
                       hintText: "Search"
                   ),)),
-                  eb,
+                 // eb,
                 ],),
               ),
               rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,

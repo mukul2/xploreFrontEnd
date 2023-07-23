@@ -52,6 +52,7 @@ dependencies:
   data_table_2: ^2.5.3
   expandable: ^5.0.1
   google_fonts: ^5.1.0
+  image_picker: ^1.0.1
 
 
 

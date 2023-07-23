@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'Admin/Drawer/drawer.dart';
 import 'Admin/Students/students.dart';
 import 'Admin/Teachers/teachers.dart';
 import 'AppProviders/DrawerProvider.dart';
@@ -100,7 +101,7 @@ final GoRouter _router = GoRouter(
         GoRoute(
           path: 'admin',
           builder: (BuildContext context, GoRouterState state) {
-            return FirebaseAuth.instance.currentUser==null?AdminApp(): AdminApp();
+            return FirebaseAuth.instance.currentUser==null?AdminDrawer(): AdminDrawer();
             return StreamBuilder<User?>(
                 stream: FirebaseAuth.instance.authStateChanges(), // a previously-obtained Future<String> or null
                 builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
@@ -153,7 +154,7 @@ final GoRouter _router = GoRouter(
                   if(snapshot.hasData){
                     try{
                       if(snapshot.data!["isTeacher"]) {
-                        return SidebarXExampleApp();
+                        return TeacherDrawer();
                         return Center(child: CircularProgressIndicator(),);
 
                       }else

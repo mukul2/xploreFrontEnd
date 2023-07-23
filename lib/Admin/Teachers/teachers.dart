@@ -44,6 +44,7 @@ class _TeachersState extends State<Teachers> {
         future: Data().teachers(), // a previously-obtained Future<String> or null
     builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
           if(snapshot.hasData){
+
             int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
             final DataTableSource _allUsers = MyData(snapshot.data!);
 

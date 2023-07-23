@@ -2,7 +2,8 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 class Data{
-  String base ="https://quizhub.online";
+String base ="https://quizhub.online";
+//  String base = "http://139.59.74.58";
   Future<List>quizesX () async {
 
    try{

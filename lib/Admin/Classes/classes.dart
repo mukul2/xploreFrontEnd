@@ -91,11 +91,12 @@ class _AllStudentsState extends State<AllClasses> {
                         Container(height: 45,width: 300,child: TextFormField(decoration: InputDecoration(
                           hintText: "Search"
                         ),)),
-                        ElevatedButton(onPressed: (){
+                      if(false)  ElevatedButton(onPressed: (){
                           TextEditingController c = TextEditingController();
                           showDialog(
                               context: context,
-                              builder: (_) =>AlertDialog(title: Text("Create Class"),actions: [
+                              builder: (_) =>AlertDialog(
+                                title: Text("Create Class"),actions: [
                                 ElevatedButton(onPressed: (){
 
                                   Data().saveClasses(data: {"name":c.text,"created_by":FirebaseAuth.instance.currentUser==null?null:FirebaseAuth.instance.currentUser!.uid}).then((value) {

@@ -25,7 +25,7 @@ class _CourseDetailsState extends State<CourseDetails> {
         future: Data().coursedetails(id:widget.id.toString()), // a previously-obtained Future<String> or null
     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if(snapshot.hasData){
-            return Text(snapshot.data!.toString());
+
            return Scaffold(body: SingleChildScrollView(
              child: Column(
                mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.center,
@@ -288,7 +288,7 @@ class _ExpandbleWidgetState extends State<ExpandbleWidget> {
            try{
              return Padding(
                padding:  EdgeInsets.symmetric(vertical: 4,horizontal: 34),
-               child: Text( widget.list[index2]["data"].toString()),
+               child: Text( widget.list[index2]["title"]??"--"),
              );
            }catch(e){
              return Text(e.toString());
