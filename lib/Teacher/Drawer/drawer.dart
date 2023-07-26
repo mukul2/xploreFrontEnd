@@ -11,6 +11,7 @@ import '../../create_question_activity.dart';
 import '../../students_activity.dart';
 import '../Questions/question.dart';
 import '../Quize/teacher_quizes.dart';
+import '../Wallet_quizes/Wallet_quiz.dart';
 import 'data.dart';
 
 class TeacherDrawer extends StatefulWidget {
@@ -54,6 +55,7 @@ class _TeacherDrawerState extends State<TeacherDrawer> {
         Container(height: MediaQuery.of(context).size.height,width: 1,color: Colors.grey.shade300,),
         Expanded(child: Consumer<DrawerSelectionSub>(
             builder: (_, bar, __) {
+              if(bar.selection == 4 && bar.selectionsub == 1) return WalletQuiz();
               if(bar.selection == 4 && bar.selectionsub == 0) return Wallet();
               if(bar.selection == 3 && bar.selectionsub == 0) return StudentActivitySql();
               if(bar.selection == 2 && bar.selectionsub == 0) return CreateCourseActivity();
@@ -90,9 +92,13 @@ class _SingleMenuState extends State<SingleMenu> {
       builder: (_, bar, __) =>Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,children: [
 
         InkWell(onTap: (){
-          if(widget.position == drawerDataTeacher.length - 1)FirebaseAuth.instance.signOut().then((value) {
-            GoRouter.of(context).go("/");
-          });
+          if(widget.position == drawerDataTeacher.length - 1){
+            Provider.of<DrawerSelectionSub>(context, listen: false).selection = 0;
+            Provider.of<DrawerSelectionSub>(context, listen: false).selectionsub = 0;
+            FirebaseAuth.instance.signOut().then((value) {
+              GoRouter.of(context).go("/");
+            });
+          }
 
 
           bar.selection = widget.position;

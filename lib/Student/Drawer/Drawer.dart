@@ -10,6 +10,7 @@ import '../../RestApi.dart';
 import '../../course_table.dart';
 import '../../create_question_activity.dart';
 import '../../students_activity.dart';
+import '../SubmittedQuizes/submitted_quize.dart';
 import 'data.dart';
 
 
@@ -315,10 +316,93 @@ class _TeacherDrawerState extends State<StudentDrawer> {
                     }
 
                   });
+              if(bar.selection == 0 && bar.selectionsub == 2)return MySubmittedQuizes();
               if(bar.selection == 0 && bar.selectionsub == 1) return  FutureBuilder<List>(
                   future: Data().quizesX(), // a previously-obtained Future<String> or null
                   builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
                     if(snapshot.hasData && snapshot.data!.length>0){
+
+                      int columnsCount = ( MediaQuery.of(context).size.shortestSide /200).toInt();
+                      return  GridView.builder(shrinkWrap: true,
+                          // Set padding and spacing between cards.
+                          padding: const EdgeInsets.all(10),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            // Set the number of columns based on the device's screen size.
+                            crossAxisCount: columnsCount,
+                            // Set the aspect ratio of each card.
+                            childAspectRatio:MediaQuery.of(context).size.aspectRatio,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                          ),
+                          // Set the number of items in the grid view.
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return InkWell(onTap: (){
+                             // context.push('/lectures/'+snapshot.data![index]["course_id"].toString());
+                            },
+                              child: Container(decoration: boxShadow2,margin: EdgeInsets.all(5),child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(color: Colors.blue.shade50,height: MediaQuery.of(context).size.shortestSide * 0.08,child: Stack(
+                                    children: [
+
+                                    ],
+                                  ),),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8,left: 8,right: 8),
+                                    child: Text(snapshot.data![index]["title"]??"--",style: TextStyle(fontSize: 14,fontWeight: FontWeight.bold),textAlign: TextAlign.start,),
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.only(top: 3,bottom: 0,left: 8,right: 8),
+                                      child: Text(snapshot.data![index]["sectoion_details"]??"--",style: TextStyle(fontSize: 12),)),
+                               Padding(
+                                 padding: const EdgeInsets.symmetric(horizontal: 8),
+                                 child: ElevatedButton(onPressed: (){
+
+                                   showDialog(
+                                       context: context,
+                                       builder: (_) =>AlertDialog(actions: [
+                                         ElevatedButton(onPressed: (){
+                                           Navigator.pop(context);
+
+                                         }, child: Text("Cancel")),
+
+                                         ElevatedButton(onPressed: (){
+                                           Map data = {"quize_id":snapshot.data![index]["id"],"price":snapshot.data![index]["price"],"teacher_id":snapshot.data![index]["created_by"],"student_id":FirebaseAuth.instance.currentUser!.uid};
+                                           Data().buycuize(data:data ).then((value) {
+                                             Navigator.pop(context);
+
+                                           });
+
+
+                                           // Map data = {"quize_id":snapshot.data![index]["id"],"student_id":FirebaseAuth.instance.currentUser!.uid};
+                                           // print(data);
+                                           // Data().buyquize(data:data ).then((value) {
+                                           //   Navigator.pop(context);
+                                           //
+                                           // });
+
+
+
+
+                                         }, child: Text("Confirm")),
+                                       ],content: Text("Pay "+snapshot.data![index]["price"].toString()??"--"+"?"),title: Text("Buy Quize",style: TextStyle(fontSize: 15,color: Colors.black),),));
+
+
+                                 }, child: Text("Buy ৳ "+snapshot.data![index]["price"].toString()??"--" ,style: TextStyle(color: Colors.white),)),
+                               ),
+                               if(false)   snapshot.data![index]["teacher"]==null?Container(width: 0,height: 0,): Padding(
+                                      padding: const EdgeInsets.only(top: 0,bottom: 3,left: 8,right: 8),
+                                      child: Text(snapshot.data![index]["teacher"]["LastName"]+" "+snapshot.data![index]["teacher"]["LastName"],style: TextStyle(fontSize: 12,color: Colors.grey),)),
+
+
+
+
+
+
+                                ],
+                              )),
+                            );
+                          });
 
                       int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
                       final DataTableSource _allUsers = MyQuizesTable2(snapshot.data!,context);
@@ -354,40 +438,75 @@ class _TeacherDrawerState extends State<StudentDrawer> {
                     }
 
                   });
-              if(bar.selection == 0 && bar.selectionsub == 0) return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 30),
-                child: FutureBuilder<List>(
-                    future: Data().mypurchasedquizes(id: FirebaseAuth.instance.currentUser!.uid), // a previously-obtained Future<String> or null
-                    builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
-                      if(snapshot.hasData && snapshot.data!.length>0){
-                        // return Text(snapshot.data!.toString());
-                        int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
-                        final DataTableSource _allUsers = MyDataPurchasedQuizes(snapshot.data!);
-                        return   Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: PaginatedDataTable(
-                            // columnSpacing: 10,
-                            horizontalMargin: 5,
+              if(bar.selection == 0 && bar.selectionsub == 0) return Container(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 0,vertical: 0),
+                  child: FutureBuilder<List>(
+                      future: Data().mypurchasedquizes(id: FirebaseAuth.instance.currentUser!.uid), // a previously-obtained Future<String> or null
+                      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                        if(snapshot.hasData && snapshot.data!.length>0){
+                          // return Text(snapshot.data!.toString());
+                          int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
 
-                            header:null,
-                            rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
+                          int columnsCount = ( MediaQuery.of(context).size.shortestSide /200).toInt();
 
-                            columns: const [
-                              DataColumn(label: Text('Quize title',style: TextStyle(color: Colors.blue),)),
+    return  GridView.builder(shrinkWrap: true,
+    // Set padding and spacing between cards.
+    padding: const EdgeInsets.all(10),
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    // Set the number of columns based on the device's screen size.
+    crossAxisCount: columnsCount,
+    // Set the aspect ratio of each card.
+    childAspectRatio:MediaQuery.of(context).size.aspectRatio,
+    crossAxisSpacing: 10,
+    mainAxisSpacing: 10,
+    ),
+    // Set the number of items in the grid view.
+    itemCount: snapshot.data!.length,
+    itemBuilder: (BuildContext context, int index) {
 
-                              DataColumn(label: Text('Actions',style: TextStyle(color: Colors.blue),)),
+      return Container(decoration: boxShadow2,margin: EdgeInsets.all(5),child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(snapshot.data![index]['quize']??"--",style: TextStyle(color: Colors.blue),),
+            ElevatedButton(onPressed: (){
 
-                              // DataColumn(label: Text('Id')),
-                              // DataColumn(label: Text('Phone'))
-                            ],
-                            source: _allUsers,
-                          ),
-                        );
-                      }else{
-                        return Center(child: Text("No data"),);
-                      }
+              context.push('/take-exam/'+snapshot.data![index]["quiz_id"].toString());
+            }, child: Text("Take Exam now")),
+          ],
+        ),
+      ),);
+    });
 
-                    }),
+
+                          final DataTableSource _allUsers = MyDataPurchasedQuizes(snapshot.data!);
+                          return   Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: PaginatedDataTable(
+                              // columnSpacing: 10,
+                              horizontalMargin: 5,
+
+                              header:null,
+                              rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
+
+                              columns: const [
+                                DataColumn(label: Text('Quize title',style: TextStyle(color: Colors.blue),)),
+
+                                DataColumn(label: Text('Actions',style: TextStyle(color: Colors.blue),)),
+
+                                // DataColumn(label: Text('Id')),
+                                // DataColumn(label: Text('Phone'))
+                              ],
+                              source: _allUsers,
+                            ),
+                          );
+                        }else{
+                          return Center(child: Text("No data"),);
+                        }
+
+                      }),
+                ),
               );
               return Text(drawerDataStudent[bar.selection]["sub"][bar.selectionsub]);
             })),
@@ -414,9 +533,14 @@ class _SingleMenuState extends State<SingleMenu> {
         builder: (_, bar, __) =>Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,children: [
 
           InkWell(onTap: (){
-            if(widget.position == drawerDataStudent.length - 1)FirebaseAuth.instance.signOut().then((value) {
-              GoRouter.of(context).go("/");
-            });
+            if(widget.position == drawerDataStudent.length - 1){
+
+              Provider.of<DrawerSelectionSub>(context, listen: false).selection = 0;
+              Provider.of<DrawerSelectionSub>(context, listen: false).selectionsub = 0;
+              FirebaseAuth.instance.signOut().then((value) {
+                GoRouter.of(context).go("/");
+              });
+            }
 
 
             bar.selection = widget.position;

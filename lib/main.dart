@@ -18,6 +18,7 @@ import 'RestApi.dart';
 import 'Admin/admin_page.dart';
 import 'Student/Courses/Market/market_place.dart';
 import 'Student/Drawer/Drawer.dart';
+import 'Student/ExamHall/take_exam.dart';
 import 'Student/Lecture/lectures.dart';
 import 'Teacher/Drawer/drawer.dart';
 import 'all_questions.dart';
@@ -174,6 +175,12 @@ final GoRouter _router = GoRouter(
                   }
 
                 });
+          },
+        ),
+        GoRoute(
+          path: 'take-exam/:id',
+          builder: (BuildContext context, GoRouterState state) {
+            return TakeExam(id:state.pathParameters['id']!);
           },
         ),
         GoRoute(

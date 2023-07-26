@@ -27,8 +27,8 @@ class QuizesTable extends StatefulWidget {
 }
 // The "soruce" of the table
 class MyData extends DataTableSource {
-  MyData(this._data,this.key,);
-  GlobalKey<ScaffoldState> key;
+  MyData(this._data,this.context,);
+  BuildContext context;
   final List<dynamic> _data;
 
   List selected_quiz = [];
@@ -112,7 +112,7 @@ class MyData extends DataTableSource {
             child: ElevatedButton(onPressed: (){
               Data().deletequize(id: _data[index]['id'].toString()).then((value) {
                 Data().quizesHandelerid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
-                  Provider.of<Quizessprovider>(key.currentState!.context, listen: false).items = value;
+                  Provider.of<Quizessprovider>(context, listen: false).items = value;
                 });
 
 
@@ -120,52 +120,61 @@ class MyData extends DataTableSource {
               });
             }, child: Text("Delete")),
           ),
-          TextButton(onPressed: (){
+          ElevatedButton(onPressed: (){
 
-            key.currentState!.showBottomSheet((context) => Container(height: MediaQuery.of(context).size.height,child: SingleChildScrollView(
-              child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Card(margin: EdgeInsets.zero,shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0.0),
-                  ) ,
-                    child: Padding(
-                      padding:  EdgeInsets.only(bottom: 10,top: 15),
-                      child: Column(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          InkWell( onTap: (){
+            //context
 
-                            Provider.of<QuestionsSelectedProvider>(context, listen: false).totalMarks = 0;
-                            Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestionsBody =[];
-                            Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestions = [];
+            showDialog(
+                context: context,
+                builder: (_) => Dialog(child: SingleChildScrollView(
+                  child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Card(margin: EdgeInsets.zero,shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0.0),
+                      ) ,
+                        child: Padding(
+                          padding:  EdgeInsets.only(bottom: 10,top: 15),
+                          child: Column(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              InkWell( onTap: (){
 
-                            Navigator.pop(context);
-                          },
-                            child: Row(
-                              children: [
-                                Icon(Icons.navigate_before,color: Colors.blue,),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Text("Close",style: TextStyle(color: Colors.blue),),
+                                Provider.of<QuestionsSelectedProvider>(context, listen: false).totalMarks = 0;
+                                Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestionsBody =[];
+                                Provider.of<QuestionsSelectedProvider>(context, listen: false).selectedQuestions = [];
+
+                                Navigator.pop(context);
+                              },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.navigate_before,color: Colors.blue,),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 10),
+                                        child: Text("Close",style: TextStyle(color: Colors.blue),),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 30),
+                                child: Text(_data[index]['title'],style: TextStyle(fontSize: 25),),
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 30),
-                            child: Text("Edit",style: TextStyle(fontSize: 25),),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
+
+                      // Container(height: 25,),
+                      QuestionsofQuize(quizeId:_data[index]["id"].toString() ,),
+                      //  Edit_quiz_activitySQL(ref:_data[index]),
+
+                    ],
                   ),
+                ),));
 
-                  // Container(height: 25,),
-                  QuestionsofQuize(quizeId:_data[index]["id"].toString() ,),
-                  //  Edit_quiz_activitySQL(ref:_data[index]),
 
-                ],
-              ),
-            ),));
 
           },child: Text("Edit"),),
         ],
@@ -195,7 +204,7 @@ class _StudentsState extends State<QuizesTable> {
           // if (bar.items.isEmpty) return Center(child: Text("No data"),);
           //  return Text(bar.items.toString());
           int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
-          final DataTableSource _allUsers = MyData(bar.items,widget.scaffoldKey);
+          final DataTableSource _allUsers = MyData(bar.items,context);
           //  return Text(_allUsers.rowCount.toString());
 
           return Padding(
@@ -215,8 +224,8 @@ class _StudentsState extends State<QuizesTable> {
                   }, child: Text("Create Course")),
                 ],),
               ),
-              //   rowsPerPage:n>0?( _allUsers.rowCount>n?n:_allUsers.rowCount):1,
-              rowsPerPage: 1,
+              rowsPerPage:n>0?( _allUsers.rowCount>n?n:_allUsers.rowCount):0,
+            //  rowsPerPage: 1,
               columns: const [
                 DataColumn(label: Text('Course')),
                 DataColumn(label: Text('Class')),
@@ -239,41 +248,7 @@ class _StudentsState extends State<QuizesTable> {
 
 
 
-    return Text("Quiz here");
 
-    return  StreamBuilder(
-
-        stream:FirebaseFirestore.instance.collection('quizz2').orderBy("created_at",descending: true).limit(100).snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snap) {
-
-          //  final DataTableSource _allUsers = MyData(snap.data!.docs,widget.scaffoldKey);
-          if(snap.hasData){
-            int n =( ( MediaQuery.of(context).size.height - 140 ) / 55 ).toInt() ;
-            final DataTableSource _allUsers = MyData(snap.data!.docs,widget.scaffoldKey);
-            return SingleChildScrollView(
-              child: PaginatedDataTable(
-
-                header: null,
-                rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
-                columns: const [
-                  DataColumn(label: Text('Quiz title')),
-                  DataColumn(label: Text('Number of questions')),
-                  DataColumn(label: Text('Course')),
-                  DataColumn(label: Text('Exam start')),
-                  DataColumn(label: Text('Exam end')),
-                  DataColumn(label: Text('Exam duration')),
-                  DataColumn(label: Text('Actions')),
-                  // DataColumn(label: Text('Id')),
-                  // DataColumn(label: Text('Phone'))
-                ],
-                source: _allUsers,
-              ),
-            );
-          }
-          else{
-            return new Text('No data...');
-          }
-        });
 
 
 

@@ -27,11 +27,23 @@ class QuestionsofQuize extends StatelessWidget {
               rowsPerPage: _allUsers.rowCount>n?n:_allUsers.rowCount,
 
               columns: const [
-                DataColumn(label: Text('Title',style: TextStyle(color: Colors.blue),)),
-                DataColumn(label: Text('Question',style: TextStyle(color: Colors.blue),)),
-                DataColumn(label: Text('Mark',style: TextStyle(color: Colors.blue),)),
+                DataColumn(label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Text('Title',style: TextStyle(color: Colors.blue),),
+                )),
+                DataColumn(label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Text('Question',style: TextStyle(color: Colors.blue),),
+                )),
+                DataColumn(label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Text('Mark',style: TextStyle(color: Colors.blue),),
+                )),
 
-                DataColumn(label: Text('Actions',style: TextStyle(color: Colors.blue),)),
+                DataColumn(label: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: Text('Actions',style: TextStyle(color: Colors.blue),),
+                )),
 
                 // DataColumn(label: Text('Id')),
                 // DataColumn(label: Text('Phone'))
@@ -64,12 +76,21 @@ class MyQuizesTable extends DataTableSource {
 
     return DataRow(cells: [
       DataCell(ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 300,minWidth: 100),child: Text(_data[index]['title']??"--"))),
+          constraints: BoxConstraints(maxWidth: 300,minWidth: 100),child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Text(_data[index]['title']??"--"),
+          ))),
       DataCell(ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 300,minWidth: 100),child: Text(_data[index]['q']??"--"))),
+          constraints: BoxConstraints(maxWidth: 300,minWidth: 100),child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Text(_data[index]['q']??"--"),
+          ))),
 
       DataCell(ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 300,minWidth: 100),child: Text(_data[index]['score'].toString()??"--"))),
+          constraints: BoxConstraints(maxWidth: 300,minWidth: 100),child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 8),
+            child: Text(_data[index]['score'].toString()??"--"),
+          ))),
 
       DataCell(ElevatedButton(onPressed: (){
         showDialog(

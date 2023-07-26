@@ -191,7 +191,7 @@ String base ="https://quizhub.online";
     }catch(e){
       print("Save quiz response catches");
       print(e);
-      return{};
+      return e;
 
     }
   }
@@ -242,6 +242,26 @@ String base ="https://quizhub.online";
 
     try{
       http.Response r =  await http.get(Uri.parse(base+"/deletequize/"+id),);
+      return jsonDecode(r.body);
+    }catch(e){
+      return {};
+
+    }
+  }  Future<dynamic>quize ({required String id}) async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/quize/"+id),);
+      return jsonDecode(r.body);
+    }catch(e){
+      return {};
+
+    }
+  }
+  Future<dynamic>myquizeearnings ({required String id}) async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/myquizeearnings/"+id),);
+      print(base+"/myquizeearnings/"+id);
       return jsonDecode(r.body);
     }catch(e){
       return {};
@@ -376,6 +396,20 @@ String base ="https://quizhub.online";
 
     }
   }
+
+  Future<List>mysubmittedQuizes ({required String id}) async {
+    print("get questions");
+
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/mysubmittedQuizes"),headers: {'Content-Type': 'application/json',},body: jsonEncode({"student_id":id}));
+      print(r.body);
+      return jsonDecode(r.body);
+    }catch(e){
+      print(e);
+      return [];
+
+    }
+  }
   Future<List>questionsbyid ({required String id}) async {
     print("get questions");
 
@@ -414,7 +448,18 @@ String base ="https://quizhub.online";
 
     }
   }
-  Future saveTeacher ({required dynamic data}) async {
+  Future quizsubmit ({required dynamic data}) async {
+
+    try{
+      http.Response r =  await http.post(Uri.parse(base+"/quiz-submit",),headers: {'Content-Type': 'application/json',},body: jsonEncode( data));
+      print(r.body);
+      return r.body;
+    }catch(e){
+      print(e);
+      return e;
+
+    }
+  }  Future saveTeacher ({required dynamic data}) async {
 
     try{
       http.Response r =  await http.post(Uri.parse(base+"/saveteacher",),headers: {'Content-Type': 'application/json',},body: jsonEncode( data));

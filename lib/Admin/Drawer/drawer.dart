@@ -118,9 +118,16 @@ class _SingleMenuState extends State<SingleMenu> {
         builder: (_, bar, __) =>Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,children: [
 
           InkWell(onTap: (){
-            if(widget.position == drawerDataAdmin.length - 1)FirebaseAuth.instance.signOut().then((value) {
-              GoRouter.of(context).go("/");
-            });
+            if(widget.position == drawerDataAdmin.length - 1){
+
+              Provider.of<DrawerSelectionSub>(context, listen: false).selection = 0;
+              Provider.of<DrawerSelectionSub>(context, listen: false).selectionsub = 0;
+              FirebaseAuth.instance.signOut().then((value) {
+                GoRouter.of(context).go("/");
+              });
+            }
+
+
 
 
             bar.selection = widget.position;

@@ -300,7 +300,7 @@ class MyData extends DataTableSource {
 
                       Data().questionsbyid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
                         Provider.of<Questionsprovider>(context, listen: false).items = value;
-                        Navigator.pop(context);
+                        //Navigator.pop(context);
                       });
 
                     });

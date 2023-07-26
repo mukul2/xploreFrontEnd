@@ -37,6 +37,7 @@ class _CreateQuizeState extends State<CreateQuize> {
   int? selectedClass = null;
   int? selectedsubject = null;
   int? selectedChapter = null;
+  List selectedOldQuestions = [];
   @override
   Widget build(BuildContext context) {
 
@@ -102,16 +103,16 @@ class _CreateQuizeState extends State<CreateQuize> {
                   "exam_start":exm_start/1000,
                   "exam_time_minute":min,
 
-                  "num_retakes":controller2.text,
+                  "num_retakes":int.parse(controller2.text),
                   "pass_mark":controller6.text,
 
                   "questions":q,
-                  "retakes":"",
+                  "retakes":int.parse(controller2.text),
                   "section_details":controller10.text,
                   "status":controller9.text,
                   "title":controller1.text,
                   "total_point":controller5.text,
-                  "price":controller11.text,
+                  "price":controller11.text,"question_id":selectedOldQuestions,
 
 
 
@@ -119,12 +120,15 @@ class _CreateQuizeState extends State<CreateQuize> {
 
 
 
-                Data().saveQuiz(data: dataToSave).then((value) {
+                Data().saveQuiz(data: dataToSave).then((value) async {
+               await   showDialog(
+                      context: context,
+                      builder: (_) =>AlertDialog(title: Text("Quize save response"),content: Text(value.toString()),));
                   Provider.of<AddedProviderOnlyNew>(context, listen: false).questions = [];
                   Provider.of<AddedProvider>(context, listen: false).questions = [];
                   Data().quizesHandelerid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
                     Provider.of<Quizessprovider>(context, listen: false).items = value;
-                    Navigator.pop(context);
+                    //Navigator.pop(context);
                   });
 
 
@@ -420,229 +424,385 @@ class _CreateQuizeState extends State<CreateQuize> {
 
                   children: [
                   Text("Questions"),
-                  ElevatedButton(onPressed: (){
-                    List Options = [];
-                    int correctOption = 0;
-                    List<TextEditingController> allController = [];
-
-                    TextEditingController c1 = TextEditingController();
-                    TextEditingController c2 = TextEditingController();
-                    TextEditingController c3 = TextEditingController();
-
-
-                    double score = 1.0;
-
-
-
-
-
-                    showDialog(
-                        context: context,
-                        builder: (_) =>StatefulBuilder(
-                            builder: (BuildContext context, StateSetter setStateC) {
-                              return Dialog(backgroundColor: Colors.grey.shade50,child: Container(width: 1200,height: 900,
-                                child: SingleChildScrollView(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        InkWell(onTap: (){
+                    Row(
+                      children: [
+                        ElevatedButton(onPressed: (){
+                          //select q
+                          showDialog(
+                              context: context,
+                              builder: (_) =>StatefulBuilder(
+                                  builder: (context,setS) {
+                                    return AlertDialog(actions: [
+                                      Center(
+                                        child: ElevatedButton(onPressed: (){
                                           Navigator.pop(context);
-                                        },child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
-                                            children: [
-                                              Icon(Icons.navigate_before_rounded,color: Colors.blue,),
-                                              Text("Back",style: TextStyle(color: Colors.blue),),
-                                            ],
-                                          ),
-                                        ),),
-                                        Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Container(margin: EdgeInsets.symmetric(horizontal: 4,),width: 600,decoration: boxShadow,
-                                              child: Padding(
-                                                padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 10),
-                                                child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Padding(
-                                                      padding:  EdgeInsets.symmetric(vertical: 10,horizontal: 15),
-                                                      child: TextField(controller: c1,decoration: InputDecoration(label:Text("Question title"),contentPadding: EdgeInsets.symmetric(horizontal: 8),),),
-                                                    ),
+                                        }, child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
+                                          child: Container(width: 700,child: Center(child: Text("Close"))),
+                                        )),
+                                      ),
+                                    ],content:Container(height: 300,width: 800,
+                                      child: true?Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: FutureBuilder<List>(
+                                            future: Data().questionsbyid(id: FirebaseAuth.instance.currentUser!.uid), // a previously-obtained Future<String> or null
+                                            builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                                              if(snapshot.hasData){
 
-                                                    Padding(
-                                                      padding:  EdgeInsets.symmetric(vertical: 10,horizontal: 15),
-                                                      child: TextField(controller: c2,maxLines: 5,minLines: 2,decoration: InputDecoration(label: Text("Question body"),contentPadding: EdgeInsets.symmetric(vertical: 15,horizontal: 8)),),
-                                                    ),
+                                                return  ListView.builder(shrinkWrap: true,
+                                                  itemCount: snapshot.data!.length,
 
+                                                  itemBuilder: (context, index2) {
 
-                                                    Padding(
-                                                      padding:  EdgeInsets.symmetric(vertical: 10,horizontal: 15),
-                                                      child: TextField(controller: c3,decoration: InputDecoration(label: Text("Explanation"),contentPadding: EdgeInsets.symmetric(horizontal: 8),),),
-                                                    ),
-
-                                                    Container(margin: EdgeInsets.symmetric(horizontal: 15),decoration: boxShadow,
-                                                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Padding(
-                                                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                                                            child: Text("Score"),
-                                                          ),
-
-                                                          Row(children: [
-                                                            InkWell( onTap: (){
-                                                              setStateC(() {
-                                                                score = 0.5;
-                                                              });
-
-                                                            },
-                                                              child: Padding(
-                                                                padding: const EdgeInsets.all(8.0),
-                                                                child: Card(color: score==0.5?Colors.blue:Colors.white,child: Padding(
-                                                                  padding: const EdgeInsets.all(8.0),
-                                                                  child: Text("0.5",style: TextStyle(color:  score==0.5?Colors.white:Colors.blue),),
-                                                                ),),
-                                                              ),
-                                                            ),
-                                                            InkWell( onTap: (){
-                                                              setStateC(() {
-                                                                score = 1.0;
-                                                              });
-
-                                                            },
-                                                              child: Padding(
-                                                                padding: const EdgeInsets.all(8.0),
-                                                                child: Card(color: score==1?Colors.blue:Colors.white,child: Padding(
-                                                                  padding: const EdgeInsets.all(8.0),
-                                                                  child: Text("1.0",style: TextStyle(color:  score==1.0?Colors.white:Colors.blue),),
-                                                                ),),
-                                                              ),
-                                                            ),
-                                                            InkWell( onTap: (){
-                                                              setStateC(() {
-                                                                score = 1.5;
-                                                              });
-
-                                                            },
-                                                              child: Padding(
-                                                                padding: const EdgeInsets.all(8.0),
-                                                                child: Card(color: score==1.5?Colors.blue:Colors.white,child: Padding(
-                                                                  padding: const EdgeInsets.all(8.0),
-                                                                  child: Text("1.5",style: TextStyle(color:  score==1.5?Colors.white:Colors.blue),),
-                                                                ),),
-                                                              ),
-                                                            ),
-                                                            InkWell( onTap: (){
-                                                              setStateC(() {
-                                                                score = 2.0;
-                                                              });
-
-                                                            },
-                                                              child: Padding(
-                                                                padding: const EdgeInsets.all(8.0),
-                                                                child: Card(color: score==2.0?Colors.blue:Colors.white,child: Padding(
-                                                                  padding: const EdgeInsets.all(8.0),
-                                                                  child: Text("2.0",style: TextStyle(color:  score==2.0?Colors.white:Colors.blue),),
-                                                                ),),
-                                                              ),
-                                                            ),
-                                                          ],),
-                                                        ],
-                                                      ),
-                                                    ),
-
-
-
-
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Container(decoration: boxShadow,child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Padding(
+                                                    return Opacity( opacity:selectedOldQuestions==null?1: selectedOldQuestions.length>0?( selectedOldQuestions.contains(snapshot.data![index2]["id"])?0.5:1):1,
+                                                      child: Padding(
                                                         padding: const EdgeInsets.all(8.0),
-                                                        child: Text("Options:", ),
+                                                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Expanded(child: Text(snapshot.data![index2]["q"])),
+                                                            ElevatedButton(onPressed: (){
+
+                                                              if(selectedOldQuestions.contains(snapshot.data![index2]["id"])){
+                                                                try{
+                                                                  selectedOldQuestions.remove(snapshot.data![index2]["id"]);
+                                                                }catch(e){
+                                                                  print(e);
+                                                                }
+                                                                setState(() {
+
+                                                                });
+                                                                setS(() {
+
+                                                                });
+                                                              }else{
+                                                                print("add");
+                                                                try{
+                                                                  selectedOldQuestions.add(snapshot.data![index2]["id"]);
+                                                                }catch(e){
+                                                                  print(e);
+                                                                }
+                                                                setState(() {
+
+                                                                });
+                                                                setS(() {
+
+                                                                });
+                                                              }
+
+                                                              Navigator.of(context);
+                                                            }, child: Text(selectedOldQuestions.contains(snapshot.data![index2]["id"])?"Remove": "Select"))
+                                                          ],
+                                                        ),
                                                       ),
-                                                      ElevatedButton(onPressed: (){
+                                                    );
+                                                  },
+                                                );
+                                              }else{
+                                                return Center(child: CircularProgressIndicator(),);
+                                              }
+                                            }),
+                                      ): Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          FutureBuilder<List>(
+                                              future: Data().questionsbyid(id: FirebaseAuth.instance.currentUser!.uid), // a previously-obtained Future<String> or null
+                                              builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+                                                if(snapshot.hasData){
 
-                                                        setStateC(() {
-                                                          Options.add("");
-                                                        });
+                                                  return  ListView.builder(shrinkWrap: true,
+                                                    itemCount: snapshot.data!.length,
 
+                                                    itemBuilder: (context, index2) {
 
-
-                                                      }, child: Text("Add Options")),
-                                                    ],
-                                                  ),
-                                                  ListView.builder(shrinkWrap: true,
-                                                    itemCount: Options.length,
-
-                                                    itemBuilder: (context, index) {
-                                                      TextEditingController c = TextEditingController(text: Options[index]);
-                                                      allController.add(c);
-                                                      return ListTile(trailing: IconButton(onPressed: (){
-                                                        allController.removeAt(index);
-                                                        Options.removeAt(index);
-
-                                                        setStateC(() {
-                                                        });
-
-                                                      },icon: Icon(Icons.delete),),leading: Checkbox(value: index==correctOption,onChanged: (bool? b){
-                                                        if(b == true){
-
-                                                          correctOption = index;
-                                                          setStateC(() {
-                                                          });
-                                                        }
-
-                                                      },),
-                                                        title: Padding(
+                                                      return Opacity( opacity:selectedOldQuestions==null?1: selectedOldQuestions.length>0?( selectedOldQuestions.contains(snapshot.data![index2]["id"])?0.5:1):1,
+                                                        child: Padding(
                                                           padding: const EdgeInsets.all(8.0),
-                                                          child: TextFormField(onChanged: (String s){
-                                                            Options[index] = s ;
-                                                          },controller: c,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 10),label: Text("Option "+(index+1).toString())),),
+                                                          child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Expanded(child: Text(snapshot.data![index2]["q"])),
+                                                              ElevatedButton(onPressed: (){
+
+                                                                if(selectedOldQuestions.contains(snapshot.data![index2]["id"])){
+                                                                  try{
+                                                                    selectedOldQuestions.remove(snapshot.data![index2]["id"]);
+                                                                  }catch(e){
+                                                                    print(e);
+                                                                  }
+                                                                  setState(() {
+
+                                                                  });
+                                                                  setS(() {
+
+                                                                  });
+                                                                }else{
+                                                                  print("add");
+                                                                  try{
+                                                                    selectedOldQuestions.add(snapshot.data![index2]["id"]);
+                                                                  }catch(e){
+                                                                    print(e);
+                                                                  }
+                                                                  setState(() {
+
+                                                                  });
+                                                                  setS(() {
+
+                                                                  });
+                                                                }
+
+                                                                Navigator.of(context);
+                                                              }, child: Text(selectedOldQuestions.contains(snapshot.data![index2]["id"])?"Remove": "Select"))
+                                                            ],
+                                                          ),
                                                         ),
                                                       );
                                                     },
-                                                  ),
-
-                                                ],
-                                              ),),
-                                            ),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(20.0),
-                                          child: Center(
-                                            child: ElevatedButton( onPressed: (){
-
-
-
-                                              Provider.of<AddedProvider>(context, listen: false).add({"explanation":c3.text,"score":score,"correctOption":correctOption,"ans":Options[correctOption],"options":Options,"title":c1.text,"q":c2.text,"type":"SC"});
-                                              Provider.of<AddedProviderOnlyNew>(context, listen: false).add({"explanation":c3.text,"score":score,"correctOption":correctOption,"ans":Options[correctOption],"options":Options,"title":c1.text,"q":c2.text,"type":"SC"});
-                                              setState(() {
-                                              });
+                                                  );
+                                                }else{
+                                                  return Center(child: CircularProgressIndicator(),);
+                                                }
+                                              }),
+                                          Center(
+                                            child: ElevatedButton(onPressed: (){
                                               Navigator.pop(context);
+                                            }, child: Padding(
+                                              padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
+                                              child: Text("Close"),
+                                            )),
+                                          )
+                                        ],
+                                      ),
+                                    ),);
+                                  }
+                              ));
+                        }, child: Text("Select question")),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: ElevatedButton(onPressed: (){
+                            List Options = [];
+                            int correctOption = 0;
+                            List<TextEditingController> allController = [];
 
-                                            },
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(10.0),
-                                                child: Container(width: 400,child: Center(child: Text("Save",style: TextStyle(color: Colors.white),))),
-                                              ),
+                            TextEditingController c1 = TextEditingController();
+                            TextEditingController c2 = TextEditingController();
+                            TextEditingController c3 = TextEditingController();
+
+
+                            double score = 1.0;
+
+
+
+
+
+                            showDialog(
+                                context: context,
+                                builder: (_) =>StatefulBuilder(
+                                    builder: (BuildContext context, StateSetter setStateC) {
+                                      return Dialog(backgroundColor: Colors.grey.shade50,child: Container(width: 1200,height: 900,
+                                        child: SingleChildScrollView(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(20.0),
+                                            child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                InkWell(onTap: (){
+                                                  Navigator.pop(context);
+                                                },child: Padding(
+                                                  padding: const EdgeInsets.all(8.0),
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(Icons.navigate_before_rounded,color: Colors.blue,),
+                                                      Text("Back",style: TextStyle(color: Colors.blue),),
+                                                    ],
+                                                  ),
+                                                ),),
+                                                Row(mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(margin: EdgeInsets.symmetric(horizontal: 4,),width: 600,decoration: boxShadow,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.symmetric(vertical: 20,horizontal: 10),
+                                                        child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Padding(
+                                                              padding:  EdgeInsets.symmetric(vertical: 10,horizontal: 15),
+                                                              child: TextField(controller: c1,decoration: InputDecoration(label:Text("Question title"),contentPadding: EdgeInsets.symmetric(horizontal: 8),),),
+                                                            ),
+
+                                                            Padding(
+                                                              padding:  EdgeInsets.symmetric(vertical: 10,horizontal: 15),
+                                                              child: TextField(controller: c2,maxLines: 5,minLines: 2,decoration: InputDecoration(label: Text("Question body"),contentPadding: EdgeInsets.symmetric(vertical: 15,horizontal: 8)),),
+                                                            ),
+
+
+                                                            Padding(
+                                                              padding:  EdgeInsets.symmetric(vertical: 10,horizontal: 15),
+                                                              child: TextField(controller: c3,decoration: InputDecoration(label: Text("Explanation"),contentPadding: EdgeInsets.symmetric(horizontal: 8),),),
+                                                            ),
+
+                                                            Container(margin: EdgeInsets.symmetric(horizontal: 15),decoration: boxShadow,
+                                                              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                children: [
+                                                                  Padding(
+                                                                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                                                                    child: Text("Score"),
+                                                                  ),
+
+                                                                  Row(children: [
+                                                                    InkWell( onTap: (){
+                                                                      setStateC(() {
+                                                                        score = 0.5;
+                                                                      });
+
+                                                                    },
+                                                                      child: Padding(
+                                                                        padding: const EdgeInsets.all(8.0),
+                                                                        child: Card(color: score==0.5?Colors.blue:Colors.white,child: Padding(
+                                                                          padding: const EdgeInsets.all(8.0),
+                                                                          child: Text("0.5",style: TextStyle(color:  score==0.5?Colors.white:Colors.blue),),
+                                                                        ),),
+                                                                      ),
+                                                                    ),
+                                                                    InkWell( onTap: (){
+                                                                      setStateC(() {
+                                                                        score = 1.0;
+                                                                      });
+
+                                                                    },
+                                                                      child: Padding(
+                                                                        padding: const EdgeInsets.all(8.0),
+                                                                        child: Card(color: score==1?Colors.blue:Colors.white,child: Padding(
+                                                                          padding: const EdgeInsets.all(8.0),
+                                                                          child: Text("1.0",style: TextStyle(color:  score==1.0?Colors.white:Colors.blue),),
+                                                                        ),),
+                                                                      ),
+                                                                    ),
+                                                                    InkWell( onTap: (){
+                                                                      setStateC(() {
+                                                                        score = 1.5;
+                                                                      });
+
+                                                                    },
+                                                                      child: Padding(
+                                                                        padding: const EdgeInsets.all(8.0),
+                                                                        child: Card(color: score==1.5?Colors.blue:Colors.white,child: Padding(
+                                                                          padding: const EdgeInsets.all(8.0),
+                                                                          child: Text("1.5",style: TextStyle(color:  score==1.5?Colors.white:Colors.blue),),
+                                                                        ),),
+                                                                      ),
+                                                                    ),
+                                                                    InkWell( onTap: (){
+                                                                      setStateC(() {
+                                                                        score = 2.0;
+                                                                      });
+
+                                                                    },
+                                                                      child: Padding(
+                                                                        padding: const EdgeInsets.all(8.0),
+                                                                        child: Card(color: score==2.0?Colors.blue:Colors.white,child: Padding(
+                                                                          padding: const EdgeInsets.all(8.0),
+                                                                          child: Text("2.0",style: TextStyle(color:  score==2.0?Colors.white:Colors.blue),),
+                                                                        ),),
+                                                                      ),
+                                                                    ),
+                                                                  ],),
+                                                                ],
+                                                              ),
+                                                            ),
+
+
+
+
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Container(decoration: boxShadow,child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets.all(8.0),
+                                                                child: Text("Options:", ),
+                                                              ),
+                                                              ElevatedButton(onPressed: (){
+
+                                                                setStateC(() {
+                                                                  Options.add("");
+                                                                });
+
+
+
+                                                              }, child: Text("Add Options")),
+                                                            ],
+                                                          ),
+                                                          ListView.builder(shrinkWrap: true,
+                                                            itemCount: Options.length,
+
+                                                            itemBuilder: (context, index) {
+                                                              TextEditingController c = TextEditingController(text: Options[index]);
+                                                              allController.add(c);
+                                                              return ListTile(trailing: IconButton(onPressed: (){
+                                                                allController.removeAt(index);
+                                                                Options.removeAt(index);
+
+                                                                setStateC(() {
+                                                                });
+
+                                                              },icon: Icon(Icons.delete),),leading: Checkbox(value: index==correctOption,onChanged: (bool? b){
+                                                                if(b == true){
+
+                                                                  correctOption = index;
+                                                                  setStateC(() {
+                                                                  });
+                                                                }
+
+                                                              },),
+                                                                title: Padding(
+                                                                  padding: const EdgeInsets.all(8.0),
+                                                                  child: TextFormField(onChanged: (String s){
+                                                                    Options[index] = s ;
+                                                                  },controller: c,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 0,horizontal: 10),label: Text("Option "+(index+1).toString())),),
+                                                                ),
+                                                              );
+                                                            },
+                                                          ),
+
+                                                        ],
+                                                      ),),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(20.0),
+                                                  child: Center(
+                                                    child: ElevatedButton( onPressed: (){
+
+
+
+                                                      Provider.of<AddedProvider>(context, listen: false).add({"explanation":c3.text,"score":score,"correctOption":correctOption,"ans":Options[correctOption],"options":Options,"title":c1.text,"q":c2.text,"type":"SC"});
+                                                      Provider.of<AddedProviderOnlyNew>(context, listen: false).add({"explanation":c3.text,"score":score,"correctOption":correctOption,"ans":Options[correctOption],"options":Options,"title":c1.text,"q":c2.text,"type":"SC"});
+                                                      setState(() {
+                                                      });
+                                                      Navigator.pop(context);
+
+                                                    },
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(10.0),
+                                                        child: Container(width: 400,child: Center(child: Text("Save",style: TextStyle(color: Colors.white),))),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),);
-                            }
-                        ));
-                  }, child: Text("Add question")),
+                                      ),);
+                                    }
+                                ));
+                          }, child: Text("Add question")),
+                        ),
+                      ],
+                    ),
+
                   ],
                 ),
               ),),
