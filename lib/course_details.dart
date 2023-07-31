@@ -90,90 +90,98 @@ class _CourseDetailsState extends State<CourseDetails> {
                      ],
                    ),),
                  ),),
-                Container(width: width,
-                  child: Row(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.center,
+                 Container(width: width,
+                  child: Row(crossAxisAlignment: CrossAxisAlignment.start,mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,children: [
-                          // Container(width: width,margin: EdgeInsets.all(10),decoration: boxShadow3,child: Padding(
-                          //   padding: const EdgeInsets.all(20.0),
-                          //   child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                          //     children: [
-                          //       Text("What you will learn",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
-                          //
-                          //
-                          //     ],
-                          //   ),
-                          // ),),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 25,bottom: 10),
-                            child: SelectableText("Course content",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
-                          ),
-                          //SelectableText(snapshot.data!.toString()),
-                          Container(margin: EdgeInsets.only(top: 15),decoration: boxShadow3,
+                        child: Padding(
+                          padding: EdgeInsets.only(top:40,left: 10),
+                          child: Card(
                             child: Padding(
-                              padding: const EdgeInsets.only(left: 0),
-                              child: ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
-                                  itemCount: snapshot.data!["lecture"].length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return  ExpandbleWidget(name:snapshot.data!["lecture"][index]["name"],list: snapshot.data!["lecture"][index]["contents"],nofq:snapshot.data!["lecture"][index]["quizes"].length);
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,children: [
+                                // Container(width: width,margin: EdgeInsets.all(10),decoration: boxShadow3,child: Padding(
+                                //   padding: const EdgeInsets.all(20.0),
+                                //   child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                //     children: [
+                                //       Text("What you will learn",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+                                //
+                                //
+                                //     ],
+                                //   ),
+                                // ),),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 25,bottom: 10,left: 25),
+                                  child: SelectableText("Course content",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+                                ),
+                                //SelectableText(snapshot.data!.toString()),
+                                Container(margin: EdgeInsets.only(top: 15),decoration: boxShadow3,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 0),
+                                    child: ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
+                                        itemCount: snapshot.data!["lecture"].length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          return  ExpandbleWidget(purchased: false,name:snapshot.data!["lecture"][index]["name"],list: snapshot.data!["lecture"][index]["contents"],nofq:snapshot.data!["lecture"][index]["quizes"].length);
 
-                                try{
-                                  return Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                    //  ExpandbleWidget(name:snapshot.data!["lecture"][index]["name"],list: snapshot.data!["lecture"][index]["contents"],),
-                                 //     SelectableText( snapshot.data!["lecture"][index]["name"]),
-                                      if(false)   ExpandablePanel(
-                                      header: Text("Contents"),
-                                      collapsed: Text("Contents 1", softWrap: true, maxLines: 1, overflow: TextOverflow.ellipsis,),
-                                      expanded: ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
-                                          itemCount: snapshot.data!["lecture"][index]["contents"].length,
-                                          itemBuilder: (BuildContext context, int index2) {
+                                      try{
+                                        return Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                          //  ExpandbleWidget(name:snapshot.data!["lecture"][index]["name"],list: snapshot.data!["lecture"][index]["contents"],),
+                                       //     SelectableText( snapshot.data!["lecture"][index]["name"]),
+                                            if(false)   ExpandablePanel(
+                                            header: Text("Contents"),
+                                            collapsed: Text("Contents 1", softWrap: true, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                                            expanded: ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
+                                                itemCount: snapshot.data!["lecture"][index]["contents"].length,
+                                                itemBuilder: (BuildContext context, int index2) {
 
-                                            try{
-                                              return SelectableText( snapshot.data!["lecture"][index]["contents"][index2]["data"].toString());
-                                            }catch(e){
-                                              return Text(e.toString());
-                                            }
-                                          }),
+                                                  try{
+                                                    return SelectableText( snapshot.data!["lecture"][index]["contents"][index2]["data"].toString());
+                                                  }catch(e){
+                                                    return Text(e.toString());
+                                                  }
+                                                }),
 
-                                      ),
-                                      if(false)   ExpandablePanel(
-                                        header: Text("quizes"),
-                                        collapsed: Text("quizes 1", softWrap: true, maxLines: 1, overflow: TextOverflow.ellipsis,),
-                                        expanded: ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
-                                            itemCount: snapshot.data!["lecture"][index]["quizes"].length,
-                                            itemBuilder: (BuildContext context, int index2) {
-                                              try{
-                                                return SelectableText( snapshot.data!["lecture"][index]["quizes"][index2].toString());
-                                              }catch(e){
-                                                return Text(e.toString());
+                                            ),
+                                            if(false)   ExpandablePanel(
+                                              header: Text("quizes"),
+                                              collapsed: Text("quizes 1", softWrap: true, maxLines: 1, overflow: TextOverflow.ellipsis,),
+                                              expanded: ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
+                                                  itemCount: snapshot.data!["lecture"][index]["quizes"].length,
+                                                  itemBuilder: (BuildContext context, int index2) {
+                                                    try{
+                                                      return SelectableText( snapshot.data!["lecture"][index]["quizes"][index2].toString());
+                                                    }catch(e){
+                                                      return Text(e.toString());
 
-                                              }
+                                                    }
 
-                                            }),
+                                                  }),
 
-                                      ),
+                                            ),
 
-                                      // Row(
-                                      //   children: [
-                                      //     Text("Content: "+ snapshot.data!["lecture"][index]["content_count"].toString()+" Quize: "+ snapshot.data!["lecture"][index]["quize_count"].toString(),style: TextStyle(color: Colors.grey),),
-                                      //   ],
-                                      // ),
-                                    ],
-                                  );
-                                }catch(e){
-                                  return Container(height: 0,width: 0,);
+                                            // Row(
+                                            //   children: [
+                                            //     Text("Content: "+ snapshot.data!["lecture"][index]["content_count"].toString()+" Quize: "+ snapshot.data!["lecture"][index]["quize_count"].toString(),style: TextStyle(color: Colors.grey),),
+                                            //   ],
+                                            // ),
+                                          ],
+                                        );
+                                      }catch(e){
+                                        return Container(height: 0,width: 0,);
 
-                                }
+                                      }
 
-                                  }),
+                                        }),
+                                  ),
+                                ),
+
+                              ],),
                             ),
                           ),
-
-                        ],),
+                        ),
                       ),
-                      Container(margin: EdgeInsets.only(top:80,left: 10),width: 300,child: Card(
+                      Container(margin: EdgeInsets.only(top:40,left: 10),width: 300,child: Card(
                         child: Padding(
                           padding: const EdgeInsets.all(15),
                           child: Column(
@@ -241,9 +249,13 @@ class _CourseDetailsState extends State<CourseDetails> {
 class ExpandbleWidget extends StatefulWidget {
   String name;
   List list ;
+  List? quizes ;
   int nofq;
+  bool purchased ;
+  Function(Map<String,dynamic>)?selectedContent;
+  Function(Map<String,dynamic>)?selectedQuize;
 
-  ExpandbleWidget({required this.name,required this.list,required this.nofq});
+  ExpandbleWidget({this.quizes,required this.name,required this.list,required this.nofq,required this.purchased,this.selectedContent,this.selectedQuize});
 
   @override
   State<ExpandbleWidget> createState() => _ExpandbleWidgetState();
@@ -253,47 +265,110 @@ class _ExpandbleWidgetState extends State<ExpandbleWidget> {
   bool expanded = false;
   @override
   Widget build(BuildContext context) {
-   return Column(children: [
-     Container(color: Colors.grey.shade300,
-       child: InkWell(onTap: (){
-         setState(() {
-           expanded = !expanded;
-         });
-       },
-         child: Container(
-           child: Padding(
-             padding: const EdgeInsets.all(8.0),
-             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-               children: [
-                 Padding(
-                   padding: const EdgeInsets.all(8.0),
-                   child: Row(
-                     children: [
-                       expanded?Icon(Icons.keyboard_arrow_up_outlined):Icon(Icons.keyboard_arrow_down_outlined),
-                       Text(widget.name),
-                     ],
-                   ),
-                 ),
-                 Text(widget.nofq.toString()+" quizes"),
-               ],
-             ),
-           ),
-         ),
-       ),
-     ),
- if(expanded) ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
-         itemCount: widget.list.length,
-         itemBuilder: (BuildContext context, int index2) {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
+      Container(color: Colors.grey.shade100,
+        child: InkWell(onTap: (){
+          setState(() {
+            expanded = !expanded;
+          });
+        },
+          child: Container(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        expanded?Icon(Icons.keyboard_arrow_up_outlined):Icon(Icons.keyboard_arrow_down_outlined),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Text(widget.name),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Text(widget.nofq.toString()+" quizes"),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      if(expanded) Padding(
+        padding: const EdgeInsets.only(left: 15),
+        child: Text("Contents"),
+      ),
+      if(expanded) ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
+          itemCount: widget.list.length,
+          itemBuilder: (BuildContext context, int index2) {
 
-           try{
-             return Padding(
-               padding:  EdgeInsets.symmetric(vertical: 4,horizontal: 34),
-               child: Text( widget.list[index2]["title"]??"--"),
-             );
-           }catch(e){
-             return Text(e.toString());
-           }
-         })
-   ],);
+            try{
+              return Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text("# "+(index2+1).toString()),
+                  ),
+                  InkWell( onTap: (){
+                    if(widget.purchased){
+                      widget.selectedContent!(widget.list[index2]);
+                    }
+
+                  },
+                    child: Padding(
+                      padding:  EdgeInsets.symmetric(vertical: 4,horizontal: 10),
+                      child: Text( widget.list[index2]["title"]??"--"),
+                    ),
+                  ),
+                ],
+              );
+            }catch(e){
+              return Text(e.toString());
+            }
+          }),
+      if(expanded)if(widget.purchased)if(widget.nofq>0)Padding(
+        padding: const EdgeInsets.only(left: 15),
+        child: Text("Quizes"),
+      ),
+      if(expanded)if(widget.purchased)if(widget.nofq>0)ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
+          itemCount: widget.quizes!.length,
+          itemBuilder: (BuildContext context, int index2) {
+
+            try{
+              return Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text("# "+(index2+1).toString()),
+                  ),
+                  InkWell( onTap: (){
+                    if(widget.purchased){
+                      widget.selectedQuize!(widget.quizes![index2]);
+                    }
+
+                  },
+                    child: Padding(
+                      padding:  EdgeInsets.symmetric(vertical: 4,horizontal: 10),
+                      child: true? FutureBuilder<dynamic>(
+                      future: Data().quize(id: widget.quizes![index2]["quize_id"].toString()), // a previously-obtained Future<String> or null
+                      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                      if(snapshot.hasData){
+                        return Text(snapshot.data!["title"].toString());
+                      }else{
+                        return Text("Please wait");
+                      }
+
+                      }) : Text( widget.quizes![index2].toString()),
+                    ),
+                  ),
+                ],
+              );
+            }catch(e){
+              return Text(e.toString());
+            }
+          })
+    ],);
   }
 }

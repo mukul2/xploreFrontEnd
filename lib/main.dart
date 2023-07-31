@@ -282,7 +282,8 @@ class MyApp extends StatelessWidget {
         ),
       ),
          // textTheme:  GoogleFonts.poppinsTextTheme(baseTheme.textTheme),
-          scaffoldBackgroundColor: Colors.grey.shade300,dialogBackgroundColor: Colors.grey.shade300,dialogTheme: DialogTheme(backgroundColor: Colors.grey.shade300),appBarTheme: AppBarTheme(elevation: 1,
+          scaffoldBackgroundColor: Colors.grey.shade300,dialogBackgroundColor: Colors.grey.shade300,dialogTheme: DialogTheme(backgroundColor: Colors.grey.shade300),
+          appBarTheme: AppBarTheme(elevation: 1,
         iconTheme: IconThemeData(color: Colors.black),titleTextStyle: TextStyle(color: Colors.black54),
         color: Colors.white, //<-- SEE HERE
       ),

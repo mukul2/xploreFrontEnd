@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../RestApi.dart';
+import '../../Video_player/player.dart';
+import '../../Video_player/utube_player.dart';
 import '../../course_details.dart';
 import '../../styles.dart';
 
@@ -20,6 +22,9 @@ class _LecturesState extends State<Lectures> {
     // TODO: implement initState
     super.initState();
   }
+  Map<String,dynamic>? selectedContent;
+  Map<String,dynamic>? selectedQuize;
+  int selected = 0;
   @override
   Widget build(BuildContext context) {
     double width = 900;
@@ -99,12 +104,14 @@ class _LecturesState extends State<Lectures> {
                 ),
               ),),
               body: true?Row(children: [
-                Expanded(child: Text("Container")),
+                Expanded(child: selectedContent==null?Center(child: Text("Select a content or quize")):Container(height: MediaQuery.of(context).size.height *0.8,child: selectedContent!["data"].toString().contains("youtube")?UtubePlayer(id: ((false?"https://www.youtube.com/watch?v=xptJmP6QVA8": selectedContent!["data"].toString()).split("watch?v=")).last,): BumbleBeeRemoteVideo(link :selectedContent!["data"]))),
                 Container(decoration: boxShadow3,width: 300,child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
+
                     Padding(
                       padding: const EdgeInsets.only(top: 12,bottom: 10,left: 8),
-                      child: SelectableText("Course content",style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
+                      child: SelectableText("Lectures",style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
                     ),
                     Expanded(
                       child: ListView(shrinkWrap: true,
@@ -117,7 +124,21 @@ class _LecturesState extends State<Lectures> {
                             child: ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
                                 itemCount: snapshot.data!["lecture"].length,
                                 itemBuilder: (BuildContext context, int index) {
-                                  return  ExpandbleWidget(name:snapshot.data!["lecture"][index]["name"],list: snapshot.data!["lecture"][index]["contents"],nofq:snapshot.data!["lecture"][index]["quizes"].length);
+                                  return  ExpandbleWidget(selectedQuize: (Map<String,dynamic> data){
+                                    setState(() {
+                                      selectedQuize = data;
+                                    });
+
+
+
+                                  } ,quizes:snapshot.data!["lecture"][index]["quizes"],selectedContent: (Map<String,dynamic> data){
+                                    setState(() {
+                                      selectedContent = data;
+                                    });
+
+
+
+                                  },purchased: true,name:snapshot.data!["lecture"][index]["name"],list: snapshot.data!["lecture"][index]["contents"],nofq:snapshot.data!["lecture"][index]["quizes"].length);
 
 
 
@@ -230,7 +251,7 @@ class _LecturesState extends State<Lectures> {
                                 child: ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
                                     itemCount: snapshot.data!["lecture"].length,
                                     itemBuilder: (BuildContext context, int index) {
-                                      return  ExpandbleWidget(name:snapshot.data!["lecture"][index]["name"],list: snapshot.data!["lecture"][index]["contents"],nofq:snapshot.data!["lecture"][index]["quizes"].length);
+                                      return  ExpandbleWidget(purchased: true,name:snapshot.data!["lecture"][index]["name"],list: snapshot.data!["lecture"][index]["contents"],nofq:snapshot.data!["lecture"][index]["quizes"].length);
 
 
 

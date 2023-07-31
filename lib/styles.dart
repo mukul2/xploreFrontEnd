@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+BoxDecoration bdq = BoxDecoration(borderRadius: BorderRadius.circular(8),color: Colors.white);
 BoxDecoration boxShadow =  BoxDecoration(
   color:Colors.white,border: Border.all(color: Colors.black54,width: 0.3),
   borderRadius: BorderRadius.only(
