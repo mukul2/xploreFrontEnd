@@ -217,10 +217,22 @@ String base ="https://quizhub.online";
       return {};
 
     }
-  }  Future<dynamic>coursedetails ({required String id}) async {
+  }
+  Future<dynamic>coursedetails ({required String id}) async {
 
     try{
       http.Response r =  await http.get(Uri.parse(base+"/course-details/"+id),);
+
+      return jsonDecode(r.body);
+    }catch(e){
+      return {};
+
+    }
+  }
+  Future<dynamic>lectures ({required String id}) async {
+
+    try{
+      http.Response r =  await http.get(Uri.parse(base+"/lectures/"+id),);
 
       return jsonDecode(r.body);
     }catch(e){

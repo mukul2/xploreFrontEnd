@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import 'AppProviders/DrawerProvider.dart';
 import 'RestApi.dart';
+import 'Teacher/Course_edit/quize_edit.dart';
 import 'edit_question_activity.dart';
 
 class CourseTable extends StatefulWidget {
@@ -47,39 +48,52 @@ class MyData extends DataTableSource {
           constraints: BoxConstraints(maxWidth: 300,minWidth: 100), child: Text(_data[index]['description']??"--"))),
       DataCell(Text(_data[index]['price'].toString()??"--")),
       DataCell(Text(_data[index]['lectures'][0]["lnum"].toString()??"--")),
-      DataCell(ElevatedButton(onPressed: (){
+      DataCell(Row(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: ElevatedButton(onPressed: (){
+
+              showDialog(
+                  context: context,
+                  builder: (_) => Dialog(child: EditCourseActivity(data: _data[index]),),);
+            }, child: Text("Edit")),
+          ),
+          ElevatedButton(onPressed: (){
 
 
-        showDialog(
-            context: context,
-            builder: (_) =>AlertDialog(
-              //title: Text("Delete Question"),
-              content: Container(width: 400,
-                child: Wrap(
-                  children: [
-                    Center(child: Icon(Icons.warning,size: 50,)),
-                    Container(width: 400,child: Center(child: Text("Are you sure to delete this course?"))),
-                  ],
-                ),
-              ),actions: [
-              ElevatedButton(onPressed: (){
-                Data().deletecourse(id:_data[index]['id'].toString() ).then((value) {
+            showDialog(
+                context: context,
+                builder: (_) =>AlertDialog(
+                  //title: Text("Delete Question"),
+                  content: Container(width: 400,
+                    child: Wrap(
+                      children: [
+                        Center(child: Icon(Icons.warning,size: 50,)),
+                        Container(width: 400,child: Center(child: Text("Are you sure to delete this course?"))),
+                      ],
+                    ),
+                  ),actions: [
+                  ElevatedButton(onPressed: (){
+                    Data().deletecourse(id:_data[index]['id'].toString() ).then((value) {
 
-                  Data().batchesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
-                    Provider.of<Batchprovider>(context, listen: false).items = value;
-                  });
+                      Data().batchesid(id: FirebaseAuth.instance.currentUser!.uid).then((value) {
+                        Provider.of<Batchprovider>(context, listen: false).items = value;
+                      });
 
-                });
-              }, child: Text("Yes")),
-              ElevatedButton(onPressed: (){
-                Navigator.pop(context);
-              }, child: Text("No")),
-            ],));
-
-
+                    });
+                  }, child: Text("Yes")),
+                  ElevatedButton(onPressed: (){
+                    Navigator.pop(context);
+                  }, child: Text("No")),
+                ],));
 
 
-      },child: Text("Delete"),)),
+
+
+          },child: Text("Delete"),),
+        ],
+      )),
 
 
 
