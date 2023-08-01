@@ -296,79 +296,82 @@ class _ExpandbleWidgetState extends State<ExpandbleWidget> {
           ),
         ),
       ),
-      if(expanded) Padding(
-        padding: const EdgeInsets.only(left: 15),
-        child: Text("Contents"),
-      ),
-      if(expanded) ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
+
+      if(expanded) ListView.separated(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
           itemCount: widget.list.length,
           itemBuilder: (BuildContext context, int index2) {
 
             try{
-              return Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text("# "+(index2+1).toString()),
-                  ),
-                  InkWell( onTap: (){
-                    if(widget.purchased){
-                      widget.selectedContent!(widget.list[index2]);
-                    }
-
-                  },
-                    child: Padding(
-                      padding:  EdgeInsets.symmetric(vertical: 4,horizontal: 10),
-                      child: Text( widget.list[index2]["title"]??"--"),
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: true?Icon(Icons.play_circle_outline): Text("# "+(index2+1).toString()),
                     ),
-                  ),
-                ],
+                    InkWell( onTap: (){
+                      if(widget.purchased){
+                        widget.selectedContent!(widget.list[index2]);
+                      }
+
+                    },
+                      child: Padding(
+                        padding:  EdgeInsets.symmetric(vertical: 4,horizontal: 10),
+                        child: Text( widget.list[index2]["title"]??"--"),
+                      ),
+                    ),
+                  ],
+                ),
               );
             }catch(e){
               return Text(e.toString());
             }
-          }),
-      if(expanded)if(widget.purchased)if(widget.nofq>0)Padding(
-        padding: const EdgeInsets.only(left: 15),
-        child: Text("Quizes"),
-      ),
-      if(expanded)if(widget.purchased)if(widget.nofq>0)ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
+          }, separatorBuilder: (BuildContext context, int index) { return Divider(); },),
+      // if(expanded)if(widget.purchased)if(widget.nofq>0)Padding(
+      //   padding: const EdgeInsets.only(left: 15),
+      //   child: Text("Quizes"),
+      // ),
+      if(expanded)if(widget.purchased)if(widget.nofq>0)ListView.separated(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
           itemCount: widget.quizes!.length,
           itemBuilder: (BuildContext context, int index2) {
 
             try{
-              return Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text("# "+(index2+1).toString()),
-                  ),
-                  InkWell( onTap: (){
-                    if(widget.purchased){
-                      widget.selectedQuize!(widget.quizes![index2]);
-                    }
-
-                  },
-                    child: Padding(
-                      padding:  EdgeInsets.symmetric(vertical: 4,horizontal: 10),
-                      child: true? FutureBuilder<dynamic>(
-                      future: Data().quize(id: widget.quizes![index2]["quize_id"].toString()), // a previously-obtained Future<String> or null
-                      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                      if(snapshot.hasData){
-                        return Text(snapshot.data!["title"].toString());
-                      }else{
-                        return Text("Please wait");
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: true?Icon(Icons.quiz): Text("# "+(index2+1).toString()),
+                    ),
+                    InkWell( onTap: (){
+                      if(widget.purchased){
+                        widget.selectedQuize!(widget.quizes![index2]);
                       }
 
-                      }) : Text( widget.quizes![index2].toString()),
+                    },
+                      child: Padding(
+                        padding:  EdgeInsets.symmetric(vertical: 4,horizontal: 10),
+                        child: true? FutureBuilder<dynamic>(
+                        future: Data().quize(id: widget.quizes![index2]["quize_id"].toString()), // a previously-obtained Future<String> or null
+                        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                        if(snapshot.hasData){
+                          return Text(snapshot.data!["title"].toString());
+                        }else{
+                          return Text("Please wait");
+                        }
+
+                        }) : Text( widget.quizes![index2].toString()),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             }catch(e){
               return Text(e.toString());
             }
-          })
+          }, separatorBuilder: (BuildContext context, int index) { return Divider(); },)
     ],);
   }
 }

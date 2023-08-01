@@ -10,6 +10,7 @@ import '../../RestApi.dart';
 import '../../course_table.dart';
 import '../../create_question_activity.dart';
 import '../../students_activity.dart';
+import '../Profile/screen.dart';
 import '../SubmittedQuizes/submitted_quize.dart';
 import 'data.dart';
 
@@ -131,7 +132,7 @@ class _TeacherDrawerState extends State<StudentDrawer> {
     ),);
     Widget body = Consumer<DrawerSelectionSub>(
         builder: (_, bar, __) {
-
+          if(bar.selection == 2)return StudentProfile();
           if(bar.selection == 1 && bar.selectionsub == 1) return  Container(height: MediaQuery.of(context).size.height,width:MediaQuery.of(context).size.width- (isMobile?0:251) ,
 
 
@@ -697,19 +698,19 @@ class _SingleMenuState extends State<SingleMenu> {
                 children: [
                   Row(
                     children: [
-                      Icon(widget.data["icon"]  ,color:  bar.selection == widget.position?Colors.blue:( Colors.black54)),
+                      Icon(widget.data["icon"]  ,color:  bar.selection == widget.position?Colors.blue:( Colors.black)),
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
                         child: Column(
                           children: [
-                            Text(widget.data["name"],style: TextStyle(color:  bar.selection == widget.position?Colors.blue:( Colors.black54)),),
+                            Text(widget.data["name"],style: TextStyle(color:  bar.selection == widget.position?Colors.blue:( Colors.black)),),
                           ],
                         ),
                       ),
                     ],
                   ),
 
-                  Icon(  bar.selection == widget.position?Icons.keyboard_arrow_down_outlined:Icons.keyboard_arrow_up_outlined,color: onHover?Colors.blue:Colors.black87),
+                  Icon(  bar.selection == widget.position?Icons.keyboard_arrow_down_outlined:Icons.keyboard_arrow_up_outlined,color: onHover?Colors.blue:Colors.black),
                 ],
               ),
             ),
@@ -775,10 +776,10 @@ class _SingleMenuSubState extends State<SingleMenuSub> {
                 children: [
                   Row(
                     children: [
-                      Text("-",style: TextStyle(color: (bar.selection == widget.position &&  bar.selectionsub == widget.positionsub ) ?Colors.blue:( Colors.black54))),
+                      Text("-",style: TextStyle(color: (bar.selection == widget.position &&  bar.selectionsub == widget.positionsub ) ?Colors.blue:( Colors.black))),
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
-                        child: Text(widget.data,style: TextStyle(color: (bar.selection == widget.position &&  bar.selectionsub == widget.positionsub ) ?Colors.blue:( Colors.black54)),),
+                        child: Text(widget.data,style: TextStyle(color: (bar.selection == widget.position &&  bar.selectionsub == widget.positionsub ) ?Colors.blue:( Colors.black)),),
                       ),
                     ],
                   ),

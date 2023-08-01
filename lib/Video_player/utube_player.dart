@@ -16,6 +16,7 @@ class _UtubePlayerState extends State<UtubePlayer> {
     // TODO: implement initState
     super.initState();
     print(widget.id);
+    print("need controller init");
     print("https://www.youtube.com/watch?v="+widget.id);
     // If the requirement is just to play a single video.
      _controller = YoutubePlayerController.fromVideoId(

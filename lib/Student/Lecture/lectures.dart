@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:video_player/video_player.dart';
+import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 import '../../RestApi.dart';
 import '../../Video_player/player.dart';
@@ -18,6 +20,14 @@ class Lectures extends StatefulWidget {
 
 class _LecturesState extends State<Lectures> {
   @override
+  void dispose() {
+    // TODO: implement dispose
+    controller = null;
+    Linkcontroller!.dispose();
+
+    super.dispose();
+  }
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -25,6 +35,9 @@ class _LecturesState extends State<Lectures> {
   Map<String,dynamic>? selectedContent;
   Map<String,dynamic>? selectedQuize;
   int selected = 0;
+  Widget? videoWid;
+  YoutubePlayerController? controller;
+   VideoPlayerController? Linkcontroller;
   @override
   Widget build(BuildContext context) {
     double width = 900;
@@ -104,7 +117,7 @@ class _LecturesState extends State<Lectures> {
                 ),
               ),),
               body: true?Row(children: [
-                Expanded(child: selectedContent==null?Center(child: Text("Select a content or quize")):Container(height: MediaQuery.of(context).size.height *0.8,child: selectedContent!["data"].toString().contains("youtube")?UtubePlayer(id: ((false?"https://www.youtube.com/watch?v=xptJmP6QVA8": selectedContent!["data"].toString()).split("watch?v=")).last,): BumbleBeeRemoteVideo(link :selectedContent!["data"]))),
+                Expanded(child: selectedContent==null?Center(child: Text("Select a content or quize")):Container(height: MediaQuery.of(context).size.height *0.8,child: videoWid)),
                 Container(decoration: boxShadow3,width: 300,child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
@@ -114,37 +127,106 @@ class _LecturesState extends State<Lectures> {
                       child: SelectableText("Lectures",style: TextStyle(color: Colors.black,fontSize: 15,fontWeight: FontWeight.bold),),
                     ),
                     Expanded(
-                      child: ListView(shrinkWrap: true,
-                        //crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                      child: Container(color: Colors.grey.shade100,
+                        child: ListView(shrinkWrap: true,
+                          //crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
 
-                          //SelectableText(snapshot.data!.toString()),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 0),
-                            child: ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
-                                itemCount: snapshot.data!["lecture"].length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return  ExpandbleWidget(selectedQuize: (Map<String,dynamic> data){
-                                    setState(() {
-                                      selectedQuize = data;
-                                    });
-
-
-
-                                  } ,quizes:snapshot.data!["lecture"][index]["quizes"],selectedContent: (Map<String,dynamic> data){
-                                    setState(() {
-                                      selectedContent = data;
-                                    });
+                            //SelectableText(snapshot.data!.toString()),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 0),
+                              child: ListView.builder(shrinkWrap: true,physics: NeverScrollableScrollPhysics(),
+                                  itemCount: snapshot.data!["lecture"].length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return  ExpandbleWidget(selectedQuize: (Map<String,dynamic> data){
+                                      setState(() {
+                                        selectedQuize = data;
+                                      });
 
 
 
-                                  },purchased: true,name:snapshot.data!["lecture"][index]["name"],list: snapshot.data!["lecture"][index]["contents"],nofq:snapshot.data!["lecture"][index]["quizes"].length);
+                                    } ,quizes:snapshot.data!["lecture"][index]["quizes"],selectedContent: (Map<String,dynamic> data){
+                                      setState(() {
+                                        print("vid wid reset");
+                                        selectedContent = data;
+                                        videoWid = Container(child: CupertinoActivityIndicator(),);
+                                      });
+                                      setState(() {
+
+
+                                        if( selectedContent!["data"].toString().contains("youtube")){
+                                          String id =  selectedContent!["data"].toString().split("watch?v=").last;
+
+
+                                          if(controller!=null){
+
+                                            controller = null;
+                                            setState(() {
+
+                                            });
+
+
+                                          }else{
+                                            controller  = YoutubePlayerController.fromVideoId(
+                                              videoId:id,
+                                              autoPlay: false,
+                                              params: const YoutubePlayerParams(showFullscreenButton: true),
+                                            );
+                                            videoWid = YoutubePlayer(
+                                              controller:  YoutubePlayerController.fromVideoId(
+                                                videoId:id,
+                                                autoPlay: false,
+                                                params: const YoutubePlayerParams(showFullscreenButton: true),
+                                              )!,
+                                              aspectRatio: 16 / 9,
+                                            );
+                                          }
 
 
 
-                                }),
-                          ),
-                        ],
+                                        }else{
+                                          Linkcontroller = VideoPlayerController.networkUrl(
+                                            Uri.parse(selectedContent!["data"]),
+                                            //   closedCaptionFile: _loadCaptions(),
+                                            videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+                                          );
+                                          Linkcontroller!.initialize().then((value) {
+                                            Linkcontroller!.play();
+                                            videoWid = true?Stack(
+                                              children: [
+                                                VideoPlayer(Linkcontroller!),
+                                                VideoProgressIndicator(Linkcontroller!, allowScrubbing: true),
+                                                ControlsOverlay( controller: Linkcontroller!,),
+                                              ],
+                                            ): AspectRatio(
+                                              aspectRatio: Linkcontroller!.value.aspectRatio,
+                                              child: Stack(
+                                                alignment: Alignment.bottomCenter,
+                                                children: <Widget>[
+                                                  VideoPlayer(Linkcontroller!),
+                                                  VideoProgressIndicator(Linkcontroller!, allowScrubbing: true),
+                                                  ControlsOverlay( controller: Linkcontroller!,),
+                                                ],
+                                              ),
+                                            );
+                                          });
+                                       //   videoWid  = BumbleBeeRemoteVideo(link :selectedContent!["data"]);
+                                        }
+
+                                      //videoWid = selectedContent!["data"].toString().contains("youtube")?UtubePlayer(id: ((false?"https://www.youtube.com/watch?v=xptJmP6QVA8": selectedContent!["data"].toString()).split("watch?v=")).last,): BumbleBeeRemoteVideo(link :selectedContent!["data"]);
+
+                                      });
+
+
+
+                                    },purchased: true,name:snapshot.data!["lecture"][index]["name"],list: snapshot.data!["lecture"][index]["contents"],nofq:snapshot.data!["lecture"][index]["quizes"].length);
+
+
+
+                                  }),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -318,5 +400,120 @@ class _LecturesState extends State<Lectures> {
           }
 
         });
+  }
+}
+class ControlsOverlay extends StatelessWidget {
+  const ControlsOverlay({required this.controller});
+
+  static const List<Duration> _exampleCaptionOffsets = <Duration>[
+    Duration(seconds: -10),
+    Duration(seconds: -3),
+    Duration(seconds: -1, milliseconds: -500),
+    Duration(milliseconds: -250),
+    Duration.zero,
+    Duration(milliseconds: 250),
+    Duration(seconds: 1, milliseconds: 500),
+    Duration(seconds: 3),
+    Duration(seconds: 10),
+  ];
+  static const List<double> _examplePlaybackRates = <double>[
+    0.25,
+    0.5,
+    1.0,
+    1.5,
+    2.0,
+    3.0,
+    5.0,
+    10.0,
+  ];
+
+  final VideoPlayerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 50),
+          reverseDuration: const Duration(milliseconds: 200),
+          child: controller.value.isPlaying
+              ? const SizedBox.shrink()
+              : Container(
+            color: Colors.black26,
+            child: const Center(
+              child: Icon(
+                Icons.play_arrow,
+                color: Colors.white,
+                size: 100.0,
+                semanticLabel: 'Play',
+              ),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            controller.value.isPlaying ? controller.pause() : controller.play();
+          },
+        ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: PopupMenuButton<Duration>(
+            initialValue: controller.value.captionOffset,
+            tooltip: 'Caption Offset',
+            onSelected: (Duration delay) {
+              controller.setCaptionOffset(delay);
+            },
+            itemBuilder: (BuildContext context) {
+              return <PopupMenuItem<Duration>>[
+                for (final Duration offsetDuration in _exampleCaptionOffsets)
+                  PopupMenuItem<Duration>(
+                    value: offsetDuration,
+                    child: Text('${offsetDuration.inMilliseconds}ms'),
+                  )
+              ];
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                // Using less vertical padding as the text is also longer
+                // horizontally, so it feels like it would need more spacing
+                // horizontally (matching the aspect ratio of the video).
+                vertical: 12,
+                horizontal: 16,
+              ),
+              child: Text('${controller.value.captionOffset.inMilliseconds}ms'),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: PopupMenuButton<double>(
+            initialValue: controller.value.playbackSpeed,
+            tooltip: 'Playback speed',
+            onSelected: (double speed) {
+              controller.setPlaybackSpeed(speed);
+            },
+            itemBuilder: (BuildContext context) {
+              return <PopupMenuItem<double>>[
+                for (final double speed in _examplePlaybackRates)
+                  PopupMenuItem<double>(
+                    value: speed,
+                    child: Text('${speed}x'),
+                  )
+              ];
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                // Using less vertical padding as the text is also longer
+                // horizontally, so it feels like it would need more spacing
+                // horizontally (matching the aspect ratio of the video).
+                vertical: 12,
+                horizontal: 16,
+              ),
+              child: Text('${controller.value.playbackSpeed}x'),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 }
