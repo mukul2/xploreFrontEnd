@@ -309,6 +309,7 @@ class _CreateCourseActivityState extends State<EditCourseActivity> {
                       return ListView.builder(shrinkWrap: true,
                           itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
+                           return TeacherLecturedViewEdit(data:snapshot.data![index]);
                             return Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),border: Border.all(color: Colors.blue.shade200)),margin: EdgeInsets.all(5),
                               child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -605,5 +606,90 @@ class _CreateCourseActivityState extends State<EditCourseActivity> {
       ),
     );
 
+  }
+}
+
+class TeacherLecturedViewEdit extends StatefulWidget {
+  Map<String,dynamic>data;
+  TeacherLecturedViewEdit({required this.data});
+
+  @override
+  State<TeacherLecturedViewEdit> createState() => _TeacherLecturedViewEditState();
+}
+
+class _TeacherLecturedViewEditState extends State<TeacherLecturedViewEdit> {
+
+  bool expandedContents = false;
+  bool expandedQuizes = false;
+  @override
+  Widget build(BuildContext context) {
+    return Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),border: Border.all(color: Colors.blue.shade200)),margin: EdgeInsets.all(10),
+      child: Column(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+
+          Padding(
+            padding: const EdgeInsets.only(left: 15,top: 15,bottom: 4),
+            child: Text(widget.data["name"],style: TextStyle(color: Colors.blue),),
+          ),
+
+          ListTile(onTap: (){
+            setState(() {
+              expandedContents = !expandedContents;
+            });
+          },leading:expandedContents?Icon(Icons.keyboard_arrow_up_outlined):Icon(Icons.keyboard_arrow_down_outlined) ,title: Text("Contents") ,),
+
+          if(expandedContents)ListView.builder(shrinkWrap: true,
+              itemCount: widget.data["contents"].length,
+              itemBuilder: (context, index2) {
+                return  Container(decoration: BoxDecoration(color: index2.isOdd?Colors.transparent:Colors.blue.shade50,border: Border.all(color: Colors.blue.shade50)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 50),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Text("# "+(index2+1).toString()),
+                        ),
+                        Text(widget.data["contents"][index2]["title"].toString()),
+                      ],
+                    ),
+                  ),
+                );
+                return ListTile(title: Text(widget.data["contents"][index2]["title"].toString()),subtitle: Text(widget.data["contents"][index2]["data"].toString()),);
+                return Text(widget.data["contents"][index2]["title"].toString());
+              }),
+          ListTile(onTap: (){
+            setState(() {
+              expandedQuizes = !expandedQuizes;
+            });
+          },leading:expandedQuizes?Icon(Icons.keyboard_arrow_up_outlined):Icon(Icons.keyboard_arrow_down_outlined) ,title: Text("Quize") ,),
+          if(expandedQuizes)ListView.builder(shrinkWrap: true,
+              itemCount:widget.data["quize"].length,
+              itemBuilder: (context, index2) {
+                return  Container(decoration: BoxDecoration(color: index2.isOdd?Colors.transparent:Colors.blue.shade50,border: Border.all(color: Colors.blue.shade50)),
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 50),
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Text("# "+(index2+1).toString()),
+                        ),
+                        Text(widget.data["quize"][index2]["q_details"]["title"].toString()),
+                      ],
+                    ),
+                  ),
+                );
+                return ListTile(title: Text(widget.data["quize"][index2]["q_details"]["title"].toString()),);
+                return Text(widget.data["contents"][index2]["title"].toString());
+              })
+
+
+
+
+        ],
+      ),
+    );
   }
 }
