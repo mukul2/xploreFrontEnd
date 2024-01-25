@@ -49,16 +49,28 @@ class _Create_questionState extends State<Create_question> {
           //   ),
           // ),),
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(controller: c1,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 8,horizontal: 8),label: Text("Question title")),),
+            padding: const EdgeInsets.only(left: 8),
+            child: Text("Question title",),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(controller: c2,minLines: 1,maxLines: 4,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 8,horizontal: 8),label: Text("Question body")),),
+            child: TextField(controller: c1,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 8,horizontal: 8)),),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Text("Question body",),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(controller: c3,minLines: 1,maxLines: 4,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 8,horizontal: 8),label: Text("Explanation")),),
+            child: TextField(controller: c2,minLines: 1,maxLines: 4,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 8,horizontal: 8),),),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Text("Explanation",),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(controller: c3,minLines: 1,maxLines: 4,decoration: InputDecoration(contentPadding: EdgeInsets.symmetric(vertical: 8,horizontal: 8),),),
           ),
           Row(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
             children: [

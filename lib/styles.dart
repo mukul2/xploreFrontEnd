@@ -1,5 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+TextStyle styleBold =  TextStyle(fontWeight: FontWeight.w900,letterSpacing: 1.5,fontFamily: "Inter");
+TextStyle styleSemiBold =  TextStyle(fontWeight: FontWeight.w700,letterSpacing: 1.5,fontFamily: "Inter");
+TextStyle styleNormal =  TextStyle(fontWeight: FontWeight.w500,letterSpacing: 1.5,fontFamily: "Inter");
+
 BoxDecoration bdq = BoxDecoration(borderRadius: BorderRadius.circular(8),color: Colors.white);
 BoxDecoration boxShadow =  BoxDecoration(
   color:Colors.white,border: Border.all(color: Colors.black54,width: 0.3),

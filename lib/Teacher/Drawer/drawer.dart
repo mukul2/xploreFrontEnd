@@ -26,15 +26,15 @@ class _TeacherDrawerState extends State<TeacherDrawer> {
   Widget build(BuildContext context) {
     return Scaffold(body: Row(mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(width: 250,height: MediaQuery.of(context).size.height,decoration: BoxDecoration(color: Colors.white),child: Column(
+        Container(width: 250,height: MediaQuery.of(context).size.height,decoration: BoxDecoration(color: Color.fromARGB(255,33, 47, 61)),child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 25),
-              child: Text("Project name",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+              child: Text("Project name",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20,color: Colors.white),),
             ),
             Padding(
               padding: const EdgeInsets.only(bottom: 30),
-              child: Text(FirebaseAuth.instance.currentUser!.email!,style: TextStyle(),),
+              child: Text(FirebaseAuth.instance.currentUser!.email!,style: TextStyle(color: Colors.white),),
             ),
             ListView.builder(
               itemCount: drawerDataTeacher.length,shrinkWrap: true,
@@ -123,12 +123,12 @@ class _SingleMenuState extends State<SingleMenu> {
               children: [
                 Row(
                   children: [
-                    Icon(widget.data["icon"]  ,color:  bar.selection == widget.position?Colors.blue:( Colors.black)),
+                    Icon(widget.data["icon"]  ,color:  bar.selection == widget.position?Colors.white:( Colors.white)),
                     Padding(
                       padding: const EdgeInsets.only(left: 10),
                       child: Column(
                         children: [
-                          Text(widget.data["name"],style: TextStyle(color:  bar.selection == widget.position?Colors.blue:( Colors.black)),),
+                          Text(widget.data["name"],style: TextStyle(color:  bar.selection == widget.position?Colors.white:( Colors.white)),),
                         ],
                       ),
                     ),
@@ -226,17 +226,18 @@ class _SingleMenuSubState extends State<SingleMenuSub> {
               onHover = b;
             });
 
-          },child: Container(margin: EdgeInsets.symmetric(horizontal: 8,vertical: 5),decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),color:(bar.selection == widget.position &&  bar.selectionsub == widget.positionsub )?Colors.blue.shade50 :( onHover?Colors.blue.shade50:Colors.transparent)),
+          },child: Container(margin: EdgeInsets.symmetric(horizontal: 8,vertical: 5),decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),color:(bar.selection == widget.position &&
+              bar.selectionsub == widget.positionsub )?Colors.white.withOpacity(0.1) :( onHover?Colors.white.withOpacity(0.1): Colors.transparent)),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
-                      Text("-",style: TextStyle(color: (bar.selection == widget.position &&  bar.selectionsub == widget.positionsub ) ?Colors.blue:( Colors.black54))),
+                      Text("-",style: TextStyle(color: (bar.selection == widget.position &&  bar.selectionsub == widget.positionsub ) ?Colors.white:( Colors.white))),
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
-                        child: Text(widget.data,style: TextStyle(color: (bar.selection == widget.position &&  bar.selectionsub == widget.positionsub ) ?Colors.blue:( Colors.black54)),),
+                        child: Text(widget.data,style: TextStyle(color: (bar.selection == widget.position &&  bar.selectionsub == widget.positionsub ) ?Colors.white:( Colors.white)),),
                       ),
                     ],
                   ),
